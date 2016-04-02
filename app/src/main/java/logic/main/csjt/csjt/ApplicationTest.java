@@ -17,6 +17,8 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
 
 import javax.microedition.khronos.egl.EGLConfig;
@@ -34,6 +36,8 @@ public class ApplicationTest extends CardboardActivity implements CardboardView.
     private static final float YAW_LIMIT = 0.12f;
     private static final float PITCH_LIMIT = 0.12f;
 
+    private static final int COORDS_PER_VERTEX = 3;
+
     // We keep the light always position just above the user.
     private static final float[] LIGHT_POS_IN_WORLD_SPACE = new float[] {0.0f, 2.0f, 0.0f, 1.0f};
 
@@ -48,11 +52,26 @@ public class ApplicationTest extends CardboardActivity implements CardboardView.
     private float[] modelViewProjection;
     private float[] modelView;
 
+    private float[] modelCube;
+    private FloatBuffer cubeVertices;
+    private FloatBuffer cubeColors;
+    private FloatBuffer cubeNormals;
+    private int cubeProgram;
+    private int cubePositionParam;
+    private int cubeNormalParam;
+    private int cubeColorParam;
+    private int cubeModelParam;
+    private int cubeModelViewParam;
+    private int cubeModelViewProjectionParam;
+    private int cubeLightPosParam;
+
+
     private float[] modelPosition;
     private float[] headRotation;
 
     private float objectDistance = MAX_MODEL_DISTANCE / 2.0f;
     private Vibrator vibrator;
+
 
     /**
      * Converts a raw text file, saved as a resource, into an OpenGL ES shader.
@@ -115,6 +134,10 @@ public class ApplicationTest extends CardboardActivity implements CardboardView.
         });
         setCardboardView(cardboardView);
 
+        //OBJECTS
+        modelCube = new float[16];
+        //END
+
         camera = new float[16];
         view = new float[16];
         modelViewProjection = new float[16];
@@ -125,6 +148,7 @@ public class ApplicationTest extends CardboardActivity implements CardboardView.
         headView = new float[16];
         vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
     }
+
 
     @Override
     public void onPause() {
@@ -159,14 +183,65 @@ public class ApplicationTest extends CardboardActivity implements CardboardView.
     public void onSurfaceCreated(EGLConfig config) {
         Log.i(TAG, "onSurfaceCreated");
         GLES20.glClearColor(0.1f, 0.1f, 0.1f, 0.5f); // Dark background so text shows up well.
+        ByteBuffer bbVertices = ByteBuffer.allocateDirect(Cube.CUBE_COORDS.length * 4);
+        bbVertices.order(ByteOrder.nativeOrder());
+        cubeVertices = bbVertices.asFloatBuffer();
+        cubeVertices.put(Cube.CUBE_COORDS);
+        cubeVertices.position(0);
+
+        ByteBuffer bbColors = ByteBuffer.allocateDirect(Cube.CUBE_COLORS.length * 4);
+        bbColors.order(ByteOrder.nativeOrder());
+        cubeColors = bbColors.asFloatBuffer();
+        cubeColors.put(Cube.CUBE_COLORS);
+        cubeColors.position(0);
+
+        ByteBuffer bbNormals = ByteBuffer.allocateDirect(Cube.CUBE_NORMALS.length * 4);
+        bbNormals.order(ByteOrder.nativeOrder());
+        cubeNormals = bbNormals.asFloatBuffer();
+        cubeNormals.put(Cube.CUBE_NORMALS);
+        cubeNormals.position(0);
+
+        int vertexShader = loadGLShader(GLES20.GL_VERTEX_SHADER, R.raw.light_vertex);
+        int gridShader = loadGLShader(GLES20.GL_FRAGMENT_SHADER, R.raw.grid_fragment);
+        int passthroughShader = loadGLShader(GLES20.GL_FRAGMENT_SHADER, R.raw.passthrough_fragment);
+
+        cubeProgram = GLES20.glCreateProgram();
+        GLES20.glAttachShader(cubeProgram, vertexShader);
+        GLES20.glAttachShader(cubeProgram, passthroughShader);
+        GLES20.glLinkProgram(cubeProgram);
+        GLES20.glUseProgram(cubeProgram);
+
+        checkGLError("Cube program");
+
+        cubePositionParam = GLES20.glGetAttribLocation(cubeProgram, "a_Position");
+        cubeNormalParam = GLES20.glGetAttribLocation(cubeProgram, "a_Normal");
+        cubeColorParam = GLES20.glGetAttribLocation(cubeProgram, "a_Color");
+
+        cubeModelParam = GLES20.glGetUniformLocation(cubeProgram, "u_Model");
+        cubeModelViewParam = GLES20.glGetUniformLocation(cubeProgram, "u_MVMatrix");
+        cubeModelViewProjectionParam = GLES20.glGetUniformLocation(cubeProgram, "u_MVP");
+        cubeLightPosParam = GLES20.glGetUniformLocation(cubeProgram, "u_LightPos");
+
+        GLES20.glEnableVertexAttribArray(cubePositionParam);
+        GLES20.glEnableVertexAttribArray(cubeNormalParam);
+        GLES20.glEnableVertexAttribArray(cubeColorParam);
+
+        checkGLError("Cube program params");
+
+        updateModelPosition();
 
         checkGLError("onSurfaceCreated");
     }
 
     /**
-     * Updates the cube model position.
+     * Updates the cube model position. Gets called before error checking in onSurfaceCreate
      */
     private void updateModelPosition() {
+
+        Matrix.setIdentityM(modelCube, 0);
+        Matrix.translateM(modelCube, 0, modelPosition[0], modelPosition[1], modelPosition[2]);
+
+        checkGLError("updateCubePosition");
 
     }
 
@@ -201,7 +276,7 @@ public class ApplicationTest extends CardboardActivity implements CardboardView.
     @Override
     public void onNewFrame(HeadTransform headTransform) {
         // Build the Model part of the ModelView matrix.
-        //Matrix.rotateM(modelCube, 0, TIME_DELTA, 0.5f, 0.5f, 1.0f);
+        //Matrix.rotateM(modelCube, 0, TIME_DELTA, 0.5f, 0.5f, 1.0f);  // <- Lets rotate the cube
 
         // Build the camera matrix and apply it to the ModelView.
         Matrix.setLookAtM(camera, 0, 0.0f, 0.0f, CAMERA_Z, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f);
@@ -235,9 +310,9 @@ public class ApplicationTest extends CardboardActivity implements CardboardView.
         // Build the ModelView and ModelViewProjection matrices
         // for calculating cube position and light.
         float[] perspective = eye.getPerspective(Z_NEAR, Z_FAR);
-        //Matrix.multiplyMM(modelView, 0, view, 0, modelCube, 0);
+        Matrix.multiplyMM(modelView, 0, view, 0, modelCube, 0);
         Matrix.multiplyMM(modelViewProjection, 0, perspective, 0, modelView, 0);
-
+        drawCube();
 
     }
 
@@ -251,21 +326,38 @@ public class ApplicationTest extends CardboardActivity implements CardboardView.
      */
     public void drawCube() {
 
+
+        GLES20.glUseProgram(cubeProgram);
+
+        GLES20.glUniform3fv(cubeLightPosParam, 1, lightPosInEyeSpace, 0);
+
+        // Set the Model in the shader, used to calculate lighting
+        GLES20.glUniformMatrix4fv(cubeModelParam, 1, false, modelCube, 0);
+
+        // Set the ModelView in the shader, used to calculate lighting
+        GLES20.glUniformMatrix4fv(cubeModelViewParam, 1, false, modelView, 0);
+
+        // Set the position of the cube
+        GLES20.glVertexAttribPointer(
+                cubePositionParam, COORDS_PER_VERTEX, GLES20.GL_FLOAT, false, 0, cubeVertices);
+
+        // Set the ModelViewProjection matrix in the shader.
+        GLES20.glUniformMatrix4fv(cubeModelViewProjectionParam, 1, false, modelViewProjection, 0);
+
+        // Set the normal positions of the cube, again for shading
+        GLES20.glVertexAttribPointer(cubeNormalParam, 3, GLES20.GL_FLOAT, false, 0, cubeNormals);
+
+        //Has to do sth with the color of the cube while pointing at it
+        GLES20.glVertexAttribPointer(cubeColorParam, 4, GLES20.GL_FLOAT, false, 0,
+                isLookingAtObject() ? cubeColors : cubeColors);
+
+        GLES20.glDrawArrays(GLES20.GL_TRIANGLES, 0, 36);
+        checkGLError("Drawing cube");
     }
 
-    /**
-     * Draw the floor.
-     *
-     * <p>This feeds in data for the floor into the shader. Note that this doesn't feed in data about
-     * position of the light, so if we rewrite our code to draw the floor first, the lighting might
-     * look strange.
-     */
-    public void drawFloor() {
-
-    }
 
     /**
-     * Called when the Cardboard trigger is pulled.
+     * Called when the Cardboard trigger is pulled. (Means if display is being touched)
      */
     @Override
     public void onCardboardTrigger() {
@@ -312,7 +404,7 @@ public class ApplicationTest extends CardboardActivity implements CardboardView.
 
     /**
      * Check if user is looking at object by calculating where the object is in eye-space.
-     *
+     * TODO Make This function work with different objects like this isLookingAtObject(Obj obj)
      * @return true if the user is looking at the object.
      */
     private boolean isLookingAtObject() {
@@ -320,7 +412,7 @@ public class ApplicationTest extends CardboardActivity implements CardboardView.
         float[] objPositionVec = new float[4];
 
         // Convert object space to camera space. Use the headView from onNewFrame.
-        //Matrix.multiplyMM(modelView, 0, headView, 0, modelCube, 0);
+        Matrix.multiplyMM(modelView, 0, headView, 0, modelCube, 0);
         Matrix.multiplyMV(objPositionVec, 0, modelView, 0, initVec, 0);
 
         float pitch = (float) Math.atan2(objPositionVec[1], -objPositionVec[2]);
