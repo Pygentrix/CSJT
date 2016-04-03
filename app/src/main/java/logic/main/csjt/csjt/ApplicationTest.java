@@ -52,6 +52,10 @@ public class ApplicationTest extends CardboardActivity implements CardboardView.
     private float[] modelViewProjection;
     private float[] modelView;
 
+    // Test cube the first 6 floats are just that there is no error :D , look at constructor to see params
+    //TODO: init correct floats
+    public Cube cube1 = new Cube(0f,0f,0f,0f,0f,0f, 0.5273f, 0.2656f, 1.0f);
+
     private float[] modelCube;
     private FloatBuffer cubeVertices;
     private FloatBuffer cubeColors;
@@ -283,7 +287,7 @@ public class ApplicationTest extends CardboardActivity implements CardboardView.
 
         headTransform.getHeadView(headView, 0);
 
-        // Update the 3d audio engine with the most recent head rotation.
+        // Update anything with the most recent head rotation.
         headTransform.getQuaternion(headRotation, 0);
 
         checkGLError("onReadyToDraw");

@@ -1,20 +1,91 @@
 package logic.main.csjt.csjt;
 
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
+import java.nio.FloatBuffer;
+
 /**
  * Created by Pygentrix on 02.04.2016.
  */
 
 public class Cube {
 
-        public Cube(Float x, Float y, Float z, short r, short g, short b, short a) {
+        public Cube(Float x, Float y, Float z,float width,float height, float r, float g, float b, float a) {
 
-                // TODO: Here we !need! to build constructors so we dont need to set static coords for every single shitty cube
+                // TODO: Here we !need! to build constructors so we dont need to set static coords for every single shitty cube. Tom got a plan :D
+                FloatBuffer cubeVertices;
+                FloatBuffer cubeColors = initCubeColors(r, g, b, a);
+                FloatBuffer cubeNormals;
+                initCubeColors(r,g,b,a);
+                ByteBuffer bbColors = ByteBuffer.allocateDirect(Cube.CUBE_COLORS.length * 4);
+                bbColors.order(ByteOrder.nativeOrder());
+                cubeColors = bbColors.asFloatBuffer();
+                cubeColors.put(Cube.CUBE_COLORS);
+                cubeColors.position(0);
 
+
+        }
+
+        private FloatBuffer initCubeColors(float r,float g, float b, float a) {
+
+                final float[] CUBE_COLORS = new float[]{
+                        // front, green
+                        r, g, b, a,
+                        r, g, b, a,
+                        r, g, b, a,
+                        r, g, b, a,
+                        r, g, b, a,
+                        r, g, b, a,
+
+                        // right, blue
+                        r, g, b, a,
+                        r, g, b, a,
+                        r, g, b, a,
+                        r, g, b, a,
+                        r, g, b, a,
+                        r, g, b, a,
+
+                        // back, also green
+                        r, g, b, a,
+                        r, g, b, a,
+                        r, g, b, a,
+                        r, g, b, a,
+                        r, g, b, a,
+                        r, g, b, a,
+
+                        // left, also blue
+                        r, g, b, a,
+                        r, g, b, a,
+                        r, g, b, a,
+                        r, g, b, a,
+                        r, g, b, a,
+                        r, g, b, a,
+
+                        // top, red
+                        r, g, b, a,
+                        r, g, b, a,
+                        r, g, b, a,
+                        r, g, b, a,
+                        r, g, b, a,
+                        r, g, b, a,
+
+                        // bottom, also red
+                        r, g, b, a,
+                        r, g, b, a,
+                        r, g, b, a,
+                        r, g, b, a,
+                        r, g, b, a,
+                        r, g, b, a,
+                };
+                ByteBuffer bbColors = ByteBuffer.allocateDirect(Cube.CUBE_COLORS.length * 4);
+                bbColors.order(ByteOrder.nativeOrder());
+                FloatBuffer cubeColors = bbColors.asFloatBuffer();
+                return cubeColors;
         }
 
         public Cube(Float x, Float y, Float z) {
 
-                short r, g, b, a = 254;
+                float r, g, b, a = 0.9f;
 
         }
 
