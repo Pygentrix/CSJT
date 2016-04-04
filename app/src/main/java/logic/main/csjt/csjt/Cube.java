@@ -10,23 +10,16 @@ import java.nio.FloatBuffer;
 
 public class Cube {
 
-        public Cube(Float x, Float y, Float z,float width,float height, float r, float g, float b, float a) {
+        private float[] cubeColors;
+        private FloatBuffer fbCubeColors;
 
-                // TODO: Here we !need! to build constructors so we dont need to set static coords for every single shitty cube. Tom got a plan :D
-                FloatBuffer cubeVertices;
-                FloatBuffer cubeColors = initCubeColors(r, g, b, a);
-                FloatBuffer cubeNormals;
-                initCubeColors(r,g,b,a);
-                ByteBuffer bbColors = ByteBuffer.allocateDirect(Cube.CUBE_COLORS.length * 4);
-                bbColors.order(ByteOrder.nativeOrder());
-                cubeColors = bbColors.asFloatBuffer();
-                cubeColors.put(Cube.CUBE_COLORS);
-                cubeColors.position(0);
+        private float[] cubeNormals;
+        private FloatBuffer fbCubeNormals;
 
+        private float[] cubeVertics;
+        private FloatBuffer fbCubeVertices;
 
-        }
-
-        private FloatBuffer initCubeColors(float r,float g, float b, float a) {
+        private float[] initCubeColors(float r, float g, float b, float a) {
 
                 final float[] CUBE_COLORS = new float[]{
                         // front, green
@@ -77,10 +70,17 @@ public class Cube {
                         r, g, b, a,
                         r, g, b, a,
                 };
-                ByteBuffer bbColors = ByteBuffer.allocateDirect(Cube.CUBE_COLORS.length * 4);
+                return CUBE_COLORS;
+        }
+        public FloatBuffer freshFloatBuffer(){
+
+                FloatBuffer lFloatBuffer;
+                ByteBuffer bbColors = ByteBuffer.allocateDirect(this.cubeColors.length * 4);
                 bbColors.order(ByteOrder.nativeOrder());
-                FloatBuffer cubeColors = bbColors.asFloatBuffer();
-                return cubeColors;
+                lFloatBuffer = bbColors.asFloatBuffer();
+                lFloatBuffer.put(this.cubeColors);
+                lFloatBuffer.position(0);
+                return lFloatBuffer;
         }
 
         public Cube(Float x, Float y, Float z) {
@@ -89,155 +89,117 @@ public class Cube {
 
         }
 
-        public static final float[] CUBE_COLORS = new float[]{
-                // front, green
-                0f, 0.5273f, 0.2656f, 1.0f,
-                0f, 0.5273f, 0.2656f, 1.0f,
-                0f, 0.5273f, 0.2656f, 1.0f,
-                0f, 0.5273f, 0.2656f, 1.0f,
-                0f, 0.5273f, 0.2656f, 1.0f,
-                0f, 0.5273f, 0.2656f, 1.0f,
-
-                // right, blue
-                0.0f, 0.3398f, 0.9023f, 1.0f,
-                0.0f, 0.3398f, 0.9023f, 1.0f,
-                0.0f, 0.3398f, 0.9023f, 1.0f,
-                0.0f, 0.3398f, 0.9023f, 1.0f,
-                0.0f, 0.3398f, 0.9023f, 1.0f,
-                0.0f, 0.3398f, 0.9023f, 1.0f,
-
-                // back, also green
-                0f, 0.5273f, 0.2656f, 1.0f,
-                0f, 0.5273f, 0.2656f, 1.0f,
-                0f, 0.5273f, 0.2656f, 1.0f,
-                0f, 0.5273f, 0.2656f, 1.0f,
-                0f, 0.5273f, 0.2656f, 1.0f,
-                0f, 0.5273f, 0.2656f, 1.0f,
-
-                // left, also blue
-                0.0f, 0.3398f, 0.9023f, 1.0f,
-                0.0f, 0.3398f, 0.9023f, 1.0f,
-                0.0f, 0.3398f, 0.9023f, 1.0f,
-                0.0f, 0.3398f, 0.9023f, 1.0f,
-                0.0f, 0.3398f, 0.9023f, 1.0f,
-                0.0f, 0.3398f, 0.9023f, 1.0f,
-
-                // top, red
-                0.8359375f, 0.17578125f, 0.125f, 1.0f,
-                0.8359375f, 0.17578125f, 0.125f, 1.0f,
-                0.8359375f, 0.17578125f, 0.125f, 1.0f,
-                0.8359375f, 0.17578125f, 0.125f, 1.0f,
-                0.8359375f, 0.17578125f, 0.125f, 1.0f,
-                0.8359375f, 0.17578125f, 0.125f, 1.0f,
-
-                // bottom, also red
-                0.8359375f, 0.17578125f, 0.125f, 1.0f,
-                0.8359375f, 0.17578125f, 0.125f, 1.0f,
-                0.8359375f, 0.17578125f, 0.125f, 1.0f,
-                0.8359375f, 0.17578125f, 0.125f, 1.0f,
-                0.8359375f, 0.17578125f, 0.125f, 1.0f,
-                0.8359375f, 0.17578125f, 0.125f, 1.0f,
-        };
 
         public static final float[] CUBE_COORDS = new float[]{
                 // Front face
-                -1.0f, 1.0f, 1.0f,
-                -1.0f, -1.0f, 1.0f,
-                1.0f, 1.0f, 1.0f,
-                -1.0f, -1.0f, 1.0f,
-                1.0f, -1.0f, 1.0f,
-                1.0f, 1.0f, 1.0f,
+                -0.5f, 0.5f, 0.5f,
+                -0.5f, -0.5f, 0.5f,
+                0.5f, 0.5f, 0.5f,
+                -0.5f, -0.5f, 0.5f,
+                0.5f, -0.5f, 0.5f,
+                0.5f, 0.5f, 0.5f,
 
                 // Right face
-                1.0f, 1.0f, 1.0f,
-                1.0f, -1.0f, 1.0f,
-                1.0f, 1.0f, -1.0f,
-                1.0f, -1.0f, 1.0f,
-                1.0f, -1.0f, -1.0f,
-                1.0f, 1.0f, -1.0f,
+                0.5f, 0.5f, 0.5f,
+                0.5f, -0.5f, 0.5f,
+                0.5f, 0.5f, -0.5f,
+                0.5f, -0.5f, 0.5f,
+                0.5f, -0.5f, -0.5f,
+                0.5f, 0.5f, -0.5f,
 
                 // Back face
-                1.0f, 1.0f, -1.0f,
-                1.0f, -1.0f, -1.0f,
-                -1.0f, 1.0f, -1.0f,
-                1.0f, -1.0f, -1.0f,
-                -1.0f, -1.0f, -1.0f,
-                -1.0f, 1.0f, -1.0f,
+                0.5f, 0.5f, -0.5f,
+                0.5f, -0.5f, -0.5f,
+                -0.5f, 0.5f, -0.5f,
+                0.5f, -0.5f, -0.5f,
+                -0.5f, -0.5f, -0.5f,
+                -0.5f, 0.5f, -0.5f,
 
                 // Left face
-                -1.0f, 1.0f, -1.0f,
-                -1.0f, -1.0f, -1.0f,
-                -1.0f, 1.0f, 1.0f,
-                -1.0f, -1.0f, -1.0f,
-                -1.0f, -1.0f, 1.0f,
-                -1.0f, 1.0f, 1.0f,
+                -0.5f, 0.5f, -0.5f,
+                -0.5f, -0.5f, -0.5f,
+                -0.5f, 0.5f, 0.5f,
+                -0.5f, -0.5f, -0.5f,
+                -0.5f, -0.5f, 0.5f,
+                -0.5f, 0.5f, 0.5f,
 
                 // Top face
-                -1.0f, 1.0f, -1.0f,
-                -1.0f, 1.0f, 1.0f,
-                1.0f, 1.0f, -1.0f,
-                -1.0f, 1.0f, 1.0f,
-                1.0f, 1.0f, 1.0f,
-                1.0f, 1.0f, -1.0f,
+                -0.5f, 0.5f, -0.5f,
+                -0.5f, 0.5f, 0.5f,
+                0.5f, 0.5f, -0.5f,
+                -0.5f, 0.5f, 0.5f,
+                0.5f, 0.5f, 0.5f,
+                0.5f, 0.5f, -0.5f,
 
                 // Bottom face
-                1.0f, -1.0f, -1.0f,
-                1.0f, -1.0f, 1.0f,
-                -1.0f, -1.0f, -1.0f,
-                1.0f, -1.0f, 1.0f,
-                -1.0f, -1.0f, 1.0f,
-                -1.0f, -1.0f, -1.0f,
+                0.5f, -0.5f, -0.5f,
+                0.5f, -0.5f, 0.5f,
+                -0.5f, -0.5f, -0.5f,
+                0.5f, -0.5f, 0.5f,
+                -0.5f, -0.5f, 0.5f,
+                -0.5f, -0.5f, -0.5f,
         };
 
         public static final float[] CUBE_NORMALS = new float[]{
                 // Front face
-                0.0f, 0.0f, 1.0f,
-                0.0f, 0.0f, 1.0f,
-                0.0f, 0.0f, 1.0f,
-                0.0f, 0.0f, 1.0f,
-                0.0f, 0.0f, 1.0f,
-                0.0f, 0.0f, 1.0f,
+                0.0f, 0.0f, 0.5f,
+                0.0f, 0.0f, 0.5f,
+                0.0f, 0.0f, 0.5f,
+                0.0f, 0.0f, 0.5f,
+                0.0f, 0.0f, 0.5f,
+                0.0f, 0.0f, 0.5f,
 
                 // Right face
-                1.0f, 0.0f, 0.0f,
-                1.0f, 0.0f, 0.0f,
-                1.0f, 0.0f, 0.0f,
-                1.0f, 0.0f, 0.0f,
-                1.0f, 0.0f, 0.0f,
-                1.0f, 0.0f, 0.0f,
+                0.5f, 0.0f, 0.0f,
+                0.5f, 0.0f, 0.0f,
+                0.5f, 0.0f, 0.0f,
+                0.5f, 0.0f, 0.0f,
+                0.5f, 0.0f, 0.0f,
+                0.5f, 0.0f, 0.0f,
 
                 // Back face
-                0.0f, 0.0f, -1.0f,
-                0.0f, 0.0f, -1.0f,
-                0.0f, 0.0f, -1.0f,
-                0.0f, 0.0f, -1.0f,
-                0.0f, 0.0f, -1.0f,
-                0.0f, 0.0f, -1.0f,
+                0.0f, 0.0f, -0.5f,
+                0.0f, 0.0f, -0.5f,
+                0.0f, 0.0f, -0.5f,
+                0.0f, 0.0f, -0.5f,
+                0.0f, 0.0f, -0.5f,
+                0.0f, 0.0f, -0.5f,
 
                 // Left face
-                -1.0f, 0.0f, 0.0f,
-                -1.0f, 0.0f, 0.0f,
-                -1.0f, 0.0f, 0.0f,
-                -1.0f, 0.0f, 0.0f,
-                -1.0f, 0.0f, 0.0f,
-                -1.0f, 0.0f, 0.0f,
+                -0.5f, 0.0f, 0.0f,
+                -0.5f, 0.0f, 0.0f,
+                -0.5f, 0.0f, 0.0f,
+                -0.5f, 0.0f, 0.0f,
+                -0.5f, 0.0f, 0.0f,
+                -0.5f, 0.0f, 0.0f,
 
                 // Top face
-                0.0f, 1.0f, 0.0f,
-                0.0f, 1.0f, 0.0f,
-                0.0f, 1.0f, 0.0f,
-                0.0f, 1.0f, 0.0f,
-                0.0f, 1.0f, 0.0f,
-                0.0f, 1.0f, 0.0f,
+                0.0f, 0.5f, 0.0f,
+                0.0f, 0.5f, 0.0f,
+                0.0f, 0.5f, 0.0f,
+                0.0f, 0.5f, 0.0f,
+                0.0f, 0.5f, 0.0f,
+                0.0f, 0.5f, 0.0f,
 
                 // Bottom face
-                0.0f, -1.0f, 0.0f,
-                0.0f, -1.0f, 0.0f,
-                0.0f, -1.0f, 0.0f,
-                0.0f, -1.0f, 0.0f,
-                0.0f, -1.0f, 0.0f,
+                0.0f, -0.5f, 0.0f,
+                0.0f, -0.5f, 0.0f,
+                0.0f, -0.5f, 0.0f,
+                0.0f, -0.5f, 0.0f,
+                0.0f, -0.5f, 0.0f,
 
 
         };
+
+        public Cube(Float x, Float y, Float z,float width,float height, float r, float g, float b, float a) {
+
+                // TODO: Here we !need! to build constructors so we dont need to set static coords for every single shitty cube. Tom got a plan :D
+                //FloatBuffer cubeVertices;  Floatbuffers kann man nicht instanzieren, weil sie static sind , von daher coords in array speichern dann an buffer übergeben
+                cubeColors = initCubeColors(r, g, b, a);
+                fbCubeColors = freshFloatBuffer();
+
+
+
+        }
 
 }

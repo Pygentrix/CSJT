@@ -58,7 +58,7 @@ public class ApplicationTest extends CardboardActivity implements CardboardView.
 
     private float[] modelCube;
     private FloatBuffer cubeVertices;
-    private FloatBuffer cubeColors;
+    //private FloatBuffer cubeColors;
     private FloatBuffer cubeNormals;
     private int cubeProgram;
     private int cubePositionParam;
@@ -192,12 +192,6 @@ public class ApplicationTest extends CardboardActivity implements CardboardView.
         cubeVertices = bbVertices.asFloatBuffer();
         cubeVertices.put(Cube.CUBE_COORDS);
         cubeVertices.position(0);
-
-        ByteBuffer bbColors = ByteBuffer.allocateDirect(Cube.CUBE_COLORS.length * 4);
-        bbColors.order(ByteOrder.nativeOrder());
-        cubeColors = bbColors.asFloatBuffer();
-        cubeColors.put(Cube.CUBE_COLORS);
-        cubeColors.position(0);
 
         ByteBuffer bbNormals = ByteBuffer.allocateDirect(Cube.CUBE_NORMALS.length * 4);
         bbNormals.order(ByteOrder.nativeOrder());
@@ -352,9 +346,9 @@ public class ApplicationTest extends CardboardActivity implements CardboardView.
         GLES20.glVertexAttribPointer(cubeNormalParam, 3, GLES20.GL_FLOAT, false, 0, cubeNormals);
 
         //Has to do sth with the color of the cube while pointing at it
-        GLES20.glVertexAttribPointer(cubeColorParam, 4, GLES20.GL_FLOAT, false, 0,
-                isLookingAtObject() ? cubeColors : cubeColors);
-
+       // GLES20.glVertexAttribPointer(cubeColorParam, 4, GLES20.GL_FLOAT, false, 0,
+        //        isLookingAtObject() ? cube1. : cube1.cubeColors);
+        GLES20.glVertexAttribPointer(cubeColorParam, 4, GLES20.GL_FLOAT, false, 0,cube1.freshFloatBuffer());
         GLES20.glDrawArrays(GLES20.GL_TRIANGLES, 0, 36);
         checkGLError("Drawing cube");
     }
