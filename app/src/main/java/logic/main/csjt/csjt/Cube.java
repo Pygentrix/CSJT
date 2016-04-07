@@ -72,7 +72,7 @@ public class Cube {
                 };
                 return CUBE_COLORS;
         }
-        public FloatBuffer freshFloatBuffer(){
+        public FloatBuffer colorFloatBuffer(){
 
                 FloatBuffer lFloatBuffer;
                 ByteBuffer bbColors = ByteBuffer.allocateDirect(this.cubeColors.length * 4);
@@ -82,10 +82,81 @@ public class Cube {
                 lFloatBuffer.position(0);
                 return lFloatBuffer;
         }
+        public FloatBuffer coordFloatBuffer(){
+
+                float[] CUBE_COORDS = new float[]{
+                        // Front face
+                        -0.5f, 0.5f, 0.5f,
+                        -0.5f, -0.5f, 0.5f,
+                        0.5f, 0.5f, 0.5f,
+                        -0.5f, -0.5f, 0.5f,
+                        0.5f, -0.5f, 0.5f,
+                        0.5f, 0.5f, 0.5f,
+
+                        // Right face
+                        0.5f, 0.5f, 0.5f,
+                        0.5f, -0.5f, 0.5f,
+                        0.5f, 0.5f, -0.5f,
+                        0.5f, -0.5f, 0.5f,
+                        0.5f, -0.5f, -0.5f,
+                        0.5f, 0.5f, -0.5f,
+
+                        // Back face
+                        0.5f, 0.5f, -0.5f,
+                        0.5f, -0.5f, -0.5f,
+                        -0.5f, 0.5f, -0.5f,
+                        0.5f, -0.5f, -0.5f,
+                        -0.5f, -0.5f, -0.5f,
+                        -0.5f, 0.5f, -0.5f,
+
+                        // Left face
+                        -0.5f, 0.5f, -0.5f,
+                        -0.5f, -0.5f, -0.5f,
+                        -0.5f, 0.5f, 0.5f,
+                        -0.5f, -0.5f, -0.5f,
+                        -0.5f, -0.5f, 0.5f,
+                        -0.5f, 0.5f, 0.5f,
+
+                        // Top face
+                        -0.5f, 0.5f, -0.5f,
+                        -0.5f, 0.5f, 0.5f,
+                        0.5f, 0.5f, -0.5f,
+                        -0.5f, 0.5f, 0.5f,
+                        0.5f, 0.5f, 0.5f,
+                        0.5f, 0.5f, -0.5f,
+
+                        // Bottom face
+                        0.5f, -0.5f, -0.5f,
+                        0.5f, -0.5f, 0.5f,
+                        -0.5f, -0.5f, -0.5f,
+                        0.5f, -0.5f, 0.5f,
+                        -0.5f, -0.5f, 0.5f,
+                        -0.5f, -0.5f, -0.5f,
+                };
+
+                FloatBuffer lFloatBuffer;
+                ByteBuffer bbCoords = ByteBuffer.allocateDirect(this.cubeVertics.length * 4);
+                bbCoords.order(ByteOrder.nativeOrder());
+                lFloatBuffer = bbCoords.asFloatBuffer();
+                lFloatBuffer.put(this.cubeVertics);
+                lFloatBuffer.position(0);
+                return lFloatBuffer;
+        }
+        public FloatBuffer normalsFloatBuffer(){
+
+                FloatBuffer lFloatBuffer;
+                ByteBuffer bbNormals = ByteBuffer.allocateDirect(this.cubeNormals.length * 4);
+                bbNormals.order(ByteOrder.nativeOrder());
+                lFloatBuffer = bbNormals.asFloatBuffer();
+                lFloatBuffer.put(this.cubeNormals);
+                lFloatBuffer.position(0);
+                return lFloatBuffer;
+        }
 
         public Cube(Float x, Float y, Float z) {
 
-                float r, g, b, a = 0.9f;
+                float r, g, b, a = 1.0f;
+                // FINSIH!
 
         }
 
@@ -194,9 +265,11 @@ public class Cube {
         public Cube(Float x, Float y, Float z,float width,float height, float r, float g, float b, float a) {
 
                 // TODO: Here we !need! to build constructors so we dont need to set static coords for every single shitty cube. Tom got a plan :D
-                //FloatBuffer cubeVertices;  Floatbuffers kann man nicht instanzieren, weil sie static sind , von daher coords in array speichern dann an buffer übergeben
+                //FloatBuffer cubeVertices;  Floatbuffers kann man nicht instanzieren, weil sie statisch sind , von daher coords in array speichern dann an buffer übergeben
                 cubeColors = initCubeColors(r, g, b, a);
-                fbCubeColors = freshFloatBuffer();
+                fbCubeColors = colorFloatBuffer();    // COLORS OF CUBE ->  Colors
+                //fbCubeNormals = normalsFloatBuffer(); // NORMALS OF CUBE -> Normals
+               // fbCubeVertices = coordFloatBuffer();  // COORDS OF CUBE -> Vertices
 
 
 

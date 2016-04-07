@@ -348,7 +348,7 @@ public class ApplicationTest extends CardboardActivity implements CardboardView.
         //Has to do sth with the color of the cube while pointing at it
        // GLES20.glVertexAttribPointer(cubeColorParam, 4, GLES20.GL_FLOAT, false, 0,
         //        isLookingAtObject() ? cube1. : cube1.cubeColors);
-        GLES20.glVertexAttribPointer(cubeColorParam, 4, GLES20.GL_FLOAT, false, 0,cube1.freshFloatBuffer());
+        GLES20.glVertexAttribPointer(cubeColorParam, 4, GLES20.GL_FLOAT, false, 0,cube1.colorFloatBuffer());
         GLES20.glDrawArrays(GLES20.GL_TRIANGLES, 0, 36);
         checkGLError("Drawing cube");
     }
