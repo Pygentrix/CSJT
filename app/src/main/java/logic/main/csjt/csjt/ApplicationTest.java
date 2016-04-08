@@ -17,8 +17,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
 
 import javax.microedition.khronos.egl.EGLConfig;
@@ -57,9 +55,7 @@ public class ApplicationTest extends CardboardActivity implements CardboardView.
     public Cube cube1 = new Cube(1.0f,1.0f,1.0f,1.0f,1.0f,1.0f, 1.0f, 0.5273f, 0.2656f, 1.0f);
 
     private float[] modelCube;
-    private FloatBuffer cubeVertices;
-    //private FloatBuffer cubeColors;
-    private FloatBuffer cubeNormals;
+
     private int cubeProgram;
     private int cubePositionParam;
     private int cubeNormalParam;
@@ -342,7 +338,8 @@ public class ApplicationTest extends CardboardActivity implements CardboardView.
        // GLES20.glVertexAttribPointer(cubeColorParam, 4, GLES20.GL_FLOAT, false, 0,
         //        isLookingAtObject() ? cube1. : cube1.cubeColors);
         GLES20.glVertexAttribPointer(cubeColorParam, 4, GLES20.GL_FLOAT, false, 0,cube1.getFbCubeColors()); //<- Points to the active Array other words: OpenGL now knows, that this needs to be rendered
-        GLES20.glDrawArrays(GLES20.GL_LINES, 0, 36);  // There is also GL_LINES for rendering lines. We used GL_TRIANGLES , maybe also good for debugging :D looks impressiv
+        // TODO: How is the GL Triangles Mode working ?
+        GLES20.glDrawArrays(GLES20.GL_TRIANGLES, 0, 36);  // There is also GL_LINES for rendering lines. We used GL_TRIANGLES , maybe also good for debugging :D looks impressiv
         checkGLError("Drawing cube");
     }
 
