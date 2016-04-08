@@ -1,7 +1,5 @@
 package logic.main.csjt.csjt;
 
-import android.opengl.GLES20;
-
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
@@ -17,6 +15,19 @@ public class Cube {
         private FloatBuffer fbCubeColors;
 
         private float[] cubeNormals;
+
+        public FloatBuffer getFbCubeNormals() {
+                return this.fbCubeNormals;
+        }
+
+        public FloatBuffer getFbCubeVertics() {
+                return this.fbCubeVertics;
+        }
+
+        public FloatBuffer getFbCubeColors() {
+                return this.fbCubeColors;
+        }
+
         private FloatBuffer fbCubeNormals;
 
         private float[] cubeVertics;
@@ -85,6 +96,7 @@ public class Cube {
                 lFloatBuffer.position(0);
                 return lFloatBuffer;
         }
+
         public float[] setCubeCoords(float px,float py,float pz ,float width, float height, float depth){
                 width = width / 2;
                 height = height / 2;
@@ -112,7 +124,7 @@ public class Cube {
                         // Back face
                         px+width, py+height, pz-depth,
                         px+width, py-height, pz-depth,
-                        px-width, py-height, pz+depth,
+                        px-width, py+height, pz-depth,
                         px+width, py-height, pz-depth,
                         px-width, py-height, pz-depth,
                         px-width, py+height, pz-depth,
@@ -122,7 +134,7 @@ public class Cube {
                         px-width, py-height, pz-depth,
                         px-width, py+height, pz+depth,
                         px-width, py-height, pz-depth,
-                        px-width, py+height, pz-depth,
+                        px-width, py-height, pz+depth,
                         px-width, py+height, pz+depth,
 
                         // Top face
@@ -144,7 +156,6 @@ public class Cube {
 
                 return CUBE_COORDS;
         }
-
         public FloatBuffer verticsFloatBuffer(){
 
                 FloatBuffer lFloatBuffer;
@@ -156,7 +167,63 @@ public class Cube {
                 return lFloatBuffer;
         }
 
+        public float[] setCubeNormals(float width, float height, float depth){
+                width = width / 2;
+                height = height / 2;
+                depth = depth / 2;
 
+                float[] CUBE_NORMALS = new float[]{
+                        // Front face
+                        0.0f, 0.0f, depth,
+                        0.0f, 0.0f, depth,
+                        0.0f, 0.0f, depth,
+                        0.0f, 0.0f, depth,
+                        0.0f, 0.0f, depth,
+                        0.0f, 0.0f, depth,
+
+                        // Right face
+                        width, 0.0f, 0.0f,
+                        width, 0.0f, 0.0f,
+                        width, 0.0f, 0.0f,
+                        width, 0.0f, 0.0f,
+                        width, 0.0f, 0.0f,
+                        width, 0.0f, 0.0f,
+
+                        // Back face
+                        0.0f, 0.0f, -depth,
+                        0.0f, 0.0f, -depth,
+                        0.0f, 0.0f, -depth,
+                        0.0f, 0.0f, -depth,
+                        0.0f, 0.0f, -depth,
+                        0.0f, 0.0f, -depth,
+
+                        // Left face
+                        -width, 0.0f, 0.0f,
+                        -width, 0.0f, 0.0f,
+                        -width, 0.0f, 0.0f,
+                        -width, 0.0f, 0.0f,
+                        -width, 0.0f, 0.0f,
+                        -width, 0.0f, 0.0f,
+
+                        // Top face
+                        0.0f, height, 0.0f,
+                        0.0f, height, 0.0f,
+                        0.0f, height, 0.0f,
+                        0.0f, height, 0.0f,
+                        0.0f, height, 0.0f,
+                        0.0f, height, 0.0f,
+
+                        // Bottom face
+                        0.0f, -height, 0.0f,
+                        0.0f, -height, 0.0f,
+                        0.0f, -height, 0.0f,
+                        0.0f, -height, 0.0f,
+                        0.0f, -height, 0.0f,
+                        0.0f, -height, 0.0f,
+                };
+
+                return CUBE_NORMALS;
+        }
         public FloatBuffer normalsFloatBuffer(){
 
                 FloatBuffer lFloatBuffer;
@@ -175,108 +242,6 @@ public class Cube {
 
         }
 
-// JUST FOR DEBUGGING SUPPORT HERE !!!!
-        public static final float[] CUBE_COORDSSSS = new float[]{
-                // Front face
-                -0.5f, 0.5f, 0.5f,
-                -0.5f, -0.5f, 0.5f,
-                0.5f, 0.5f, 0.5f,
-                -0.5f, -0.5f, 0.5f,
-                0.5f, -0.5f, 0.5f,
-                0.5f, 0.5f, 0.5f,
-
-                // Right face
-                0.5f, 0.5f, 0.5f,
-                0.5f, -0.5f, 0.5f,
-                0.5f, 0.5f, -0.5f,
-                0.5f, -0.5f, 0.5f,
-                0.5f, -0.5f, -0.5f,
-                0.5f, 0.5f, -0.5f,
-
-                // Back face
-                0.5f, 0.5f, -0.5f,
-                0.5f, -0.5f, -0.5f,
-                -0.5f, 0.5f, -0.5f,
-                0.5f, -0.5f, -0.5f,
-                -0.5f, -0.5f, -0.5f,
-                -0.5f, 0.5f, -0.5f,
-
-                // Left face
-                -0.5f, 0.5f, -0.5f,
-                -0.5f, -0.5f, -0.5f,
-                -0.5f, 0.5f, 0.5f,
-                -0.5f, -0.5f, -0.5f,
-                -0.5f, -0.5f, 0.5f,
-                -0.5f, 0.5f, 0.5f,
-
-                // Top face
-                -0.5f, 0.5f, -0.5f,
-                -0.5f, 0.5f, 0.5f,
-                0.5f, 0.5f, -0.5f,
-                -0.5f, 0.5f, 0.5f,
-                0.5f, 0.5f, 0.5f,
-                0.5f, 0.5f, -0.5f,
-
-                // Bottom face
-                0.5f, -0.5f, -0.5f,
-                0.5f, -0.5f, 0.5f,
-                -0.5f, -0.5f, -0.5f,
-                0.5f, -0.5f, 0.5f,
-                -0.5f, -0.5f, 0.5f,
-                -0.5f, -0.5f, -0.5f,
-        };
-
-        public static final float[] CUBE_NORMALS = new float[]{
-                // Front face
-                0.0f, 0.0f, 0.5f,
-                0.0f, 0.0f, 0.5f,
-                0.0f, 0.0f, 0.5f,
-                0.0f, 0.0f, 0.5f,
-                0.0f, 0.0f, 0.5f,
-                0.0f, 0.0f, 0.5f,
-
-                // Right face
-                0.5f, 0.0f, 0.0f,
-                0.5f, 0.0f, 0.0f,
-                0.5f, 0.0f, 0.0f,
-                0.5f, 0.0f, 0.0f,
-                0.5f, 0.0f, 0.0f,
-                0.5f, 0.0f, 0.0f,
-
-                // Back face
-                0.0f, 0.0f, -0.5f,
-                0.0f, 0.0f, -0.5f,
-                0.0f, 0.0f, -0.5f,
-                0.0f, 0.0f, -0.5f,
-                0.0f, 0.0f, -0.5f,
-                0.0f, 0.0f, -0.5f,
-
-                // Left face
-                -0.5f, 0.0f, 0.0f,
-                -0.5f, 0.0f, 0.0f,
-                -0.5f, 0.0f, 0.0f,
-                -0.5f, 0.0f, 0.0f,
-                -0.5f, 0.0f, 0.0f,
-                -0.5f, 0.0f, 0.0f,
-
-                // Top face
-                0.0f, 0.5f, 0.0f,
-                0.0f, 0.5f, 0.0f,
-                0.0f, 0.5f, 0.0f,
-                0.0f, 0.5f, 0.0f,
-                0.0f, 0.5f, 0.0f,
-                0.0f, 0.5f, 0.0f,
-
-                // Bottom face
-                0.0f, -0.5f, 0.0f,
-                0.0f, -0.5f, 0.0f,
-                0.0f, -0.5f, 0.0f,
-                0.0f, -0.5f, 0.0f,
-                0.0f, -0.5f, 0.0f,
-
-
-        };
-
         public void draw(){
 
               //TODO   Port the complete drawing to the Cube class so we call cubexyz.draw();
@@ -286,12 +251,12 @@ public class Cube {
         public Cube(Float x, Float y, Float z,float width,float height,float depth, float r, float g, float b, float a) {
 
                 // TODO: Here we !need! to build constructors so we dont need to set static coords for every single shitty cube. Tom got a plan :D
-                //FloatBuffer cubeVertices;  Floatbuffers kann man nicht instanzieren, weil sie statisch sind , von daher coords in array speichern dann an buffer übergeben
                 cubeColors = initCubeColors(r, g, b, a); // Init Cube Colors on first call
                 cubeVertics = setCubeCoords(x, y, z, width, height, depth);// Init Cube Coords on first call
+                cubeNormals = setCubeNormals(width,height,depth);
 
                 fbCubeColors = colorFloatBuffer();
-                //fbCubeNormals = normalsFloatBuffer(); // NORMALS OF CUBE -> Normals
+                fbCubeNormals = normalsFloatBuffer(); // NORMALS OF CUBE -> Normals
                 fbCubeVertics = verticsFloatBuffer();  // COORDS OF CUBE -> Vertices
 
 

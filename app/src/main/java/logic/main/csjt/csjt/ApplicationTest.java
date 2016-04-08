@@ -188,11 +188,9 @@ public class ApplicationTest extends CardboardActivity implements CardboardView.
         Log.i(TAG, "onSurfaceCreated");
         GLES20.glClearColor(0.1f, 0.1f, 0.1f, 0.5f); // Dark background so text shows up well.
 
-        ByteBuffer bbNormals = ByteBuffer.allocateDirect(Cube.CUBE_NORMALS.length * 4);
-        bbNormals.order(ByteOrder.nativeOrder());
-        cubeNormals = bbNormals.asFloatBuffer();
-        cubeNormals.put(Cube.CUBE_NORMALS);
-        cubeNormals.position(0);
+        ////////////
+        // Some stages earlier the Buffers where generated here, now everything is done inside the Obj Constructor (f.e.: Cube)
+        ////////////
 
         int vertexShader = loadGLShader(GLES20.GL_VERTEX_SHADER, R.raw.light_vertex);
         int gridShader = loadGLShader(GLES20.GL_FRAGMENT_SHADER, R.raw.grid_fragment);
@@ -332,18 +330,18 @@ public class ApplicationTest extends CardboardActivity implements CardboardView.
 
         // Set the position of the cube
         GLES20.glVertexAttribPointer(
-                cubePositionParam, COORDS_PER_VERTEX, GLES20.GL_FLOAT, false, 0, cube1.verticsFloatBuffer());
+                cubePositionParam, COORDS_PER_VERTEX, GLES20.GL_FLOAT, false, 0, cube1.getFbCubeVertics());
 
         // Set the ModelViewProjection matrix in the shader.
         GLES20.glUniformMatrix4fv(cubeModelViewProjectionParam, 1, false, modelViewProjection, 0);
 
         // Set the normal positions of the cube, again for shading
-        GLES20.glVertexAttribPointer(cubeNormalParam, 3, GLES20.GL_FLOAT, false, 0, cubeNormals);  //<- Points to the active Array other words: OpenGL now knows, that this needs to be rendered
+        GLES20.glVertexAttribPointer(cubeNormalParam, 3, GLES20.GL_FLOAT, false, 0, cube1.getFbCubeNormals());  //<- Points to the active Array other words: OpenGL now knows, that this needs to be rendered
 
         //Has to do sth with the color of the cube while pointing at it
        // GLES20.glVertexAttribPointer(cubeColorParam, 4, GLES20.GL_FLOAT, false, 0,
         //        isLookingAtObject() ? cube1. : cube1.cubeColors);
-        GLES20.glVertexAttribPointer(cubeColorParam, 4, GLES20.GL_FLOAT, false, 0,cube1.colorFloatBuffer()); //<- Points to the active Array other words: OpenGL now knows, that this needs to be rendered
+        GLES20.glVertexAttribPointer(cubeColorParam, 4, GLES20.GL_FLOAT, false, 0,cube1.getFbCubeColors()); //<- Points to the active Array other words: OpenGL now knows, that this needs to be rendered
         GLES20.glDrawArrays(GLES20.GL_LINES, 0, 36);  // There is also GL_LINES for rendering lines. We used GL_TRIANGLES , maybe also good for debugging :D looks impressiv
         checkGLError("Drawing cube");
     }
