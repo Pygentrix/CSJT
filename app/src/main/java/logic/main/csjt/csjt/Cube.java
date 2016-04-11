@@ -8,7 +8,7 @@ import java.nio.FloatBuffer;
  * Created by Pygentrix on 02.04.2016.
  */
 
-public class Cube {
+public class Cube extends Geom{
 
 
         private float[] cubeColors;
@@ -33,59 +33,6 @@ public class Cube {
         private float[] cubeVertics;
         private FloatBuffer fbCubeVertics;
 
-        private float[] initCubeColors(float r, float g, float b, float a) {
-
-                final float[] CUBE_COLORS = new float[]{
-                        // front, green
-                        r, g, b, a,
-                        r, g, b, a,
-                        r, g, b, a,
-                        r, g, b, a,
-                        r, g, b, a,
-                        r, g, b, a,
-
-                        // right, blue
-                        r, g, b, a,
-                        r, g, b, a,
-                        r, g, b, a,
-                        r, g, b, a,
-                        r, g, b, a,
-                        r, g, b, a,
-
-                        // back, also green
-                        r, g, b, a,
-                        r, g, b, a,
-                        r, g, b, a,
-                        r, g, b, a,
-                        r, g, b, a,
-                        r, g, b, a,
-
-                        // left, also blue
-                        r, g, b, a,
-                        r, g, b, a,
-                        r, g, b, a,
-                        r, g, b, a,
-                        r, g, b, a,
-                        r, g, b, a,
-
-                        // top, red
-                        r, g, b, a,
-                        r, g, b, a,
-                        r, g, b, a,
-                        r, g, b, a,
-                        r, g, b, a,
-                        r, g, b, a,
-
-                        // bottom, also red
-                        r, g, b, a,
-                        r, g, b, a,
-                        r, g, b, a,
-                        r, g, b, a,
-                        r, g, b, a,
-                        r, g, b, a,
-                };
-                return CUBE_COLORS;
-        }
         public FloatBuffer colorFloatBuffer(){
 
                 FloatBuffer lFloatBuffer;
@@ -102,7 +49,7 @@ public class Cube {
                 height = height / 2;
                 depth = depth / 2;
 
-                //TODO: Implement it correct, some rendering fuck ups :/
+                //TODO: Implement it correct, some rendering fuck ups. DONE NOW
 
                 float[] CUBE_COORDS = new float[]{
                         // Front face
@@ -250,8 +197,12 @@ public class Cube {
 
         public Cube(Float x, Float y, Float z,float width,float height,float depth, float r, float g, float b, float a) {
 
-                // TODO: Here we !need! to build constructors so we dont need to set static coords for every single shitty cube. Tom got a plan :D
-                cubeColors = initCubeColors(r, g, b, a); // Init Cube Colors on first call
+
+                // TODO: Build constructors so we dont need to set static coords for every single cube. DONE so far
+                px = x;
+                py = y;
+                pz = z;
+                cubeColors = setInitColor(r, g, b, a); // Init Cube Colors on first call
                 cubeVertics = setCubeCoords(x, y, z, width, height, depth);// Init Cube Coords on first call
                 cubeNormals = setCubeNormals(width,height,depth);
 

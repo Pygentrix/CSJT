@@ -35,7 +35,7 @@ public class ApplicationTest extends CardboardActivity implements CardboardView.
 
     private static final int COORDS_PER_VERTEX = 3;
 
-    // We keep the light always position just above the user.
+    // We keep the light always position just above the user. CHANGE a to see whether it changes sth
     private static final float[] LIGHT_POS_IN_WORLD_SPACE = new float[] {0.0f, 2.0f, 0.0f, 1.0f};
 
     private static final float MIN_MODEL_DISTANCE = 3.0f;
@@ -318,6 +318,7 @@ public class ApplicationTest extends CardboardActivity implements CardboardView.
         GLES20.glUniform3fv(cubeLightPosParam, 1, lightPosInEyeSpace, 0);
 
         // Set the Model in the shader, used to calculate lighting
+        //TODO: Check whether tom frogot to set modelCube to cube1.vertics......
         GLES20.glUniformMatrix4fv(cubeModelParam, 1, false, modelCube, 0);
 
         // Set the ModelView in the shader, used to calculate lighting
