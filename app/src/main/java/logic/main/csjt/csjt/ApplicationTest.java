@@ -36,6 +36,7 @@ public class ApplicationTest extends CardboardActivity implements CardboardView.
     private static final int COORDS_PER_VERTEX = 3;
 
     // We keep the light always position just above the user. CHANGE a to see whether it changes sth
+    //private static final float[] LIGHT_POS_IN_WORLD_SPACE = new float[] {0.0f, 2.0f, 0.0f, 1.0f};
     private static final float[] LIGHT_POS_IN_WORLD_SPACE = new float[] {0.0f, 2.0f, 0.0f, 1.0f};
 
     private static final float MIN_MODEL_DISTANCE = 3.0f;
@@ -51,7 +52,10 @@ public class ApplicationTest extends CardboardActivity implements CardboardView.
 
     // Test cube the first 6 floats are just that there is no error :D , look at constructor to see params
     //TODO: init correct floats Float x, Float y, Float z,float width,float height,float depth, float r, float g, float b, float a
-    public Cube cube1 = new Cube(1.0f,1.0f,1.0f,1.0f,1.0f,1.0f, 1.0f, 0.5273f, 0.2656f, 1.0f);
+    public Cube cube1 = new Cube(0.0f,1.0f,0.0f,1.0f,1.0f,1.0f, 1.0f, 0.6523f, 0.0f, 1.0f);
+    public Cube cube2 = new Cube(1.0f,1.0f,3.0f,0.7f,0.7f,0.7f, 1.0f, 0.5f, 0.4f, 1.0f);
+
+    //public Cube[] cubes = new Cube[12];
 
     private float[] modelCube;
 
@@ -70,6 +74,7 @@ public class ApplicationTest extends CardboardActivity implements CardboardView.
 
     private float objectDistance = MAX_MODEL_DISTANCE / 2.0f;
     private Vibrator vibrator;
+
 
 
     /**
@@ -133,16 +138,14 @@ public class ApplicationTest extends CardboardActivity implements CardboardView.
         });
         setCardboardView(cardboardView);
 
-        //OBJECTS
         modelCube = new float[16];
-        //END
-
         camera = new float[16];
         view = new float[16];
         modelViewProjection = new float[16];
         modelView = new float[16];
         // Model first appears directly in front of user.
-        modelPosition = new float[]{0.0f, 0.0f, -MAX_MODEL_DISTANCE / 2.0f};
+        //from 0.0f 0.0f to 1.0 1.0
+        modelPosition = new float[] {1.0f, 1.0f, -MAX_MODEL_DISTANCE / 2.0f};
         headRotation = new float[4];
         headView = new float[16];
         vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
@@ -186,35 +189,14 @@ public class ApplicationTest extends CardboardActivity implements CardboardView.
         ////////////
         // Some stages earlier the Buffers where generated here, now everything is done inside the Obj Constructor (f.e.: Cube)
         ////////////
+        //initCubes();
 
         int vertexShader = loadGLShader(GLES20.GL_VERTEX_SHADER, R.raw.light_vertex);
         int gridShader = loadGLShader(GLES20.GL_FRAGMENT_SHADER, R.raw.grid_fragment);
         int passthroughShader = loadGLShader(GLES20.GL_FRAGMENT_SHADER, R.raw.passthrough_fragment);
 
-        cubeProgram = GLES20.glCreateProgram();
-        GLES20.glAttachShader(cubeProgram, vertexShader);
-        GLES20.glAttachShader(cubeProgram, passthroughShader);
-        GLES20.glLinkProgram(cubeProgram);
-        GLES20.glUseProgram(cubeProgram);
-
-        checkGLError("Cube program");
-
-        cubePositionParam = GLES20.glGetAttribLocation(cubeProgram, "a_Position");
-        cubeNormalParam = GLES20.glGetAttribLocation(cubeProgram, "a_Normal");
-        cubeColorParam = GLES20.glGetAttribLocation(cubeProgram, "a_Color");
-
-        cubeModelParam = GLES20.glGetUniformLocation(cubeProgram, "u_Model");
-        cubeModelViewParam = GLES20.glGetUniformLocation(cubeProgram, "u_MVMatrix");
-        cubeModelViewProjectionParam = GLES20.glGetUniformLocation(cubeProgram, "u_MVP");
-        cubeLightPosParam = GLES20.glGetUniformLocation(cubeProgram, "u_LightPos");
-
-        GLES20.glEnableVertexAttribArray(cubePositionParam);// Enables the VertexArrays which is needed so opengl knows wht to render
-        GLES20.glEnableVertexAttribArray(cubeNormalParam);// Enables the VertexArrays which is needed so opengl knows wht to render
-        GLES20.glEnableVertexAttribArray(cubeColorParam);  // Enables the VertexArrays which is needed so opengl knows wht to render
-
-        checkGLError("Cube program params");
-
-        updateModelPosition();
+        cube1.initProgram(vertexShader,passthroughShader); //<- Program for every single cube or one for all ?
+        cube1.updateModelPosition();
 
         checkGLError("onSurfaceCreated");
     }
@@ -222,14 +204,14 @@ public class ApplicationTest extends CardboardActivity implements CardboardView.
     /**
      * Updates the cube model position. Gets called before error checking in onSurfaceCreate
      */
-    private void updateModelPosition() {
+/*    private void updateModelPosition() {
 
         Matrix.setIdentityM(modelCube, 0);
         Matrix.translateM(modelCube, 0, modelPosition[0], modelPosition[1], modelPosition[2]);
 
         checkGLError("updateCubePosition");
 
-    }
+    }*/
 
     /**
      * Converts a raw text file into a string.
@@ -262,7 +244,7 @@ public class ApplicationTest extends CardboardActivity implements CardboardView.
     @Override
     public void onNewFrame(HeadTransform headTransform) {
         // Build the Model part of the ModelView matrix.
-        Matrix.rotateM(modelCube, 0, TIME_DELTA, 0.5f, 0.5f, 1.0f);  // <- Lets rotate the cube ROTATION
+        //Matrix.rotateM(modelCube, 0, TIME_DELTA, 0.5f, 0.5f, 1.0f);  // <- Lets rotate the cube ROTATION
 
         // Build the camera matrix and apply it to the ModelView.
         Matrix.setLookAtM(camera, 0, 0.0f, 0.0f, CAMERA_Z, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f);
@@ -296,9 +278,10 @@ public class ApplicationTest extends CardboardActivity implements CardboardView.
         // Build the ModelView and ModelViewProjection matrices
         // for calculating cube position and light.
         float[] perspective = eye.getPerspective(Z_NEAR, Z_FAR);
-        Matrix.multiplyMM(modelView, 0, view, 0, modelCube, 0);
-        Matrix.multiplyMM(modelViewProjection, 0, perspective, 0, modelView, 0);
-        drawCube();
+        // multiplies 2 matrices 4x4 and puts the result into the first param ( modelview or modeViewProjection)
+        //Matrix.multiplyMM(modelView, 0, view, 0, modelCube, 0);
+        //Matrix.multiplyMM(modelViewProjection, 0, perspective, 0, modelView, 0);
+        drawCube(perspective);
 
     }
 
@@ -309,39 +292,14 @@ public class ApplicationTest extends CardboardActivity implements CardboardView.
      * Draw the cube.
      *
      * <p>We've set all of our transformation matrices. Now we simply pass them into the shader.
+     * @param perspective
      */
-    public void drawCube() {
+    public void drawCube(float[] perspective) {
 
-
-        GLES20.glUseProgram(cubeProgram);
-
-        GLES20.glUniform3fv(cubeLightPosParam, 1, lightPosInEyeSpace, 0);
-
-        // Set the Model in the shader, used to calculate lighting
-        //TODO: Check whether tom frogot to set modelCube to cube1.vertics......
-        GLES20.glUniformMatrix4fv(cubeModelParam, 1, false, modelCube, 0);
-
-        // Set the ModelView in the shader, used to calculate lighting
-        GLES20.glUniformMatrix4fv(cubeModelViewParam, 1, false, modelView, 0);
-
-        // Set the position of the cube
-        GLES20.glVertexAttribPointer(
-                cubePositionParam, COORDS_PER_VERTEX, GLES20.GL_FLOAT, false, 0, cube1.getFbCubeVertics());
-
-        // Set the ModelViewProjection matrix in the shader.
-        GLES20.glUniformMatrix4fv(cubeModelViewProjectionParam, 1, false, modelViewProjection, 0);
-
-        // Set the normal positions of the cube, again for shading
-        GLES20.glVertexAttribPointer(cubeNormalParam, 3, GLES20.GL_FLOAT, false, 0, cube1.getFbCubeNormals());  //<- Points to the active Array other words: OpenGL now knows, that this needs to be rendered
-
-        //Has to do sth with the color of the cube while pointing at it
-       // GLES20.glVertexAttribPointer(cubeColorParam, 4, GLES20.GL_FLOAT, false, 0,
-        //        isLookingAtObject() ? cube1. : cube1.cubeColors);
-        GLES20.glVertexAttribPointer(cubeColorParam, 4, GLES20.GL_FLOAT, false, 0,cube1.getFbCubeColors()); //<- Points to the active Array other words: OpenGL now knows, that this needs to be rendered
-        // TODO: How is the GL Triangles Mode working ?
-        GLES20.glDrawArrays(GLES20.GL_TRIANGLES, 0, 36);  // There is also GL_LINES for rendering lines. We used GL_TRIANGLES , maybe also good for debugging :D looks impressiv
-        checkGLError("Drawing cube");
+        cube1.draw(lightPosInEyeSpace, view, perspective);
+        //cube2.draw(lightPosInEyeSpace);
     }
+
 
 
     /**
@@ -387,7 +345,7 @@ public class ApplicationTest extends CardboardActivity implements CardboardView.
         modelPosition[1] = newY;
         modelPosition[2] = posVec[2];
 
-        updateModelPosition();
+        //updateModelPosition();
     }
 
     /**

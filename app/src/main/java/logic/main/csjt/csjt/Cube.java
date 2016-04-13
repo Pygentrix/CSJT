@@ -1,5 +1,8 @@
 package logic.main.csjt.csjt;
 
+import android.opengl.GLES20;
+import android.opengl.Matrix;
+
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
@@ -11,10 +14,30 @@ import java.nio.FloatBuffer;
 public class Cube extends Geom{
 
 
+        private final float[] modelPosition;
+        private static final float MAX_MODEL_DISTANCE = 7.0f;
         private float[] cubeColors;
         private FloatBuffer fbCubeColors;
 
         private float[] cubeNormals;
+        private FloatBuffer fbCubeNormals;
+
+        private float[] cubeVertics;
+        private FloatBuffer fbCubeVertics;
+
+        public static int cubeProgram;
+
+        private static final int COORDS_PER_VERTEX = 3;
+        private int cubePositionParam;
+        private int cubeModelViewProjectionParam;
+        private float[] modelViewProjection;
+        private int cubeNormalParam;
+        private int cubeColorParam;
+        private int cubeModelParam;
+        private int cubeModelViewParam;
+        private int cubeLightPosParam;
+        private float[] modelCube;
+        private float[] modelView = new float[16];
 
         public FloatBuffer getFbCubeNormals() {
                 return this.fbCubeNormals;
@@ -28,11 +51,6 @@ public class Cube extends Geom{
                 return this.fbCubeColors;
         }
 
-        private FloatBuffer fbCubeNormals;
-
-        private float[] cubeVertics;
-        private FloatBuffer fbCubeVertics;
-
         public FloatBuffer colorFloatBuffer(){
 
                 FloatBuffer lFloatBuffer;
@@ -45,11 +63,8 @@ public class Cube extends Geom{
         }
 
         public float[] setCubeCoords(float px,float py,float pz ,float width, float height, float depth){
-                width = width / 2;
-                height = height / 2;
-                depth = depth / 2;
 
-                //TODO: Implement it correct, some rendering fuck ups. DONE NOW
+                //TODO: Implement it correct, some rendering fuck ups. Still not correct
 
                 float[] CUBE_COORDS = new float[]{
                         // Front face
@@ -98,7 +113,7 @@ public class Cube extends Geom{
                         px-width, py-height, pz-depth,
                         px+width, py-height, pz+depth,
                         px-width, py-height, pz+depth,
-                        px-width, py-height, pz-depth,
+                        px-width, py-height, pz-depth
                 };
 
                 return CUBE_COORDS;
@@ -115,12 +130,8 @@ public class Cube extends Geom{
         }
 
         public float[] setCubeNormals(float width, float height, float depth){
-                width = width / 2;
-                height = height / 2;
-                depth = depth / 2;
 
                 float[] CUBE_NORMALS = new float[]{
-                        // Front face
                         0.0f, 0.0f, depth,
                         0.0f, 0.0f, depth,
                         0.0f, 0.0f, depth,
@@ -166,7 +177,7 @@ public class Cube extends Geom{
                         0.0f, -height, 0.0f,
                         0.0f, -height, 0.0f,
                         0.0f, -height, 0.0f,
-                        0.0f, -height, 0.0f,
+                        0.0f, -height, 0.0f
                 };
 
                 return CUBE_NORMALS;
@@ -186,18 +197,74 @@ public class Cube extends Geom{
 
                 float r, g, b, a = 1.0f;
                 // FINSIH!
+                modelPosition = new float[] {1.0f, 1.0f, -MAX_MODEL_DISTANCE / 2.0f};
 
         }
 
-        public void draw(){
+        public void draw(float[] lightPosInEyeSpace, float[] view, float[] perspective){
+                // TODO: Init Params !
+                Matrix.multiplyMM(modelView, 0, view, 0, modelCube, 0);
+                Matrix.multiplyMM(modelViewProjection, 0, perspective, 0, modelView, 0);
+                GLES20.glUseProgram(cubeProgram);
+                //hier gehts mit ner nullpointer kaputt
+                GLES20.glUniform3fv(this.cubeLightPosParam, 1, lightPosInEyeSpace, 0);
 
-              //TODO   Port the complete drawing to the Cube class so we call cubexyz.draw();
+                // Set the Model in the shader, used to calculate lighting
+                GLES20.glUniformMatrix4fv(this.cubeModelParam, 1, false, this.modelCube, 0);
 
+                // Set the ModelView in the shader, used to calculate lighting
+                //hier gehts mit ner nullpointer kaputt, jetzt nicht mehr :D aber geht trotzdem net
+                GLES20.glUniformMatrix4fv(this.cubeModelViewParam, 1, false, this.modelView, 0);
+                GLES20.glVertexAttribPointer(
+                        this.cubePositionParam,COORDS_PER_VERTEX, GLES20.GL_FLOAT, false, 0, this.getFbCubeVertics());
+
+                // Set the ModelViewProjection matrix in the shader.
+                GLES20.glUniformMatrix4fv(this.cubeModelViewProjectionParam, 1, false, this.modelViewProjection, 0);
+
+                // Set the normal positions of the cube, again for shading
+                GLES20.glVertexAttribPointer(this.cubeNormalParam, 3, GLES20.GL_FLOAT, false, 0, this.getFbCubeNormals());  //<- Points to the active Array other words: OpenGL now knows, that this needs to be rendered
+
+                //Has to do sth with the color of the cube while pointing at it
+                // GLES20.glVertexAttribPointer(cubeColorParam, 4, GLES20.GL_FLOAT, false, 0,
+                //        isLookingAtObject() ? cube1. : cube1.cubeColors);
+                GLES20.glVertexAttribPointer(this.cubeColorParam, 4, GLES20.GL_FLOAT, false, 0,this.getFbCubeColors()); //<- Points to the active Array other words: OpenGL now knows, that this needs to be rendered
+                // TODO: How is the GL Triangles Mode working ?
+                GLES20.glDrawArrays(GLES20.GL_TRIANGLES, 0, 36);  // There is also GL_LINES for rendering lines. We used GL_TRIANGLES , maybe also good for debugging :D looks impressiv
+                checkGLError("Drawing cube");
+        }
+
+        public void initProgram(int vertexShader, int passthroughShader){
+
+
+                this.cubeProgram = GLES20.glCreateProgram();
+                GLES20.glAttachShader(cubeProgram, vertexShader);
+                GLES20.glAttachShader(cubeProgram, passthroughShader);
+                GLES20.glLinkProgram(cubeProgram);
+                GLES20.glUseProgram(cubeProgram);
+
+                checkGLError("Cube program");
+
+                this.cubePositionParam = GLES20.glGetAttribLocation(cubeProgram, "a_Position");
+                this.cubeNormalParam = GLES20.glGetAttribLocation(cubeProgram, "a_Normal");
+                this.cubeColorParam = GLES20.glGetAttribLocation(cubeProgram, "a_Color");
+
+                this.cubeModelParam = GLES20.glGetUniformLocation(cubeProgram, "u_Model");
+                this.cubeModelViewParam = GLES20.glGetUniformLocation(cubeProgram, "u_MVMatrix");
+                this.cubeModelViewProjectionParam = GLES20.glGetUniformLocation(cubeProgram, "u_MVP");
+                this.cubeLightPosParam = GLES20.glGetUniformLocation(cubeProgram, "u_LightPos");
+
+                GLES20.glEnableVertexAttribArray(this.cubePositionParam);// Enables the VertexArrays which is needed so opengl knows wht to render
+                GLES20.glEnableVertexAttribArray(this.cubeNormalParam);// Enables the VertexArrays which is needed so opengl knows wht to render
+                GLES20.glEnableVertexAttribArray(this.cubeColorParam);  // Enables the VertexArrays which is needed so opengl knows wht to render
+
+                checkGLError("Cube program params");
         }
 
         public Cube(Float x, Float y, Float z,float width,float height,float depth, float r, float g, float b, float a) {
 
-
+                modelCube = new float[16];
+                modelViewProjection = new float[16];
+                modelPosition = new float[] {1.0f, 1.0f, -MAX_MODEL_DISTANCE / 2.0f};
                 // TODO: Build constructors so we dont need to set static coords for every single cube. DONE so far
                 px = x;
                 py = y;
@@ -214,4 +281,11 @@ public class Cube extends Geom{
 
         }
 
+        public void updateModelPosition() {
+
+                Matrix.setIdentityM(this.modelCube, 0);
+                Matrix.translateM(this.modelCube, 0, this.modelPosition[0], this.modelPosition[1], this.modelPosition[2]);
+
+                checkGLError("updateCubePosition");
+        }
 }
