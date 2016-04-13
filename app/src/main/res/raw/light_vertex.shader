@@ -18,7 +18,7 @@ void main() {
 
    float distance = length(u_LightPos - modelViewVertex);
    vec3 lightVector = normalize(u_LightPos - modelViewVertex);
-   float diffuse = max(dot(modelViewNormal, lightVector), 0.5);
+   float diffuse = max(dot(modelViewNormal, lightVector), 0.2);
 
    diffuse = diffuse * (1.0 / (1.0 + (0.00001 * distance * distance)));
    v_Color = a_Color * diffuse;
