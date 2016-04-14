@@ -28,15 +28,12 @@ public class ApplicationTest extends CardboardActivity implements CardboardView.
     private static final float Z_FAR = 100.0f;
 
     private static final float CAMERA_Z = 0.01f;
-    private static final float TIME_DELTA = 0.3f;
 
     private static final float YAW_LIMIT = 0.12f;
     private static final float PITCH_LIMIT = 0.12f;
 
-    private static final int COORDS_PER_VERTEX = 3;
 
     // We keep the light always position just above the user. CHANGE a to see whether it changes sth
-    //private static final float[] LIGHT_POS_IN_WORLD_SPACE = new float[] {0.0f, 2.0f, 0.0f, 1.0f};
     private static final float[] LIGHT_POS_IN_WORLD_SPACE = new float[] {0.0f, 2.0f, 0.0f, 1.0f};
 
     private static final float MIN_MODEL_DISTANCE = 3.0f;
@@ -47,27 +44,16 @@ public class ApplicationTest extends CardboardActivity implements CardboardView.
     private float[] camera;
     private float[] view;
     private float[] headView;
-    private float[] modelViewProjection;
     private float[] modelView;
 
     // Test cube the first 6 floats are just that there is no error :D , look at constructor to see params
     //TODO: init correct floats Float x, Float y, Float z,float width,float height,float depth, float r, float g, float b, float a
-    public Cube cube1 = new Cube(0.0f,1.0f,0.0f,1.0f,1.0f,1.0f, 1.0f, 0.6523f, 0.0f, 1.0f);
-    public Cube cube2 = new Cube(1.0f,1.0f,3.0f,0.7f,0.7f,0.7f, 1.0f, 0.5f, 0.4f, 1.0f);
-
-    //public Cube[] cubes = new Cube[12];
+    public Cube cube1 = new Cube(0.0f,5.0f,0.0f,1.0f,1.0f,1.0f, 1.0f, 0.6523f, 0.0f, 1.0f);
+    public Cube cube2 = new Cube(1.0f,8.0f,3.0f,0.7f,0.7f,0.7f, 1.0f, 0.5f, 0.4f, 1.0f);
+    int m = 50; // dont do m=100 , rendering 1000 cubes atm is too much
+    public Cube[][] cubes = new Cube[m][m];
 
     private float[] modelCube;
-
-    private int cubeProgram;
-    private int cubePositionParam;
-    private int cubeNormalParam;
-    private int cubeColorParam;
-    private int cubeModelParam;
-    private int cubeModelViewParam;
-    private int cubeModelViewProjectionParam;
-    private int cubeLightPosParam;
-
 
     private float[] modelPosition;
     private float[] headRotation;
@@ -76,7 +62,18 @@ public class ApplicationTest extends CardboardActivity implements CardboardView.
     private Vibrator vibrator;
 
 
+    public void initCubes(int vertexShader,int passthroughShader){
 
+        for(int i =0;i< m; i++){
+            for(int j=0
+                ; j < m; j++){
+
+            cubes[i][j] = new Cube(50.0f-(5*j),-3.0f,20.0f-(5*i),1.0f,1.0f,1.0f, 1.0f, 0.6523f, 0.0f, 1.0f);
+            cubes[i][j].initProgram(vertexShader,passthroughShader);
+            cubes[i][j].updateModelPosition();
+            }
+        }
+    }
     /**
      * Converts a raw text file, saved as a resource, into an OpenGL ES shader.
      *
@@ -141,7 +138,6 @@ public class ApplicationTest extends CardboardActivity implements CardboardView.
         modelCube = new float[16];
         camera = new float[16];
         view = new float[16];
-        modelViewProjection = new float[16];
         modelView = new float[16];
         // Model first appears directly in front of user.
         //from 0.0f 0.0f to 1.0 1.0
@@ -189,14 +185,18 @@ public class ApplicationTest extends CardboardActivity implements CardboardView.
         ////////////
         // Some stages earlier the Buffers where generated here, now everything is done inside the Obj Constructor (f.e.: Cube)
         ////////////
-        //initCubes();
 
         int vertexShader = loadGLShader(GLES20.GL_VERTEX_SHADER, R.raw.light_vertex);
         int gridShader = loadGLShader(GLES20.GL_FRAGMENT_SHADER, R.raw.grid_fragment);
         int passthroughShader = loadGLShader(GLES20.GL_FRAGMENT_SHADER, R.raw.passthrough_fragment);
 
+        initCubes(vertexShader,passthroughShader);
+
         cube1.initProgram(vertexShader,passthroughShader); //<- Program for every single cube or one for all ?
+        cube2.initProgram(vertexShader,passthroughShader);
+
         cube1.updateModelPosition();
+        cube2.updateModelPosition();
 
         checkGLError("onSurfaceCreated");
     }
@@ -297,7 +297,13 @@ public class ApplicationTest extends CardboardActivity implements CardboardView.
     public void drawCube(float[] perspective) {
 
         cube1.draw(lightPosInEyeSpace, view, perspective);
-        //cube2.draw(lightPosInEyeSpace);
+        cube2.draw(lightPosInEyeSpace, view, perspective);
+        for(int i=0;i< m;i++){
+            for(int j=0;j< m;j++)
+            cubes[i][j].draw(lightPosInEyeSpace, view, perspective);
+
+        }
+
     }
 
 
@@ -350,7 +356,7 @@ public class ApplicationTest extends CardboardActivity implements CardboardView.
 
     /**
      * Check if user is looking at object by calculating where the object is in eye-space.
-     * TODO Make This function work with different objects like this isLookingAtObject(Obj obj)
+     * TODO Make This function work with different objects like this isLookingAtObject(Obj obj) orit returns the obj looking at
      * @return true if the user is looking at the object.
      */
     private boolean isLookingAtObject() {
