@@ -14,7 +14,7 @@ import java.nio.FloatBuffer;
 public class Cube extends Geom{
 
 
-        private final float[] modelPosition;
+        private float[] modelPosition;
         private static final float MAX_MODEL_DISTANCE = 7.0f;
         private float[] cubeColors;
         private FloatBuffer fbCubeColors;
@@ -24,6 +24,10 @@ public class Cube extends Geom{
 
         private float[] cubeVertics;
         private FloatBuffer fbCubeVertics;
+
+        private float width;
+        private float height;
+        private float depth;
 
         public static int cubeProgram;
 
@@ -206,7 +210,6 @@ public class Cube extends Geom{
                 Matrix.multiplyMM(modelView, 0, view, 0, modelCube, 0);
                 Matrix.multiplyMM(modelViewProjection, 0, perspective, 0, modelView, 0);
                 GLES20.glUseProgram(cubeProgram);
-                //hier gehts mit ner nullpointer kaputt
                 GLES20.glUniform3fv(this.cubeLightPosParam, 1, lightPosInEyeSpace, 0);
 
                 // Set the Model in the shader, used to calculate lighting
@@ -269,6 +272,9 @@ public class Cube extends Geom{
                 px = x;
                 py = y;
                 pz = z;
+                this.width = width;
+                this.height = height;
+                this.depth = depth;
                 cubeColors = setInitColor(r, g, b, a); // Init Cube Colors on first call
                 cubeVertics = setCubeCoords(x, y, z, width, height, depth);// Init Cube Coords on first call
                 cubeNormals = setCubeNormals(width,height,depth);
@@ -283,6 +289,17 @@ public class Cube extends Geom{
 
         public void updateModelPosition() {
 
+                Matrix.setIdentityM(this.modelCube, 0);
+                Matrix.translateM(this.modelCube, 0, this.modelPosition[0], this.modelPosition[1], this.modelPosition[2]);
+
+                checkGLError("updateCubePosition");
+        }
+        public void updateLightPosition() {
+
+                this.modelPosition[0] = ApplicationTest.LIGHT_POS_IN_WORLD_SPACE[0];
+                this.modelPosition[1] = ApplicationTest.LIGHT_POS_IN_WORLD_SPACE[1];
+                this.modelPosition[2] = ApplicationTest.LIGHT_POS_IN_WORLD_SPACE[2];
+                this.cubeVertics = this.setCubeCoords(ApplicationTest.LIGHT_POS_IN_WORLD_SPACE[0],ApplicationTest.LIGHT_POS_IN_WORLD_SPACE[1],ApplicationTest.LIGHT_POS_IN_WORLD_SPACE[2],this.width,this.height,this.depth);
                 Matrix.setIdentityM(this.modelCube, 0);
                 Matrix.translateM(this.modelCube, 0, this.modelPosition[0], this.modelPosition[1], this.modelPosition[2]);
 
