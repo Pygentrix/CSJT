@@ -34,7 +34,8 @@ public class ApplicationTest extends CardboardActivity implements CardboardView.
 
 
     // We keep the light always position just above the user. CHANGE a to see whether it changes sth
-    private static final float[] LIGHT_POS_IN_WORLD_SPACE = new float[] {0.0f, 2.0f, 0.0f, 1.0f};
+    public static float[] LIGHT_POS_IN_WORLD_SPACE = new float[] {8.0f, 1.0f, 10.0f, 1.0f};
+    public int testLightning = 1;
 
     private static final float MIN_MODEL_DISTANCE = 3.0f;
     private static final float MAX_MODEL_DISTANCE = 7.0f;
@@ -46,11 +47,12 @@ public class ApplicationTest extends CardboardActivity implements CardboardView.
     private float[] headView;
     private float[] modelView;
 
-    // Test cube the first 6 floats are just that there is no error :D , look at constructor to see params
+    // Test cubes look at constructor to see params
     //TODO: init correct floats Float x, Float y, Float z,float width,float height,float depth, float r, float g, float b, float a
     public Cube cube1 = new Cube(0.0f,5.0f,0.0f,1.0f,1.0f,1.0f, 1.0f, 0.6523f, 0.0f, 1.0f);
     public Cube cube2 = new Cube(1.0f,8.0f,3.0f,0.7f,0.7f,0.7f, 1.0f, 0.5f, 0.4f, 1.0f);
-    int m = 50; // dont do m=100 , rendering 1000 cubes atm is too much
+    public Cube light1 = new Cube(LIGHT_POS_IN_WORLD_SPACE[0],LIGHT_POS_IN_WORLD_SPACE[1],LIGHT_POS_IN_WORLD_SPACE[2],0.7f,0.7f,0.7f, 1.0f, 1.0f, 1.0f, 1.0f );
+    int m = 10;// dont do m=100 , rendering 10000 cubes atm is too much
     public Cube[][] cubes = new Cube[m][m];
 
     private float[] modelCube;
@@ -194,7 +196,9 @@ public class ApplicationTest extends CardboardActivity implements CardboardView.
 
         cube1.initProgram(vertexShader,passthroughShader); //<- Program for every single cube or one for all ?
         cube2.initProgram(vertexShader,passthroughShader);
+        light1.initProgram(vertexShader,passthroughShader);
 
+        light1.updateLightPosition();
         cube1.updateModelPosition();
         cube2.updateModelPosition();
 
@@ -298,6 +302,7 @@ public class ApplicationTest extends CardboardActivity implements CardboardView.
 
         cube1.draw(lightPosInEyeSpace, view, perspective);
         cube2.draw(lightPosInEyeSpace, view, perspective);
+        light1.draw(lightPosInEyeSpace,view,perspective);
         for(int i=0;i< m;i++){
             for(int j=0;j< m;j++)
             cubes[i][j].draw(lightPosInEyeSpace, view, perspective);
@@ -318,6 +323,11 @@ public class ApplicationTest extends CardboardActivity implements CardboardView.
         if (isLookingAtObject()) {
            // hideObject();
         }
+        //We try to change the light pos while being in the app
+        testLightning = testLightning +1;
+        LIGHT_POS_IN_WORLD_SPACE[0] = 1.0f * testLightning;
+        LIGHT_POS_IN_WORLD_SPACE[1] = 1.0f * testLightning;
+        LIGHT_POS_IN_WORLD_SPACE[2] = 1.0f * testLightning;
 
         // Always give user feedback.
         vibrator.vibrate(50);
