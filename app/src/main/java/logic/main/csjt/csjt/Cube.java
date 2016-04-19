@@ -14,7 +14,7 @@ import java.nio.FloatBuffer;
 public class Cube extends Geom{
 
 
-        private float[] modelPosition;
+        public float[] modelPosition;
         private static final float MAX_MODEL_DISTANCE = 7.0f;
         private float[] cubeColors;
         private FloatBuffer fbCubeColors;
@@ -42,6 +42,8 @@ public class Cube extends Geom{
         private int cubeLightPosParam;
         private float[] modelCube;
         private float[] modelView = new float[16];
+
+        public float movY = 0.0f;
 
         public FloatBuffer getFbCubeNormals() {
                 return this.fbCubeNormals;
@@ -263,7 +265,7 @@ public class Cube extends Geom{
                 checkGLError("Cube program params");
         }
 
-        public Cube(Float x, Float y, Float z,float width,float height,float depth, float r, float g, float b, float a) {
+        public Cube(float x, float y, float z,float width,float height,float depth, float r, float g, float b, float a) {
 
                 modelCube = new float[16];
                 modelViewProjection = new float[16];
@@ -290,6 +292,7 @@ public class Cube extends Geom{
         public void updateModelPosition() {
 
                 Matrix.setIdentityM(this.modelCube, 0);
+                // We add to the Y-axis a rnd float so cubes start moving....
                 Matrix.translateM(this.modelCube, 0, this.modelPosition[0], this.modelPosition[1], this.modelPosition[2]);
 
                 checkGLError("updateCubePosition");
@@ -299,10 +302,17 @@ public class Cube extends Geom{
                 this.modelPosition[0] = ApplicationTest.LIGHT_POS_IN_WORLD_SPACE[0];
                 this.modelPosition[1] = ApplicationTest.LIGHT_POS_IN_WORLD_SPACE[1];
                 this.modelPosition[2] = ApplicationTest.LIGHT_POS_IN_WORLD_SPACE[2];
-                this.cubeVertics = this.setCubeCoords(ApplicationTest.LIGHT_POS_IN_WORLD_SPACE[0],ApplicationTest.LIGHT_POS_IN_WORLD_SPACE[1],ApplicationTest.LIGHT_POS_IN_WORLD_SPACE[2],this.width,this.height,this.depth);
-                Matrix.setIdentityM(this.modelCube, 0);
-                Matrix.translateM(this.modelCube, 0, this.modelPosition[0], this.modelPosition[1], this.modelPosition[2]);
+                this.callUpdatePos();
+        }
 
-                checkGLError("updateCubePosition");
+
+        public void callUpdatePos() {
+                if(this.modelPosition[1] < 50.0f){
+                        this.modelPosition[1] = this.modelPosition[1] + this.movY;}
+                else if(this.modelPosition[1] >= 49.0f){
+                        this.modelPosition[1] = this.modelPosition[1] - this.movY;
+                }
+                this.updateModelPosition();
+                checkGLError("updatePositions");
         }
 }
