@@ -15,6 +15,7 @@ import com.google.vrtoolkit.cardboard.Viewport;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.util.Random;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
@@ -31,6 +32,8 @@ public class ApplicationTest extends CardboardActivity implements CardboardView.
 
     private static final float YAW_LIMIT = 0.12f;
     private static final float PITCH_LIMIT = 0.12f;
+
+    Random random = new Random();
 
 
     // We keep the light always position just above the user. CHANGE a to see whether it changes sth
@@ -300,16 +303,20 @@ public class ApplicationTest extends CardboardActivity implements CardboardView.
      */
     public void drawCube(float[] perspective) {
 
+
         cube1.draw(lightPosInEyeSpace, view, perspective);
         cube2.draw(lightPosInEyeSpace, view, perspective);
+        light1.updateLightPosition();
         light1.draw(lightPosInEyeSpace,view,perspective);
         for(int i=0;i< m;i++){
-            for(int j=0;j< m;j++)
-            cubes[i][j].draw(lightPosInEyeSpace, view, perspective);
+            for(int j=0;j< m;j++){
+                cubes[i][j].callUpdatePos();
+                cubes[i][j].draw(lightPosInEyeSpace, view, perspective);}
 
         }
 
     }
+
 
 
 
@@ -326,11 +333,23 @@ public class ApplicationTest extends CardboardActivity implements CardboardView.
         //We try to change the light pos while being in the app
         testLightning = testLightning +1;
         LIGHT_POS_IN_WORLD_SPACE[0] = 1.0f * testLightning;
-        LIGHT_POS_IN_WORLD_SPACE[1] = 1.0f * testLightning;
+        LIGHT_POS_IN_WORLD_SPACE[1] = 2.0f;
         LIGHT_POS_IN_WORLD_SPACE[2] = 1.0f * testLightning;
+        cubes[3][3].movY =+ 1.0f;
+        selectRndCubeAndStartMoving();
 
         // Always give user feedback.
         vibrator.vibrate(50);
+    }
+
+    private void selectRndCubeAndStartMoving() {
+
+        int rndCubeSelector = random.nextInt((m-1));
+        int rndCubeSelector2 = random.nextInt((m-1));
+        float rndMovY = random.nextFloat();
+        cubes[rndCubeSelector][rndCubeSelector2].movY = rndMovY;
+        Log.e(TAG, "RndCubeSelector" + rndCubeSelector + "rndfloat:" + rndMovY);
+
     }
 
     /**
