@@ -44,6 +44,8 @@ public class Cube extends Geom{
         private float[] modelView = new float[16];
 
         public float movY = 0.0f;
+        public boolean dir = true;
+        private boolean initCase = true;
 
         public FloatBuffer getFbCubeNormals() {
                 return this.fbCubeNormals;
@@ -307,11 +309,20 @@ public class Cube extends Geom{
 
 
         public void callUpdatePos() {
-                if(this.modelPosition[1] < 50.0f){
-                        this.modelPosition[1] = this.modelPosition[1] + this.movY;}
-                else if(this.modelPosition[1] >= 49.0f){
-                        this.modelPosition[1] = this.modelPosition[1] - this.movY;
+                if(this.initCase){
+                        this.initCase = false;
+                        this.modelPosition[1] = this.modelPosition[1] + this.movY;
                 }
+                else if(this.modelPosition[1] >= 50.0f){
+                        this.dir = false;
+                }
+                else if(this.modelPosition[1] <= -20.0f){
+                        this.dir = true;
+                }
+                if(this.dir) {this.modelPosition[1] = this.modelPosition[1] + this.movY;}
+                else if(!this.dir) {this.modelPosition[1] = this.modelPosition[1] - this.movY;}
+
+
                 this.updateModelPosition();
                 checkGLError("updatePositions");
         }
