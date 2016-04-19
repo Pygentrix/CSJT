@@ -332,10 +332,9 @@ public class ApplicationTest extends CardboardActivity implements CardboardView.
         }
         //We try to change the light pos while being in the app
         testLightning = testLightning +1;
-        LIGHT_POS_IN_WORLD_SPACE[0] = 1.0f * testLightning;
+        LIGHT_POS_IN_WORLD_SPACE[0] = 0.1f * testLightning;
         LIGHT_POS_IN_WORLD_SPACE[1] = 2.0f;
-        LIGHT_POS_IN_WORLD_SPACE[2] = 1.0f * testLightning;
-        cubes[3][3].movY =+ 1.0f;
+        LIGHT_POS_IN_WORLD_SPACE[2] = 0.1f * testLightning;
         selectRndCubeAndStartMoving();
 
         // Always give user feedback.
@@ -346,7 +345,7 @@ public class ApplicationTest extends CardboardActivity implements CardboardView.
 
         int rndCubeSelector = random.nextInt((m-1));
         int rndCubeSelector2 = random.nextInt((m-1));
-        float rndMovY = random.nextFloat();
+        float rndMovY = (random.nextFloat() / 2);
         cubes[rndCubeSelector][rndCubeSelector2].movY = rndMovY;
         Log.e(TAG, "RndCubeSelector" + rndCubeSelector + "rndfloat:" + rndMovY);
 
