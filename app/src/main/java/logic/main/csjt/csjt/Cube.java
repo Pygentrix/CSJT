@@ -30,6 +30,8 @@ public class Cube extends Geom{
         private float depth;
 
         public static int cubeProgram;
+        private static final float YAW_LIMIT = 0.12f;
+        private static final float PITCH_LIMIT = 0.12f;
 
         private static final int COORDS_PER_VERTEX = 3;
         private int cubePositionParam;
@@ -325,5 +327,19 @@ public class Cube extends Geom{
 
                 this.updateModelPosition();
                 checkGLError("updatePositions");
+        }
+
+        public boolean isLookingAtObject(float[] headView) {
+                float[] initVec = {0, 0, 0, 1.0f};
+                float[] objPositionVec = new float[4];
+
+                // Convert object space to camera space. Use the headView from onNewFrame.
+                Matrix.multiplyMM(this.modelView, 0, headView, 0, this.modelCube, 0);
+                Matrix.multiplyMV(objPositionVec, 0, this.modelView, 0, initVec, 0);
+
+                float pitch = (float) Math.atan2(objPositionVec[1], -objPositionVec[2]);
+                float yaw = (float) Math.atan2(objPositionVec[0], -objPositionVec[2]);
+
+                return Math.abs(pitch) < PITCH_LIMIT && Math.abs(yaw) < YAW_LIMIT;
         }
 }
