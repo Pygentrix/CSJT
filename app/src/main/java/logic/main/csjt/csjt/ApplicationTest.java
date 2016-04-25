@@ -254,6 +254,7 @@ public class ApplicationTest extends CardboardActivity implements CardboardView.
         //Matrix.rotateM(modelCube, 0, TIME_DELTA, 0.5f, 0.5f, 1.0f);  // <- Lets rotate the cube ROTATION
 
         // Build the camera matrix and apply it to the ModelView.
+        //Changed EyeY to 1.0f instead of 0.0f
         Matrix.setLookAtM(camera, 0, 0.0f, 0.0f, CAMERA_Z, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f);
 
         headTransform.getHeadView(headView, 0);
@@ -326,16 +327,25 @@ public class ApplicationTest extends CardboardActivity implements CardboardView.
     @Override
     public void onCardboardTrigger() {
         Log.i(TAG, "onCardboardTrigger");
-
-        if (isLookingAtObject()) {
-           // hideObject();
+        if(cube1.isLookingAtObject(headView)){
+            cube1.movY = 0.25f;
+            Log.e(TAG, "TRIGGERED event!!!");
+        }
+        for(int i = 0; i < m; i++){
+            for(int j = 0; j < m;j++) {
+                if (cubes[i][j].isLookingAtObject(headView)) {
+                    // hideObject();
+                    cubes[i][j].movY = 0.25f;
+                    Log.e(TAG, "TRIGGERED ISLOOKINGATOBJ!!!");
+                }
+            }
         }
         //We try to change the light pos while being in the app
         testLightning = testLightning +1;
         LIGHT_POS_IN_WORLD_SPACE[0] = 0.1f * testLightning;
         LIGHT_POS_IN_WORLD_SPACE[1] = 2.0f;
         LIGHT_POS_IN_WORLD_SPACE[2] = 0.1f * testLightning;
-        selectRndCubeAndStartMoving();
+        //selectRndCubeAndStartMoving();
 
         // Always give user feedback.
         vibrator.vibrate(50);
@@ -387,7 +397,7 @@ public class ApplicationTest extends CardboardActivity implements CardboardView.
      * TODO Make This function work with different objects like this isLookingAtObject(Obj obj) orit returns the obj looking at
      * @return true if the user is looking at the object.
      */
-    private boolean isLookingAtObject() {
+/*    private boolean isLookingAtObject() {
         float[] initVec = {0, 0, 0, 1.0f};
         float[] objPositionVec = new float[4];
 
@@ -399,5 +409,5 @@ public class ApplicationTest extends CardboardActivity implements CardboardView.
         float yaw = (float) Math.atan2(objPositionVec[0], -objPositionVec[2]);
 
         return Math.abs(pitch) < PITCH_LIMIT && Math.abs(yaw) < YAW_LIMIT;
-    }
+    }*/
 }
