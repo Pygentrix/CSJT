@@ -20,6 +20,7 @@ public class TextObject {
     public TextObject(String txt, float xcoord, float ycoord)
     {
         text = txt;
+
         x = xcoord;
         y = ycoord;
         color = new float[] {1f, 1f, 1f, 1.0f};
