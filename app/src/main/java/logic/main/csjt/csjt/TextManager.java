@@ -37,6 +37,6 @@ public class TextManager {
                 0, 38, 39, 12, 36, 34, 0, 0,
                 0, 38, 0, 0, 0, 0, 0, 0};
 
-        public Vector<TextObject> txtcollection;
+       
 
 }
