@@ -17,6 +17,11 @@ public class Cube extends Geom{
         public float[] modelPosition;
         private static final float MAX_MODEL_DISTANCE = 7.0f;
         private float[] cubeColors;
+
+        public void setFbCubeColors(FloatBuffer fbCubeColors) {
+                this.fbCubeColors = fbCubeColors;
+        }
+
         private FloatBuffer fbCubeColors;
 
         private float[] cubeNormals;
@@ -30,8 +35,10 @@ public class Cube extends Geom{
         private float depth;
 
         public static int cubeProgram;
+        // The default value is 0.12f, but we will increase the value due to debugging
         private static final float YAW_LIMIT = 0.12f;
         private static final float PITCH_LIMIT = 0.12f;
+        private static final float TIME_DELTA = 0.3f;
 
         private static final int COORDS_PER_VERTEX = 3;
         private int cubePositionParam;
@@ -206,7 +213,7 @@ public class Cube extends Geom{
         public Cube(Float x, Float y, Float z) {
 
                 float r, g, b, a = 1.0f;
-                // FINSIH!
+                //TODO FINSIH!
                 modelPosition = new float[] {1.0f, 1.0f, -MAX_MODEL_DISTANCE / 2.0f};
 
         }
@@ -222,7 +229,6 @@ public class Cube extends Geom{
                 GLES20.glUniformMatrix4fv(this.cubeModelParam, 1, false, this.modelCube, 0);
 
                 // Set the ModelView in the shader, used to calculate lighting
-                //hier gehts mit ner nullpointer kaputt, jetzt nicht mehr :D aber geht trotzdem net
                 GLES20.glUniformMatrix4fv(this.cubeModelViewParam, 1, false, this.modelView, 0);
                 GLES20.glVertexAttribPointer(
                         this.cubePositionParam,COORDS_PER_VERTEX, GLES20.GL_FLOAT, false, 0, this.getFbCubeVertics());
@@ -330,16 +336,21 @@ public class Cube extends Geom{
         }
 
         public boolean isLookingAtObject(float[] headView) {
-                float[] initVec = {0, 0, 0, 1.0f};
+                float[] initVec = {this.modelPosition[0], this.modelPosition[1], this.modelPosition[2], 1.0f};
                 float[] objPositionVec = new float[4];
 
                 // Convert object space to camera space. Use the headView from onNewFrame.
+                // Multiplies 2 matrices and stores it into the result
                 Matrix.multiplyMM(this.modelView, 0, headView, 0, this.modelCube, 0);
+
+                //Multiplies a 4 element vector by a 4x4 matrix and stores the result in a 4-element column vector.
                 Matrix.multiplyMV(objPositionVec, 0, this.modelView, 0, initVec, 0);
-
+                // Pitch: Tolerance up & down, switching to german for myself( Nimmt die Koordinaten Y,Z und berechnet daraus im Polar Koordinatensystem den pitch)
                 float pitch = (float) Math.atan2(objPositionVec[1], -objPositionVec[2]);
+                // Yaw: Tolerance to the left and right, german again ( Nimmt X und Z und berechnet den YAW des obj in Polar Koordinatensystem)
                 float yaw = (float) Math.atan2(objPositionVec[0], -objPositionVec[2]);
-
+                // Returns true if pitch and yaw are in the space of the object
+                // Modified the PITCH AND YAW LIMIT!!
                 return Math.abs(pitch) < PITCH_LIMIT && Math.abs(yaw) < YAW_LIMIT;
         }
 }

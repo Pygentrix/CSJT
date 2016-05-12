@@ -33,6 +33,7 @@ public class ApplicationTest extends CardboardActivity implements CardboardView.
     private static final float YAW_LIMIT = 0.12f;
     private static final float PITCH_LIMIT = 0.12f;
 
+
     Random random = new Random();
 
 
@@ -52,7 +53,7 @@ public class ApplicationTest extends CardboardActivity implements CardboardView.
 
     // Test cubes look at constructor to see params
     //TODO: init correct floats Float x, Float y, Float z,float width,float height,float depth, float r, float g, float b, float a
-    public Cube cube1 = new Cube(0.0f,5.0f,0.0f,1.0f,1.0f,1.0f, 1.0f, 0.6523f, 0.0f, 1.0f);
+    public Cube cube1 = new Cube(2.0f,3.0f,5.0f,0.5f,0.5f,0.5f, 1.0f, 0.6523f, 0.0f, 1.0f);
     public Cube cube2 = new Cube(1.0f,8.0f,3.0f,0.7f,0.7f,0.7f, 1.0f, 0.5f, 0.4f, 1.0f);
     public Cube light1 = new Cube(LIGHT_POS_IN_WORLD_SPACE[0],LIGHT_POS_IN_WORLD_SPACE[1],LIGHT_POS_IN_WORLD_SPACE[2],0.7f,0.7f,0.7f, 1.0f, 1.0f, 1.0f, 1.0f );
     int m = 10;// dont do m=100 , rendering 10000 cubes atm is too much
@@ -146,7 +147,7 @@ public class ApplicationTest extends CardboardActivity implements CardboardView.
         modelView = new float[16];
         // Model first appears directly in front of user.
         //from 0.0f 0.0f to 1.0 1.0
-        modelPosition = new float[] {1.0f, 1.0f, -MAX_MODEL_DISTANCE / 2.0f};
+        modelPosition = new float[] {0.0f, 0.0f, -MAX_MODEL_DISTANCE / 2.0f};
         headRotation = new float[4];
         headView = new float[16];
         vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
@@ -304,7 +305,11 @@ public class ApplicationTest extends CardboardActivity implements CardboardView.
      */
     public void drawCube(float[] perspective) {
 
-
+        if(cube1.isLookingAtObject(headView)){
+            cube1.movY = 0.25f;
+            vibrator.vibrate(50);
+            Log.e(TAG, "TRIGGERED event in DrawCube");
+        }
         cube1.draw(lightPosInEyeSpace, view, perspective);
         cube2.draw(lightPosInEyeSpace, view, perspective);
         light1.updateLightPosition();
@@ -331,6 +336,8 @@ public class ApplicationTest extends CardboardActivity implements CardboardView.
             cube1.movY = 0.25f;
             Log.e(TAG, "TRIGGERED event!!!");
         }
+        cubes[4][4].setInitColor(1.0f,0.0f,0.0f,1.0f);
+        cubes[4][4].setFbCubeColors(cubes[4][4].getFbCubeColors());
         for(int i = 0; i < m; i++){
             for(int j = 0; j < m;j++) {
                 if (cubes[i][j].isLookingAtObject(headView)) {
