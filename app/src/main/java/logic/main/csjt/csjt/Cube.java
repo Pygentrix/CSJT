@@ -277,6 +277,8 @@ public class Cube extends Geom{
 
         public Cube(float x, float y, float z,float width,float height,float depth, float r, float g, float b, float a) {
 
+                pages = 6;
+                verticesPerPage = 6;
                 modelCube = new float[16];
                 modelViewProjection = new float[16];
                 modelPosition = new float[] {1.0f, 1.0f, -MAX_MODEL_DISTANCE / 2.0f};
@@ -287,6 +289,7 @@ public class Cube extends Geom{
                 this.width = width;
                 this.height = height;
                 this.depth = depth;
+
                 cubeColors = setInitColor(r, g, b, a); // Init Cube Colors on first call
                 cubeVertics = setCubeCoords(x, y, z, width, height, depth);// Init Cube Coords on first call
                 cubeNormals = setCubeNormals(width,height,depth);
