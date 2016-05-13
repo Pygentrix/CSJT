@@ -201,8 +201,13 @@ public class Cube extends Geom{
 
         }
 
+        public float[] getModelCube() {
+                return modelCube;
+        }
+
         public void draw(float[] lightPosInEyeSpace, float[] view, float[] perspective){
                 // TODO: Init Params !
+                this.callUpdatePos();
                 Matrix.multiplyMM(modelView, 0, view, 0, modelCube, 0);
                 Matrix.multiplyMM(modelViewProjection, 0, perspective, 0, modelView, 0);
                 GLES20.glUseProgram(cubeProgram);
@@ -264,7 +269,7 @@ public class Cube extends Geom{
                 verticesPerPage = 6;
                 modelCube = new float[16];
                 modelViewProjection = new float[16];
-                modelPosition = new float[] {1.0f, 1.0f, -MAX_MODEL_DISTANCE / 2.0f};
+                modelPosition = new float[] {x, y, z};
                 // TODO: Build constructors so we dont need to set static coords for every single cube. DONE so far
                 px = x;
                 py = y;
@@ -280,6 +285,8 @@ public class Cube extends Geom{
                 setFbGeomColors(colorFloatBuffer());
                 fbCubeNormals = normalsFloatBuffer(); // NORMALS OF CUBE -> Normals
                 fbCubeVertics = verticsFloatBuffer();  // COORDS OF CUBE -> Vertices
+
+                this.callUpdatePos();
 
 
 

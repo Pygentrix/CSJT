@@ -1,8 +1,14 @@
 package logic.main.csjt.csjt;
 
+
+import java.nio.FloatBuffer;
+import java.nio.ShortBuffer;
+
 /**
  * Created by JB on 13.05.2016.
  */
+
+
 public class TextManager {
 
         private static final float RI_TEXT_UV_BOX_WIDTH = 0.125f;

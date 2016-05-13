@@ -53,13 +53,11 @@ public class ApplicationTest extends CardboardActivity implements CardboardView.
 
     // Test cubes look at constructor to see params
     //TODO: init correct floats Float x, Float y, Float z,float width,float height,float depth, float r, float g, float b, float a
-    public Cube cube1 = new Cube(2.0f,3.0f,5.0f,0.5f,0.5f,0.5f, 1.0f, 0.6523f, 0.0f, 1.0f);
+    public Cube cube1 = new Cube(-5.0f,1.0f,5.0f,0.5f,0.5f,0.5f, 1.0f, 0.6523f, 0.0f, 1.0f);
     public Cube cube2 = new Cube(1.0f,8.0f,3.0f,0.7f,0.7f,0.7f, 1.0f, 0.5f, 0.4f, 1.0f);
     public Cube light1 = new Cube(LIGHT_POS_IN_WORLD_SPACE[0],LIGHT_POS_IN_WORLD_SPACE[1],LIGHT_POS_IN_WORLD_SPACE[2],0.7f,0.7f,0.7f, 1.0f, 1.0f, 1.0f, 1.0f );
     int m = 10;// dont do m=100 , rendering 10000 cubes atm is too much
     public Cube[][] cubes = new Cube[m][m];
-
-    private float[] modelCube;
 
     private float[] modelPosition;
     private float[] headRotation;
@@ -141,7 +139,6 @@ public class ApplicationTest extends CardboardActivity implements CardboardView.
         });
         setCardboardView(cardboardView);
 
-        modelCube = new float[16];
         camera = new float[16];
         view = new float[16];
         modelView = new float[16];
@@ -210,18 +207,6 @@ public class ApplicationTest extends CardboardActivity implements CardboardView.
     }
 
     /**
-     * Updates the cube model position. Gets called before error checking in onSurfaceCreate
-     */
-/*    private void updateModelPosition() {
-
-        Matrix.setIdentityM(modelCube, 0);
-        Matrix.translateM(modelCube, 0, modelPosition[0], modelPosition[1], modelPosition[2]);
-
-        checkGLError("updateCubePosition");
-
-    }*/
-
-    /**
      * Converts a raw text file into a string.
      *
      * @param resId The resource ID of the raw text file about to be turned into a shader.
@@ -252,7 +237,7 @@ public class ApplicationTest extends CardboardActivity implements CardboardView.
     @Override
     public void onNewFrame(HeadTransform headTransform) {
         // Build the Model part of the ModelView matrix.
-        //Matrix.rotateM(modelCube, 0, TIME_DELTA, 0.5f, 0.5f, 1.0f);  // <- Lets rotate the cube ROTATION
+        Matrix.rotateM(cube1.getModelCube(), 0, 0.3f, 0.5f, 0.5f, 1.0f);  // <- Lets rotate the cube ROTATION
 
         // Build the camera matrix and apply it to the ModelView.
         //Changed EyeY to 1.0f instead of 0.0f
@@ -287,9 +272,7 @@ public class ApplicationTest extends CardboardActivity implements CardboardView.
         // Build the ModelView and ModelViewProjection matrices
         // for calculating cube position and light.
         float[] perspective = eye.getPerspective(Z_NEAR, Z_FAR);
-        // multiplies 2 matrices 4x4 and puts the result into the first param ( modelview or modeViewProjection)
-        //Matrix.multiplyMM(modelView, 0, view, 0, modelCube, 0);
-        //Matrix.multiplyMM(modelViewProjection, 0, perspective, 0, modelView, 0);
+
         drawCube(perspective);
 
     }
