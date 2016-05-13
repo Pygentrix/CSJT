@@ -3,6 +3,8 @@ package logic.main.csjt.csjt;
 import android.opengl.GLES20;
 import android.util.Log;
 
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
 
 /**
@@ -15,8 +17,23 @@ public class Geom {
     static int pages;
     static int verticesPerPage;
     float[] coords;
+
+    public void setGeomColors(float[] geomColors) {
+        this.geomColors = geomColors;
+    }
+
+    private float[] geomColors;
     FloatBuffer vertics;
 
+    private FloatBuffer fbGeomColors;
+
+    public void setFbGeomColors(FloatBuffer fbGeomColors) {
+        this.fbGeomColors = fbGeomColors;
+    }
+
+    public FloatBuffer getFbGeomColors() {
+        return this.fbGeomColors;
+    }
 
 public float[] setInitColor(float r, float g, float b,float a) {
 
@@ -45,7 +62,16 @@ public float[] setInitColor(float r, float g, float b,float a) {
     return INIT_COLORS;
     }
 
+    public FloatBuffer colorFloatBuffer(){
 
+        FloatBuffer lFloatBuffer;
+        ByteBuffer bbColors = ByteBuffer.allocateDirect(this.geomColors.length * 4);
+        bbColors.order(ByteOrder.nativeOrder());
+        lFloatBuffer = bbColors.asFloatBuffer();
+        lFloatBuffer.put(this.geomColors);
+        lFloatBuffer.position(0);
+        return lFloatBuffer;
+    }
 
     /**
      * Checks if we've had an error inside of OpenGL ES, and if so what that error is.

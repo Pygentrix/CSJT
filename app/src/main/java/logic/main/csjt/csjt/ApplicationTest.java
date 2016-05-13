@@ -337,7 +337,6 @@ public class ApplicationTest extends CardboardActivity implements CardboardView.
             Log.e(TAG, "TRIGGERED event!!!");
         }
         cubes[4][4].setInitColor(1.0f,0.0f,0.0f,1.0f);
-        cubes[4][4].setFbCubeColors(cubes[4][4].getFbCubeColors());
         for(int i = 0; i < m; i++){
             for(int j = 0; j < m;j++) {
                 if (cubes[i][j].isLookingAtObject(headView)) {

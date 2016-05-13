@@ -16,13 +16,8 @@ public class Cube extends Geom{
 
         public float[] modelPosition;
         private static final float MAX_MODEL_DISTANCE = 7.0f;
-        private float[] cubeColors;
 
-        public void setFbCubeColors(FloatBuffer fbCubeColors) {
-                this.fbCubeColors = fbCubeColors;
-        }
 
-        private FloatBuffer fbCubeColors;
 
         private float[] cubeNormals;
         private FloatBuffer fbCubeNormals;
@@ -64,20 +59,8 @@ public class Cube extends Geom{
                 return this.fbCubeVertics;
         }
 
-        public FloatBuffer getFbCubeColors() {
-                return this.fbCubeColors;
-        }
 
-        public FloatBuffer colorFloatBuffer(){
 
-                FloatBuffer lFloatBuffer;
-                ByteBuffer bbColors = ByteBuffer.allocateDirect(this.cubeColors.length * 4);
-                bbColors.order(ByteOrder.nativeOrder());
-                lFloatBuffer = bbColors.asFloatBuffer();
-                lFloatBuffer.put(this.cubeColors);
-                lFloatBuffer.position(0);
-                return lFloatBuffer;
-        }
 
         public float[] setCubeCoords(float px,float py,float pz ,float width, float height, float depth){
 
@@ -242,7 +225,7 @@ public class Cube extends Geom{
                 //Has to do sth with the color of the cube while pointing at it
                 // GLES20.glVertexAttribPointer(cubeColorParam, 4, GLES20.GL_FLOAT, false, 0,
                 //        isLookingAtObject() ? cube1. : cube1.cubeColors);
-                GLES20.glVertexAttribPointer(this.cubeColorParam, 4, GLES20.GL_FLOAT, false, 0,this.getFbCubeColors()); //<- Points to the active Array other words: OpenGL now knows, that this needs to be rendered
+                GLES20.glVertexAttribPointer(this.cubeColorParam, 4, GLES20.GL_FLOAT, false, 0,this.getFbGeomColors()); //<- Points to the active Array other words: OpenGL now knows, that this needs to be rendered
                 // TODO: How is the GL Triangles Mode working ?
                 GLES20.glDrawArrays(GLES20.GL_TRIANGLES, 0, 36);  // There is also GL_LINES for rendering lines. We used GL_TRIANGLES , maybe also good for debugging :D looks impressiv
                 checkGLError("Drawing cube");
@@ -290,11 +273,11 @@ public class Cube extends Geom{
                 this.height = height;
                 this.depth = depth;
 
-                cubeColors = setInitColor(r, g, b, a); // Init Cube Colors on first call
+                setGeomColors(setInitColor(r, g, b, a)); // Init Cube Colors on first call
                 cubeVertics = setCubeCoords(x, y, z, width, height, depth);// Init Cube Coords on first call
                 cubeNormals = setCubeNormals(width,height,depth);
 
-                fbCubeColors = colorFloatBuffer();
+                setFbGeomColors(colorFloatBuffer());
                 fbCubeNormals = normalsFloatBuffer(); // NORMALS OF CUBE -> Normals
                 fbCubeVertics = verticsFloatBuffer();  // COORDS OF CUBE -> Vertices
 
