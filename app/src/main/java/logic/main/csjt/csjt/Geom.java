@@ -17,15 +17,23 @@ public class Geom {
     static int pages;
     static int verticesPerPage;
     float[] coords;
+    private float[] geomColors;
+    public static float[] selectedGeomColors;
+    private FloatBuffer fbGeomColors;
+    private FloatBuffer fbSelectedGeomColors;
+    FloatBuffer vertics;
+
+    public FloatBuffer getFbSelectedGeomColors() {
+        return fbSelectedGeomColors;
+    }
+
+    public void setFbSelectedGeomColors(FloatBuffer fbSelectedGeomColors) {
+        this.fbSelectedGeomColors = fbSelectedGeomColors;
+    }
 
     public void setGeomColors(float[] geomColors) {
         this.geomColors = geomColors;
     }
-
-    private float[] geomColors;
-    FloatBuffer vertics;
-
-    private FloatBuffer fbGeomColors;
 
     public void setFbGeomColors(FloatBuffer fbGeomColors) {
         this.fbGeomColors = fbGeomColors;
@@ -35,7 +43,7 @@ public class Geom {
         return this.fbGeomColors;
     }
 
-public float[] setInitColor(float r, float g, float b,float a) {
+    public float[] setInitColor(float r, float g, float b,float a) {
 
     float[] INIT_COLORS = new float[pages*verticesPerPage*4];
 
@@ -62,6 +70,33 @@ public float[] setInitColor(float r, float g, float b,float a) {
     return INIT_COLORS;
     }
 
+    public float[] setSelectedGeomColors() {
+
+        float[] S_COLORS = new float[pages*verticesPerPage*4];
+
+        for(int j = 0; j < pages;j++){
+            for(int i = 0;i < verticesPerPage; i++){
+                S_COLORS[(verticesPerPage*j*4 + i*4) + 0] = 1.0f;
+            }
+        }
+        for(int j = 0; j < pages; j++){
+            for(int i = 0;i < verticesPerPage; i++){
+                S_COLORS[(verticesPerPage*j*4 + i*4) + 1] = 1.0f;
+            }
+        }
+        for(int j = 0; j < pages; j++){
+            for(int i = 0;i < verticesPerPage; i++){
+                S_COLORS[(verticesPerPage*j*4 + i*4) + 2] = 1.0f;
+            }
+        }
+        for(int j = 0; j < pages; j++){
+            for(int i = 0;i < verticesPerPage; i++){
+                S_COLORS[(verticesPerPage*j*4 + i*4) + 3] = 1.0f;
+            }
+        }
+        return S_COLORS;
+    }
+
     public FloatBuffer colorFloatBuffer(){
 
         FloatBuffer lFloatBuffer;
@@ -69,6 +104,16 @@ public float[] setInitColor(float r, float g, float b,float a) {
         bbColors.order(ByteOrder.nativeOrder());
         lFloatBuffer = bbColors.asFloatBuffer();
         lFloatBuffer.put(this.geomColors);
+        lFloatBuffer.position(0);
+        return lFloatBuffer;
+    }
+    public FloatBuffer setSelectedColorFloatBuffer(){
+
+        FloatBuffer lFloatBuffer;
+        ByteBuffer bbColors = ByteBuffer.allocateDirect(this.selectedGeomColors.length * 4);
+        bbColors.order(ByteOrder.nativeOrder());
+        lFloatBuffer = bbColors.asFloatBuffer();
+        lFloatBuffer.put(this.selectedGeomColors);
         lFloatBuffer.position(0);
         return lFloatBuffer;
     }

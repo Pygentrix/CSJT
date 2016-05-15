@@ -293,8 +293,11 @@ public class ApplicationTest extends CardboardActivity implements CardboardView.
         light1.draw(lightPosInEyeSpace,view,perspective);
         for(int i=0;i< m;i++){
             for(int j=0;j< m;j++){
-                cubes[i][j].callUpdatePos();
-                cubes[i][j].draw(lightPosInEyeSpace, view, perspective);}
+                cubes[i][j].isLookingAtObject(headView);
+                //cubes[i][j].callUpdatePos();
+                cubes[i][j].draw(lightPosInEyeSpace, view, perspective);
+
+                }
 
         }
 

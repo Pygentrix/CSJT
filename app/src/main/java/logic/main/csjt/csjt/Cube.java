@@ -48,6 +48,8 @@ public class Cube extends Geom{
         private float[] modelView = new float[16];
 
         public float movY = 0.0f;
+
+        public boolean islookingAtIt = false;
         public boolean dir = true;
         private boolean initCase = true;
 
@@ -58,8 +60,6 @@ public class Cube extends Geom{
         public FloatBuffer getFbCubeVertics() {
                 return this.fbCubeVertics;
         }
-
-
 
 
         public float[] setCubeCoords(float px,float py,float pz ,float width, float height, float depth){
@@ -205,10 +205,19 @@ public class Cube extends Geom{
                 return modelCube;
         }
 
+        public void setModelCube(float[] modelCube) {
+                this.modelCube = modelCube;
+        }
+
         public void draw(float[] lightPosInEyeSpace, float[] view, float[] perspective){
-                // TODO: Init Params !
-                Matrix.rotateM(this.getModelCube(), 0, 0.3f, 0.5f, 0.5f, 1.0f);
+                // TODO: Get Updating and rotation work toghether, look at hideObject func to solve proble
                 this.callUpdatePos();
+
+                // You can rotate the cubes by uncommenting Matrix.rotateM, but wont work together with callUpdatePos
+                float[] lModelCube = this.getModelCube();
+                //Matrix.rotateM(lModelCube, 0,TIME_DELTA, this.modelPosition[0], this.modelPosition[1], this.modelPosition[2]);
+                this.setModelCube(lModelCube);
+
                 Matrix.multiplyMM(modelView, 0, view, 0, modelCube, 0);
                 Matrix.multiplyMM(modelViewProjection, 0, perspective, 0, modelView, 0);
                 GLES20.glUseProgram(cubeProgram);
@@ -229,9 +238,8 @@ public class Cube extends Geom{
                 GLES20.glVertexAttribPointer(this.cubeNormalParam, 3, GLES20.GL_FLOAT, false, 0, this.getFbCubeNormals());  //<- Points to the active Array other words: OpenGL now knows, that this needs to be rendered
 
                 //Has to do sth with the color of the cube while pointing at it
-                // GLES20.glVertexAttribPointer(cubeColorParam, 4, GLES20.GL_FLOAT, false, 0,
-                //        isLookingAtObject() ? cube1. : cube1.cubeColors);
-                GLES20.glVertexAttribPointer(this.cubeColorParam, 4, GLES20.GL_FLOAT, false, 0,this.getFbGeomColors()); //<- Points to the active Array other words: OpenGL now knows, that this needs to be rendered
+                 GLES20.glVertexAttribPointer(cubeColorParam, 4, GLES20.GL_FLOAT, false, 0,this.islookingAtIt ? this.getFbSelectedGeomColors() : this.getFbGeomColors());
+                //GLES20.glVertexAttribPointer(this.cubeColorParam, 4, GLES20.GL_FLOAT, false, 0,this.getFbGeomColors()); //<- Points to the active Array other words: OpenGL now knows, that this needs to be rendered
                 // TODO: How is the GL Triangles Mode working ?
                 GLES20.glDrawArrays(GLES20.GL_TRIANGLES, 0, 36);  // There is also GL_LINES for rendering lines. We used GL_TRIANGLES , maybe also good for debugging :D looks impressiv
                 checkGLError("Drawing cube");
@@ -268,6 +276,9 @@ public class Cube extends Geom{
 
                 pages = 6;
                 verticesPerPage = 6;
+
+                selectedGeomColors = setSelectedGeomColors();
+                setFbSelectedGeomColors(setSelectedColorFloatBuffer());
                 modelCube = new float[16];
                 modelViewProjection = new float[16];
                 modelPosition = new float[] {x, y, z};
@@ -348,6 +359,7 @@ public class Cube extends Geom{
                 float yaw = (float) Math.atan2(objPositionVec[0], -objPositionVec[2]);
                 // Returns true if pitch and yaw are in the space of the object
                 // Modified the PITCH AND YAW LIMIT!!
+                this.islookingAtIt = Math.abs(pitch) < PITCH_LIMIT && Math.abs(yaw) < YAW_LIMIT;
                 return Math.abs(pitch) < PITCH_LIMIT && Math.abs(yaw) < YAW_LIMIT;
         }
 }
