@@ -207,6 +207,7 @@ public class Cube extends Geom{
 
         public void draw(float[] lightPosInEyeSpace, float[] view, float[] perspective){
                 // TODO: Init Params !
+                Matrix.rotateM(this.getModelCube(), 0, 0.3f, 0.5f, 0.5f, 1.0f);
                 this.callUpdatePos();
                 Matrix.multiplyMM(modelView, 0, view, 0, modelCube, 0);
                 Matrix.multiplyMM(modelViewProjection, 0, perspective, 0, modelView, 0);
@@ -328,6 +329,9 @@ public class Cube extends Geom{
                 checkGLError("updatePositions");
         }
 
+
+        //TODO This function is really trivial in checking obj(more tiny obj are triggered inaccurate), this is because of no distance to obj calcs,
+        //TODO no more time will be spent as the MUST-HAVEs are more important
         public boolean isLookingAtObject(float[] headView) {
                 float[] initVec = {this.modelPosition[0], this.modelPosition[1], this.modelPosition[2], 1.0f};
                 float[] objPositionVec = new float[4];

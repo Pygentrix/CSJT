@@ -30,9 +30,6 @@ public class ApplicationTest extends CardboardActivity implements CardboardView.
 
     private static final float CAMERA_Z = 0.01f;
 
-    private static final float YAW_LIMIT = 0.12f;
-    private static final float PITCH_LIMIT = 0.12f;
-
 
     Random random = new Random();
 
@@ -49,13 +46,12 @@ public class ApplicationTest extends CardboardActivity implements CardboardView.
     private float[] camera;
     private float[] view;
     private float[] headView;
-    private float[] modelView;
 
     // Test cubes look at constructor to see params
     //TODO: init correct floats Float x, Float y, Float z,float width,float height,float depth, float r, float g, float b, float a
-    public Cube cube1 = new Cube(-5.0f,1.0f,5.0f,0.5f,0.5f,0.5f, 1.0f, 0.6523f, 0.0f, 1.0f);
-    public Cube cube2 = new Cube(1.0f,8.0f,3.0f,0.7f,0.7f,0.7f, 1.0f, 0.5f, 0.4f, 1.0f);
-    public Cube light1 = new Cube(LIGHT_POS_IN_WORLD_SPACE[0],LIGHT_POS_IN_WORLD_SPACE[1],LIGHT_POS_IN_WORLD_SPACE[2],0.7f,0.7f,0.7f, 1.0f, 1.0f, 1.0f, 1.0f );
+    public Cube cube1;
+    public Cube cube2;
+    public Cube light1;
     int m = 10;// dont do m=100 , rendering 10000 cubes atm is too much
     public Cube[][] cubes = new Cube[m][m];
 
@@ -67,6 +63,10 @@ public class ApplicationTest extends CardboardActivity implements CardboardView.
 
 
     public void initCubes(int vertexShader,int passthroughShader){
+
+        cube1 = new Cube(-5.0f,1.0f,5.0f,0.5f,0.5f,0.5f, 1.0f, 0.6523f, 0.0f, 1.0f);
+        cube2 = new Cube(1.0f,8.0f,3.0f,0.7f,0.7f,0.7f, 1.0f, 0.5f, 0.4f, 1.0f);
+        light1 = new Cube(LIGHT_POS_IN_WORLD_SPACE[0],LIGHT_POS_IN_WORLD_SPACE[1],LIGHT_POS_IN_WORLD_SPACE[2],0.7f,0.7f,0.7f, 1.0f, 1.0f, 1.0f, 1.0f );
 
         for(int i =0;i< m; i++){
             for(int j=0
@@ -125,7 +125,6 @@ public class ApplicationTest extends CardboardActivity implements CardboardView.
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.common_ui);
 
         CardboardView cardboardView = (CardboardView) findViewById(R.id.cardboard_view);
@@ -141,10 +140,6 @@ public class ApplicationTest extends CardboardActivity implements CardboardView.
 
         camera = new float[16];
         view = new float[16];
-        modelView = new float[16];
-        // Model first appears directly in front of user.
-        //from 0.0f 0.0f to 1.0 1.0
-        modelPosition = new float[] {0.0f, 0.0f, -MAX_MODEL_DISTANCE / 2.0f};
         headRotation = new float[4];
         headView = new float[16];
         vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
@@ -202,7 +197,6 @@ public class ApplicationTest extends CardboardActivity implements CardboardView.
         light1.updateLightPosition();
         cube1.updateModelPosition();
         cube2.updateModelPosition();
-
         checkGLError("onSurfaceCreated");
     }
 
@@ -237,7 +231,7 @@ public class ApplicationTest extends CardboardActivity implements CardboardView.
     @Override
     public void onNewFrame(HeadTransform headTransform) {
         // Build the Model part of the ModelView matrix.
-        Matrix.rotateM(cube1.getModelCube(), 0, 0.3f, 0.5f, 0.5f, 1.0f);  // <- Lets rotate the cube ROTATION
+        //Matrix.rotateM(cube1.getModelCube(), 0, 0.3f, 0.5f, 0.5f, 1.0f);  // <- Lets rotate the cube ROTATION
 
         // Build the camera matrix and apply it to the ModelView.
         //Changed EyeY to 1.0f instead of 0.0f
@@ -319,7 +313,7 @@ public class ApplicationTest extends CardboardActivity implements CardboardView.
             cube1.movY = 0.25f;
             Log.e(TAG, "TRIGGERED event!!!");
         }
-        cubes[4][4].setInitColor(1.0f,0.0f,0.0f,1.0f);
+        //cubes[4][4].setInitColor(1.0f,0.0f,0.0f,1.0f);
         for(int i = 0; i < m; i++){
             for(int j = 0; j < m;j++) {
                 if (cubes[i][j].isLookingAtObject(headView)) {
