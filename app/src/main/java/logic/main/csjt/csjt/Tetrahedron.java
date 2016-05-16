@@ -14,7 +14,6 @@ import java.nio.FloatBuffer;
 public class Tetrahedron extends Geom {
 
     //TODO: Change names to Tetra
-    public float[] modelPosition;
     private static final float MAX_MODEL_DISTANCE = 7.0f;
     private float[] cubeColors;
     private FloatBuffer fbCubeColors;
@@ -30,8 +29,6 @@ public class Tetrahedron extends Geom {
     private float depth;
 
     public static int cubeProgram;
-    private static final float YAW_LIMIT = 0.12f;
-    private static final float PITCH_LIMIT = 0.12f;
 
     private static final int COORDS_PER_VERTEX = 3;
     private int cubePositionParam;
@@ -42,8 +39,6 @@ public class Tetrahedron extends Geom {
     private int cubeModelParam;
     private int cubeModelViewParam;
     private int cubeLightPosParam;
-    private float[] modelCube;
-    private float[] modelView = new float[16];
 
     public float movY = 0.0f;
     public boolean dir = true;
@@ -215,13 +210,13 @@ public class Tetrahedron extends Geom {
 
     public void draw(float[] lightPosInEyeSpace, float[] view, float[] perspective){
         // TODO: Init Params !
-        Matrix.multiplyMM(modelView, 0, view, 0, modelCube, 0);
+        Matrix.multiplyMM(modelView, 0, view, 0, modelGeom, 0);
         Matrix.multiplyMM(modelViewProjection, 0, perspective, 0, modelView, 0);
         GLES20.glUseProgram(cubeProgram);
         GLES20.glUniform3fv(this.cubeLightPosParam, 1, lightPosInEyeSpace, 0);
 
         // Set the Model in the shader, used to calculate lighting
-        GLES20.glUniformMatrix4fv(this.cubeModelParam, 1, false, this.modelCube, 0);
+        GLES20.glUniformMatrix4fv(this.cubeModelParam, 1, false, this.modelGeom, 0);
 
         // Set the ModelView in the shader, used to calculate lighting
         //hier gehts mit ner nullpointer kaputt, jetzt nicht mehr :D aber geht trotzdem net
@@ -273,7 +268,7 @@ public class Tetrahedron extends Geom {
 
     public Tetrahedron(float x, float y, float z,float width,float height,float depth, float r, float g, float b, float a) {
 
-        modelCube = new float[16];
+        modelGeom = new float[16];
         modelViewProjection = new float[16];
         modelPosition = new float[] {1.0f, 1.0f, -MAX_MODEL_DISTANCE / 2.0f};
         // TODO: Build constructors so we dont need to set static coords for every single cube. DONE so far
@@ -297,9 +292,9 @@ public class Tetrahedron extends Geom {
 
     public void updateModelPosition() {
 
-        Matrix.setIdentityM(this.modelCube, 0);
+        Matrix.setIdentityM(this.modelGeom, 0);
         // We add to the Y-axis a rnd float so cubes start moving....
-        Matrix.translateM(this.modelCube, 0, this.modelPosition[0], this.modelPosition[1], this.modelPosition[2]);
+        Matrix.translateM(this.modelGeom, 0, this.modelPosition[0], this.modelPosition[1], this.modelPosition[2]);
 
         checkGLError("updateCubePosition");
     }
@@ -330,18 +325,5 @@ public class Tetrahedron extends Geom {
         this.updateModelPosition();
         checkGLError("updatePositions");
     }
-
-    public boolean isLookingAtObject(float[] headView) {
-        float[] initVec = {0, 0, 0, 1.0f};
-        float[] objPositionVec = new float[4];
-
-        // Convert object space to camera space. Use the headView from onNewFrame.
-        Matrix.multiplyMM(this.modelView, 0, headView, 0, this.modelCube, 0);
-        Matrix.multiplyMV(objPositionVec, 0, this.modelView, 0, initVec, 0);
-
-        float pitch = (float) Math.atan2(objPositionVec[1], -objPositionVec[2]);
-        float yaw = (float) Math.atan2(objPositionVec[0], -objPositionVec[2]);
-
-        return Math.abs(pitch) < PITCH_LIMIT && Math.abs(yaw) < YAW_LIMIT;
-    }
+    
 }

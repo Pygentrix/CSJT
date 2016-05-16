@@ -14,7 +14,6 @@ import java.nio.FloatBuffer;
 public class Cube extends Geom{
 
 
-        public float[] modelPosition;
         private static final float MAX_MODEL_DISTANCE = 7.0f;
 
 
@@ -30,9 +29,6 @@ public class Cube extends Geom{
         private float depth;
 
         public static int cubeProgram;
-        // The default value is 0.12f, but we will increase the value due to debugging
-        private static final float YAW_LIMIT = 0.12f;
-        private static final float PITCH_LIMIT = 0.12f;
         private static final float TIME_DELTA = 0.3f;
 
         private static final int COORDS_PER_VERTEX = 3;
@@ -44,12 +40,10 @@ public class Cube extends Geom{
         private int cubeModelParam;
         private int cubeModelViewParam;
         private int cubeLightPosParam;
-        private float[] modelCube;
-        private float[] modelView = new float[16];
 
         public float movY = 0.0f;
 
-        public boolean islookingAtIt = false;
+
         public boolean dir = true;
         private boolean initCase = true;
 
@@ -202,11 +196,11 @@ public class Cube extends Geom{
         }
 
         public float[] getModelCube() {
-                return modelCube;
+                return modelGeom;
         }
 
         public void setModelCube(float[] modelCube) {
-                this.modelCube = modelCube;
+                this.modelGeom = modelCube;
         }
 
         public void draw(float[] lightPosInEyeSpace, float[] view, float[] perspective){
@@ -218,13 +212,13 @@ public class Cube extends Geom{
                 //Matrix.rotateM(lModelCube, 0,TIME_DELTA, this.modelPosition[0], this.modelPosition[1], this.modelPosition[2]);
                 this.setModelCube(lModelCube);
 
-                Matrix.multiplyMM(modelView, 0, view, 0, modelCube, 0);
+                Matrix.multiplyMM(this.modelView, 0, view, 0, modelGeom, 0);
                 Matrix.multiplyMM(modelViewProjection, 0, perspective, 0, modelView, 0);
                 GLES20.glUseProgram(cubeProgram);
                 GLES20.glUniform3fv(this.cubeLightPosParam, 1, lightPosInEyeSpace, 0);
 
                 // Set the Model in the shader, used to calculate lighting
-                GLES20.glUniformMatrix4fv(this.cubeModelParam, 1, false, this.modelCube, 0);
+                GLES20.glUniformMatrix4fv(this.cubeModelParam, 1, false, this.modelGeom, 0);
 
                 // Set the ModelView in the shader, used to calculate lighting
                 GLES20.glUniformMatrix4fv(this.cubeModelViewParam, 1, false, this.modelView, 0);
@@ -279,7 +273,7 @@ public class Cube extends Geom{
 
                 selectedGeomColors = setSelectedGeomColors();
                 setFbSelectedGeomColors(setSelectedColorFloatBuffer());
-                modelCube = new float[16];
+                modelGeom = new float[16];
                 modelViewProjection = new float[16];
                 modelPosition = new float[] {x, y, z};
                 // TODO: Build constructors so we dont need to set static coords for every single cube. DONE so far
@@ -304,14 +298,6 @@ public class Cube extends Geom{
 
         }
 
-        public void updateModelPosition() {
-
-                Matrix.setIdentityM(this.modelCube, 0);
-                // We add to the Y-axis a rnd float so cubes start moving....
-                Matrix.translateM(this.modelCube, 0, this.modelPosition[0], this.modelPosition[1], this.modelPosition[2]);
-
-                checkGLError("updateCubePosition");
-        }
         public void updateLightPosition() {
 
                 this.modelPosition[0] = ApplicationTest.LIGHT_POS_IN_WORLD_SPACE[0];
@@ -338,28 +324,5 @@ public class Cube extends Geom{
 
                 this.updateModelPosition();
                 checkGLError("updatePositions");
-        }
-
-
-        //TODO This function is really trivial in checking obj(more tiny obj are triggered inaccurate), this is because of no distance to obj calcs,
-        //TODO no more time will be spent as the MUST-HAVEs are more important
-        public boolean isLookingAtObject(float[] headView) {
-                float[] initVec = {this.modelPosition[0], this.modelPosition[1], this.modelPosition[2], 1.0f};
-                float[] objPositionVec = new float[4];
-
-                // Convert object space to camera space. Use the headView from onNewFrame.
-                // Multiplies 2 matrices and stores it into the result
-                Matrix.multiplyMM(this.modelView, 0, headView, 0, this.modelCube, 0);
-
-                //Multiplies a 4 element vector by a 4x4 matrix and stores the result in a 4-element column vector.
-                Matrix.multiplyMV(objPositionVec, 0, this.modelView, 0, initVec, 0);
-                // Pitch: Tolerance up & down, switching to german for myself( Nimmt die Koordinaten Y,Z und berechnet daraus im Polar Koordinatensystem den pitch)
-                float pitch = (float) Math.atan2(objPositionVec[1], -objPositionVec[2]);
-                // Yaw: Tolerance to the left and right, german again ( Nimmt X und Z und berechnet den YAW des obj in Polar Koordinatensystem)
-                float yaw = (float) Math.atan2(objPositionVec[0], -objPositionVec[2]);
-                // Returns true if pitch and yaw are in the space of the object
-                // Modified the PITCH AND YAW LIMIT!!
-                this.islookingAtIt = Math.abs(pitch) < PITCH_LIMIT && Math.abs(yaw) < YAW_LIMIT;
-                return Math.abs(pitch) < PITCH_LIMIT && Math.abs(yaw) < YAW_LIMIT;
         }
 }
