@@ -51,7 +51,6 @@ public class ApplicationTest extends CardboardActivity implements CardboardView.
     Cube cube1;
     Cube cube2;
     Cube light1;
-    Cube cross;
     ///////////////////////////////////////
     Cube[][] cubes = new Cube[m][m];
     ///////////////////////////////////////
