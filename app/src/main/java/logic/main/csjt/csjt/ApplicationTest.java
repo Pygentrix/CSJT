@@ -22,45 +22,41 @@ import java.io.InputStreamReader;
 import javax.microedition.khronos.egl.EGLConfig;
 
 public class ApplicationTest extends CardboardActivity implements CardboardView.StereoRenderer  {
-
+//STRINGS
     private static final String TAG = "CSJT";
 
+//FLOATS
     private static final float Z_NEAR = 0.1f;
     private static final float Z_FAR = 100.0f;
 
-    private static final float CAMERA_Z = 0.01f;
+    static final float CAMERA_X = 0.0f;
+    static final float CAMERA_Y = 0.0f;
+    static final float CAMERA_Z = 0.01f;
 
-
-    Random random = new Random();
-
-
+//FLOAT ARRAYS
     // We keep the light always position just above the user. CHANGE a to see whether it changes sth
     public static float[] LIGHT_POS_IN_WORLD_SPACE = new float[] {8.0f, 1.0f, 10.0f, 1.0f};
-    public int testLightning = 1;
-
-    private static final float MIN_MODEL_DISTANCE = 3.0f;
-    private static final float MAX_MODEL_DISTANCE = 7.0f;
-
     private final float[] lightPosInEyeSpace = new float[4];
 
     private float[] camera;
     private float[] view;
     private float[] headView;
-
-    // Test cubes look at constructor to see params
-    //TODO: init correct floats Float x, Float y, Float z,float width,float height,float depth, float r, float g, float b, float a
-    public Cube cube1;
-    public Cube cube2;
-    public Cube light1;
-    int m = 10;// dont do m=100 , rendering 10000 cubes atm is too much
-    public Cube[][] cubes = new Cube[m][m];
-
-    private float[] modelPosition;
     private float[] headRotation;
 
-    private float objectDistance = MAX_MODEL_DISTANCE / 2.0f;
-    private Vibrator vibrator;
+//INTEGERS
+    int testLightning = 1;
+    int m = 10;// dont do m=100 , rendering 10000 cubes atm is too much
 
+//OBJECTS
+    Cube cube1;
+    Cube cube2;
+    Cube light1;
+    ///////////////////////////////////////
+    Cube[][] cubes = new Cube[m][m];
+    ///////////////////////////////////////
+
+    private Vibrator vibrator;
+    Random random = new Random();
 
     public void initCubes(int vertexShader,int passthroughShader){
 
@@ -78,6 +74,7 @@ public class ApplicationTest extends CardboardActivity implements CardboardView.
             }
         }
     }
+
     /**
      * Converts a raw text file, saved as a resource, into an OpenGL ES shader.
      *
@@ -145,7 +142,6 @@ public class ApplicationTest extends CardboardActivity implements CardboardView.
         vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
     }
 
-
     @Override
     public void onPause() {
         super.onPause();
@@ -185,7 +181,7 @@ public class ApplicationTest extends CardboardActivity implements CardboardView.
         ////////////
 
         int vertexShader = loadGLShader(GLES20.GL_VERTEX_SHADER, R.raw.light_vertex);
-        int gridShader = loadGLShader(GLES20.GL_FRAGMENT_SHADER, R.raw.grid_fragment);
+        //int gridShader = loadGLShader(GLES20.GL_FRAGMENT_SHADER, R.raw.grid_fragment); //NOT NEEDED YET
         int passthroughShader = loadGLShader(GLES20.GL_FRAGMENT_SHADER, R.raw.passthrough_fragment);
 
         initCubes(vertexShader,passthroughShader);
@@ -235,7 +231,7 @@ public class ApplicationTest extends CardboardActivity implements CardboardView.
 
         // Build the camera matrix and apply it to the ModelView.
         //Changed EyeY to 1.0f instead of 0.0f
-        Matrix.setLookAtM(camera, 0, 0.0f, 0.0f, CAMERA_Z, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f);
+        Matrix.setLookAtM(camera, 0, CAMERA_X, CAMERA_Y, CAMERA_Z, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f);
 
         headTransform.getHeadView(headView, 0);
 
@@ -303,9 +299,6 @@ public class ApplicationTest extends CardboardActivity implements CardboardView.
 
     }
 
-
-
-
     /**
      * Called when the Cardboard trigger is pulled. (Means if display is being touched)
      */
@@ -347,53 +340,4 @@ public class ApplicationTest extends CardboardActivity implements CardboardView.
 
     }
 
-    /**
-     * Find a new random position for the object.
-     *
-     * <p>We'll rotate it around the Y-axis so it's out of sight, and then up or down by a little bit.
-     */
-    private void hideObject() {
-        float[] rotationMatrix = new float[16];
-        float[] posVec = new float[4];
-
-        // First rotate in XZ plane, between 90 and 270 deg away, and scale so that we vary
-        // the object's distance from the user.
-        float angleXZ = (float) Math.random() * 180 + 90;
-        Matrix.setRotateM(rotationMatrix, 0, angleXZ, 0f, 1f, 0f);
-        float oldObjectDistance = objectDistance;
-        objectDistance =
-                (float) Math.random() * (MAX_MODEL_DISTANCE - MIN_MODEL_DISTANCE) + MIN_MODEL_DISTANCE;
-        float objectScalingFactor = objectDistance / oldObjectDistance;
-        Matrix.scaleM(rotationMatrix, 0, objectScalingFactor, objectScalingFactor, objectScalingFactor);
-        //Matrix.multiplyMV(posVec, 0, rotationMatrix, 0, modelCube, 12);
-
-        float angleY = (float) Math.random() * 80 - 40; // Angle in Y plane, between -40 and 40.
-        angleY = (float) Math.toRadians(angleY);
-        float newY = (float) Math.tan(angleY) * objectDistance;
-
-        modelPosition[0] = posVec[0];
-        modelPosition[1] = newY;
-        modelPosition[2] = posVec[2];
-
-        //updateModelPosition();
-    }
-
-    /**
-     * Check if user is looking at object by calculating where the object is in eye-space.
-     * TODO Make This function work with different objects like this isLookingAtObject(Obj obj) orit returns the obj looking at
-     * @return true if the user is looking at the object.
-     */
-/*    private boolean isLookingAtObject() {
-        float[] initVec = {0, 0, 0, 1.0f};
-        float[] objPositionVec = new float[4];
-
-        // Convert object space to camera space. Use the headView from onNewFrame.
-        Matrix.multiplyMM(modelView, 0, headView, 0, modelCube, 0);
-        Matrix.multiplyMV(objPositionVec, 0, modelView, 0, initVec, 0);
-
-        float pitch = (float) Math.atan2(objPositionVec[1], -objPositionVec[2]);
-        float yaw = (float) Math.atan2(objPositionVec[0], -objPositionVec[2]);
-
-        return Math.abs(pitch) < PITCH_LIMIT && Math.abs(yaw) < YAW_LIMIT;
-    }*/
 }

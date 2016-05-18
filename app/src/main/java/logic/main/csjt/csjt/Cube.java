@@ -13,40 +13,39 @@ import java.nio.FloatBuffer;
 
 public class Cube extends Geom{
 
-
-        private static final float MAX_MODEL_DISTANCE = 7.0f;
-
-
-
-        private float[] cubeNormals;
-        private FloatBuffer fbCubeNormals;
-
-        private float[] cubeVertics;
-        private FloatBuffer fbCubeVertics;
-
+//FLOATS
+        private static final float MAX_MODEL_DISTANCE = 7.0f; // Needs to be deleted in future
+        private static final float TIME_DELTA = 0.3f; // Used for object rotation
         private float width;
         private float height;
         private float depth;
+        public float movY = 0.0f; // Movement factor in y-direction
 
+//FLOAT ARRAYS
+        private float[] cubeNormals;
+        private float[] cubeVertics;
+        private float[] modelViewProjection;
+
+//FLOAT BUFFERS
+        private FloatBuffer fbCubeNormals;
+        private FloatBuffer fbCubeVertics;
+
+//INTEGERS
         public static int cubeProgram;
-        private static final float TIME_DELTA = 0.3f;
-
         private static final int COORDS_PER_VERTEX = 3;
         private int cubePositionParam;
         private int cubeModelViewProjectionParam;
-        private float[] modelViewProjection;
         private int cubeNormalParam;
         private int cubeColorParam;
         private int cubeModelParam;
         private int cubeModelViewParam;
         private int cubeLightPosParam;
 
-        public float movY = 0.0f;
-
-
+//BOOLEANS
         public boolean dir = true;
         private boolean initCase = true;
 
+//GETTERS
         public FloatBuffer getFbCubeNormals() {
                 return this.fbCubeNormals;
         }
@@ -55,7 +54,11 @@ public class Cube extends Geom{
                 return this.fbCubeVertics;
         }
 
+        public float[] getModelCube() {
+                return modelGeom;
+        }
 
+//SETTERS
         public float[] setCubeCoords(float px,float py,float pz ,float width, float height, float depth){
 
                 //TODO: Implement it correct, some rendering fuck ups. Still not correct
@@ -112,6 +115,7 @@ public class Cube extends Geom{
 
                 return CUBE_COORDS;
         }
+
         public FloatBuffer verticsFloatBuffer(){
 
                 FloatBuffer lFloatBuffer;
@@ -176,6 +180,7 @@ public class Cube extends Geom{
 
                 return CUBE_NORMALS;
         }
+
         public FloatBuffer normalsFloatBuffer(){
 
                 FloatBuffer lFloatBuffer;
@@ -187,22 +192,11 @@ public class Cube extends Geom{
                 return lFloatBuffer;
         }
 
-        public Cube(Float x, Float y, Float z) {
-
-                float r, g, b, a = 1.0f;
-                //TODO FINSIH!
-                modelPosition = new float[] {1.0f, 1.0f, -MAX_MODEL_DISTANCE / 2.0f};
-
-        }
-
-        public float[] getModelCube() {
-                return modelGeom;
-        }
-
         public void setModelCube(float[] modelCube) {
                 this.modelGeom = modelCube;
         }
 
+//FUNCTIONS / METHODS
         public void draw(float[] lightPosInEyeSpace, float[] view, float[] perspective){
                 // TODO: Get Updating and rotation work toghether, look at hideObject func to solve proble
                 this.callUpdatePos();
@@ -266,6 +260,41 @@ public class Cube extends Geom{
                 checkGLError("Cube program params");
         }
 
+        public void updateLightPosition() {
+
+                this.modelPosition[0] = ApplicationTest.LIGHT_POS_IN_WORLD_SPACE[0];
+                this.modelPosition[1] = ApplicationTest.LIGHT_POS_IN_WORLD_SPACE[1];
+                this.modelPosition[2] = ApplicationTest.LIGHT_POS_IN_WORLD_SPACE[2];
+                this.callUpdatePos();
+        }
+
+        public void callUpdatePos() {
+                if(this.initCase){
+                        this.initCase = false;
+                        this.modelPosition[1] = this.modelPosition[1] + this.movY;
+                }
+                else if(this.modelPosition[1] >= 50.0f){
+                        this.dir = false;
+                }
+                else if(this.modelPosition[1] <= -20.0f){
+                        this.dir = true;
+                }
+                if(this.dir) {this.modelPosition[1] = this.modelPosition[1] + this.movY;}
+                else if(!this.dir) {this.modelPosition[1] = this.modelPosition[1] - this.movY;}
+
+
+                this.updateModelPosition();
+                checkGLError("updatePositions");
+        }
+
+//CONSTRUCTOR(S)
+        public Cube(Float x, Float y, Float z) {
+
+                float r, g, b, a = 1.0f;
+                //TODO FINSIH!
+                modelPosition = new float[] {1.0f, 1.0f, -MAX_MODEL_DISTANCE / 2.0f};
+
+        }
         public Cube(float x, float y, float z,float width,float height,float depth, float r, float g, float b, float a) {
 
                 pages = 6;
@@ -298,31 +327,4 @@ public class Cube extends Geom{
 
         }
 
-        public void updateLightPosition() {
-
-                this.modelPosition[0] = ApplicationTest.LIGHT_POS_IN_WORLD_SPACE[0];
-                this.modelPosition[1] = ApplicationTest.LIGHT_POS_IN_WORLD_SPACE[1];
-                this.modelPosition[2] = ApplicationTest.LIGHT_POS_IN_WORLD_SPACE[2];
-                this.callUpdatePos();
-        }
-
-
-        public void callUpdatePos() {
-                if(this.initCase){
-                        this.initCase = false;
-                        this.modelPosition[1] = this.modelPosition[1] + this.movY;
-                }
-                else if(this.modelPosition[1] >= 50.0f){
-                        this.dir = false;
-                }
-                else if(this.modelPosition[1] <= -20.0f){
-                        this.dir = true;
-                }
-                if(this.dir) {this.modelPosition[1] = this.modelPosition[1] + this.movY;}
-                else if(!this.dir) {this.modelPosition[1] = this.modelPosition[1] - this.movY;}
-
-
-                this.updateModelPosition();
-                checkGLError("updatePositions");
-        }
 }

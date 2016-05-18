@@ -13,29 +13,46 @@ import java.nio.FloatBuffer;
  */
 
 public class Geom {
+//STRINGS
     private static final String TAG = "CSJT";
+
+//FLOATS
     float px, py, pz;
-    static int pages;
-    static int verticesPerPage;
-    private float[] geomColors;
-    public static float[] selectedGeomColors;
-    private FloatBuffer fbGeomColors;
-    private FloatBuffer fbSelectedGeomColors;
-
-    public float[] modelGeom;
-    public float[] modelView = new float[16];
-    public float[] modelPosition;
-
+    float objectDistance;
     // The default value is 0.12f, but we will increase the value due to debugging
     private static final float YAW_LIMIT = 0.12f;
     private static final float PITCH_LIMIT = 0.12f;
 
+//FLOAT ARRAYS
+    public float[] modelGeom;
+    public float[] modelView = new float[16];
+    public float[] modelPosition;
+    private float[] geomColors;
+    public static float[] selectedGeomColors;
+
+//INTEGERS
+    static int pages;
+    static int verticesPerPage;
+
+//BUFFERS
+    private FloatBuffer fbGeomColors;
+    private FloatBuffer fbSelectedGeomColors;
+
+//BOOLEANS
     public boolean islookingAtIt = false;
 
+
+//GETTERS
     public FloatBuffer getFbSelectedGeomColors() {
         return fbSelectedGeomColors;
     }
 
+    public FloatBuffer getFbGeomColors() {
+        return this.fbGeomColors;
+    }
+
+
+//SETTERS
     public void setFbSelectedGeomColors(FloatBuffer fbSelectedGeomColors) {
         this.fbSelectedGeomColors = fbSelectedGeomColors;
     }
@@ -46,10 +63,6 @@ public class Geom {
 
     public void setFbGeomColors(FloatBuffer fbGeomColors) {
         this.fbGeomColors = fbGeomColors;
-    }
-
-    public FloatBuffer getFbGeomColors() {
-        return this.fbGeomColors;
     }
 
     public float[] setInitColor(float r, float g, float b, float a) {
@@ -106,17 +119,6 @@ public class Geom {
         return S_COLORS;
     }
 
-    public FloatBuffer colorFloatBuffer() {
-
-        FloatBuffer lFloatBuffer;
-        ByteBuffer bbColors = ByteBuffer.allocateDirect(this.geomColors.length * 4);
-        bbColors.order(ByteOrder.nativeOrder());
-        lFloatBuffer = bbColors.asFloatBuffer();
-        lFloatBuffer.put(this.geomColors);
-        lFloatBuffer.position(0);
-        return lFloatBuffer;
-    }
-
     public FloatBuffer setSelectedColorFloatBuffer() {
 
         FloatBuffer lFloatBuffer;
@@ -124,6 +126,18 @@ public class Geom {
         bbColors.order(ByteOrder.nativeOrder());
         lFloatBuffer = bbColors.asFloatBuffer();
         lFloatBuffer.put(this.selectedGeomColors);
+        lFloatBuffer.position(0);
+        return lFloatBuffer;
+    }
+
+//METHODS / FUNCTIONS
+    public FloatBuffer colorFloatBuffer() {
+
+        FloatBuffer lFloatBuffer;
+        ByteBuffer bbColors = ByteBuffer.allocateDirect(this.geomColors.length * 4);
+        bbColors.order(ByteOrder.nativeOrder());
+        lFloatBuffer = bbColors.asFloatBuffer();
+        lFloatBuffer.put(this.geomColors);
         lFloatBuffer.position(0);
         return lFloatBuffer;
     }
@@ -147,8 +161,14 @@ public class Geom {
         // We add to the Y-axis a rnd float so cubes start moving....
         Matrix.translateM(this.modelGeom, 0, this.modelPosition[0], this.modelPosition[1], this.modelPosition[2]);
 
+        objectDistance =(float) Math.sqrt((((this.modelPosition[0]-ApplicationTest.CAMERA_X)
+                *(this.modelPosition[0]-ApplicationTest.CAMERA_X))
+                +((this.modelPosition[1]-ApplicationTest.CAMERA_Y)*(this.modelPosition[1]-ApplicationTest.CAMERA_Y))
+                +((this.modelPosition[2]-ApplicationTest.CAMERA_Z)*(this.modelPosition[2]-ApplicationTest.CAMERA_Z))));
+
         checkGLError("updateCubePosition");
     }
+
     //TODO This function is really trivial in checking obj(more tiny obj are triggered inaccurate), this is because of no distance to obj calcs,
     //TODO no more time will be spent as the MUST-HAVEs are more important
     public boolean isLookingAtObject(float[] headView) {
@@ -168,6 +188,37 @@ public class Geom {
         // Returns true if pitch and yaw are in the space of the object
         // Modified the PITCH AND YAW LIMIT!!
         this.islookingAtIt = Math.abs(pitch) < PITCH_LIMIT && Math.abs(yaw) < YAW_LIMIT;
-        return Math.abs(pitch) < PITCH_LIMIT && Math.abs(yaw) < YAW_LIMIT;
+        return this.islookingAtIt;
+    }
+    /**
+     * Find a new random position for the object.
+     *
+     * <p>We'll rotate it around the Y-axis so it's out of sight, and then up or down by a little bit.
+     */
+    //TODO: Implement function if needed.... (Not needed yet)
+    private void hideObject() {
+        float[] rotationMatrix = new float[16];
+        float[] posVec = new float[4];
+
+        // First rotate in XZ plane, between 90 and 270 deg away, and scale so that we vary
+        // the object's distance from the user.
+        float angleXZ = (float) Math.random() * 180 + 90;
+        Matrix.setRotateM(rotationMatrix, 0, angleXZ, 0f, 1f, 0f);
+        float oldObjectDistance = objectDistance;
+        //objectDistance =
+        //        (float) Math.random() * (MAX_MODEL_DISTANCE - MIN_MODEL_DISTANCE) + MIN_MODEL_DISTANCE;
+        float objectScalingFactor = objectDistance / oldObjectDistance;
+        Matrix.scaleM(rotationMatrix, 0, objectScalingFactor, objectScalingFactor, objectScalingFactor);
+        //Matrix.multiplyMV(posVec, 0, rotationMatrix, 0, modelCube, 12);
+
+        float angleY = (float) Math.random() * 80 - 40; // Angle in Y plane, between -40 and 40.
+        angleY = (float) Math.toRadians(angleY);
+        float newY = (float) Math.tan(angleY) * objectDistance;
+
+        modelPosition[0] = posVec[0];
+        modelPosition[1] = newY;
+        modelPosition[2] = posVec[2];
+
+        //updateModelPosition();
     }
 }
