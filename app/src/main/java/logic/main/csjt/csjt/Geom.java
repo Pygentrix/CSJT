@@ -19,9 +19,12 @@ public class Geom {
 //FLOATS
     float px, py, pz;
     float objectDistance;
+    float width;
+    float height;
+    float depth;
     // The default value is 0.12f, but we will increase the value due to debugging
-    private static final float YAW_LIMIT = 0.12f;
-    private static final float PITCH_LIMIT = 0.12f;
+    private float YAW_LIMIT;
+    private float PITCH_LIMIT;
 
 //FLOAT ARRAYS
     public float[] modelGeom;
@@ -187,6 +190,8 @@ public class Geom {
         float yaw = (float) Math.atan2(objPositionVec[0], -objPositionVec[2]);
         // Returns true if pitch and yaw are in the space of the object
         // Modified the PITCH AND YAW LIMIT!!
+        PITCH_LIMIT = this.height / objectDistance;
+        YAW_LIMIT = this.width / objectDistance;
         this.islookingAtIt = Math.abs(pitch) < PITCH_LIMIT && Math.abs(yaw) < YAW_LIMIT;
         return this.islookingAtIt;
     }

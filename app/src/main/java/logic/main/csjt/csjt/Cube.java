@@ -16,9 +16,6 @@ public class Cube extends Geom{
 //FLOATS
         private static final float MAX_MODEL_DISTANCE = 7.0f; // Needs to be deleted in future
         private static final float TIME_DELTA = 0.3f; // Used for object rotation
-        private float width;
-        private float height;
-        private float depth;
         public float movY = 0.0f; // Movement factor in y-direction
 
 //FLOAT ARRAYS
