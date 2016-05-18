@@ -51,12 +51,14 @@ public class ApplicationTest extends CardboardActivity implements CardboardView.
     Cube cube1;
     Cube cube2;
     Cube light1;
+    Cube cross;
     ///////////////////////////////////////
     Cube[][] cubes = new Cube[m][m];
     ///////////////////////////////////////
 
     private Vibrator vibrator;
     Random random = new Random();
+
 
     public void initCubes(int vertexShader,int passthroughShader){
 
@@ -264,6 +266,7 @@ public class ApplicationTest extends CardboardActivity implements CardboardView.
         float[] perspective = eye.getPerspective(Z_NEAR, Z_FAR);
 
         drawCube(perspective);
+
 
     }
 
