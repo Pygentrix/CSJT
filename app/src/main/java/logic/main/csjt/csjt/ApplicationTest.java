@@ -69,7 +69,8 @@ public class ApplicationTest extends CardboardActivity implements CardboardView.
             for(int j=0
                 ; j < m; j++){
 
-            cubes[i][j] = new Cube(50.0f-(5*j),-3.0f,20.0f-(5*i),1.0f,1.0f,1.0f, 1.0f, 0.6523f, 0.0f, 1.0f);
+            //cubes[i][j] = new Cube(50.0f-(5*j),-2.0f,20.0f-(5*i),1.0f,1.0f,1.0f, 1.0f, 0.6523f, 0.0f, 1.0f);
+            cubes[i][j] = new Cube(20.0f-(5*i),-2.0f,50.0f-(5*j),1.0f,1.0f,1.0f, 1.0f, 0.6523f, 0.0f, 1.0f);
             cubes[i][j].initProgram(vertexShader,passthroughShader);
             cubes[i][j].updateModelPosition();
             }

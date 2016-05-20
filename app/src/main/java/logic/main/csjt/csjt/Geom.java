@@ -34,6 +34,7 @@ public class Geom {
     public static float[] selectedGeomColors;
 
 //INTEGERS
+    int vCount;
     static int pages;
     static int verticesPerPage;
 

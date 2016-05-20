@@ -225,7 +225,7 @@ public class Cube extends Geom{
                 //Has to do sth with the color of the cube while pointing at it
                  GLES20.glVertexAttribPointer(cubeColorParam, 4, GLES20.GL_FLOAT, false, 0,this.islookingAtIt ? this.getFbSelectedGeomColors() : this.getFbGeomColors());
                 //GLES20.glVertexAttribPointer(this.cubeColorParam, 4, GLES20.GL_FLOAT, false, 0,this.getFbGeomColors()); //<- Points to the active Array other words: OpenGL now knows, that this needs to be rendered
-                GLES20.glDrawArrays(GLES20.GL_TRIANGLES, 0, 36);  // There is also GL_LINES for rendering lines. We used GL_TRIANGLES , maybe also good for debugging :D looks impressiv
+                GLES20.glDrawArrays(GLES20.GL_TRIANGLES, 0, vCount);  // There is also GL_LINES for rendering lines. We used GL_TRIANGLES , maybe also good for debugging :D looks impressiv
                 checkGLError("Drawing cube");
         }
 
@@ -288,14 +288,13 @@ public class Cube extends Geom{
 
                 float r, g, b, a = 1.0f;
                 //TODO FINSIH!
-                modelPosition = new float[] {1.0f, 1.0f, -MAX_MODEL_DISTANCE / 2.0f};
 
         }
         public Cube(float x, float y, float z,float width,float height,float depth, float r, float g, float b, float a) {
 
                 pages = 6;
                 verticesPerPage = 6;
-
+                vCount = pages * verticesPerPage;
                 selectedGeomColors = setSelectedGeomColors();
                 setFbSelectedGeomColors(setSelectedColorFloatBuffer());
                 modelGeom = new float[16];
