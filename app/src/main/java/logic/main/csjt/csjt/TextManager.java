@@ -249,6 +249,7 @@ public class TextManager {
     }
 
     private int convertCharToIndex(int c_val)
+    //translate the ASCII value of a character from our TextObject into an index for our texture atlas
     {
         int indx = -1;
 
@@ -282,4 +283,88 @@ public class TextManager {
 
         return indx;
     }
+
+    private void convertTextToTriangleInfo(TextObject val)
+    {
+        // Get attributes from text object
+        float x = val.x;
+        float y = val.y;
+        String text = val.text;
+
+        // Create
+        for(int j=0; j<text.length(); j++)
+        {
+            // get ascii value
+            char c = text.charAt(j);
+            int c_val = (int)c;
+
+            int indx = convertCharToIndex(c_val);
+
+            if(indx==-1) {
+                // unknown character, we will add a space for it to be save.
+                x += ((RI_TEXT_SPACESIZE) * uniformscale);
+                continue;
+            }
+
+            // Calculate the uv parts
+            int row = indx / 8;
+            int col = indx % 8;
+
+            float v = row * RI_TEXT_UV_BOX_WIDTH;
+            float v2 = v + RI_TEXT_UV_BOX_WIDTH;
+            float u = col * RI_TEXT_UV_BOX_WIDTH;
+            float u2 = u + RI_TEXT_UV_BOX_WIDTH;
+
+            // Creating the triangle information
+            float[] vec = new float[12];
+            float[] uv = new float[8];
+            float[] colors = new float[16];
+
+            vec[0] = x;
+            vec[1] = y + (RI_TEXT_WIDTH * uniformscale);
+            vec[2] = 0.99f;
+            vec[3] = x;
+            vec[4] = y;
+            vec[5] = 0.99f;
+            vec[6] = x + (RI_TEXT_WIDTH * uniformscale);
+            vec[7] = y;
+            vec[8] = 0.99f;
+            vec[9] = x + (RI_TEXT_WIDTH * uniformscale);
+            vec[10] = y + (RI_TEXT_WIDTH * uniformscale);
+            vec[11] = 0.99f;
+
+            colors = new float[]
+                    {val.color[0], val.color[1], val.color[2], val.color[3],
+                            val.color[0], val.color[1], val.color[2], val.color[3],
+                            val.color[0], val.color[1], val.color[2], val.color[3],
+                            val.color[0], val.color[1], val.color[2], val.color[3]
+                    };
+            // 0.001f = texture bleeding hack/fix
+            uv[0] = u+0.001f;
+            uv[1] = v+0.001f;
+            uv[2] = u+0.001f;
+            uv[3] = v2-0.001f;
+            uv[4] = u2-0.001f;
+            uv[5] = v2-0.001f;
+            uv[6] = u2-0.001f;
+            uv[7] = v+0.001f;
+
+            short[] inds = {0, 1, 2, 0, 2, 3};
+
+            // Add our triangle information to our collection for 1 render call.
+            AddCharRenderInformation(vec, colors, uv, inds);
+
+            // Calculate the new position
+            x += ((l_size[indx]/2)  * uniformscale);
+        }
+    }
+
+    public float getUniformscale() {
+        return uniformscale;
+    }
+
+    public void setUniformscale(float uniformscale) {
+        this.uniformscale = uniformscale;
+    }
 }
+
