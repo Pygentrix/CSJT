@@ -310,6 +310,7 @@ public class TextManager {
             int row = indx / 8;
             int col = indx % 8;
 
+            // calculating render information
             float v = row * RI_TEXT_UV_BOX_WIDTH;
             float v2 = v + RI_TEXT_UV_BOX_WIDTH;
             float u = col * RI_TEXT_UV_BOX_WIDTH;
@@ -354,7 +355,7 @@ public class TextManager {
             // Add our triangle information to our collection for 1 render call.
             AddCharRenderInformation(vec, colors, uv, inds);
 
-            // Calculate the new position
+            // Calculate the position for the next letter which starts at the position where the last one ends
             x += ((l_size[indx]/2)  * uniformscale);
         }
     }
