@@ -3,6 +3,8 @@ package logic.main.csjt.csjt;
 /**
  * Created by JB on 23.05.2016.
  */
+
+/*
 import android.opengl.GLES20;
 import android.opengl.Matrix;
 import android.util.Log;
@@ -10,6 +12,7 @@ import android.util.Log;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
+import java.nio.ShortBuffer;
 
 public class TextManager {
 
@@ -369,3 +372,4 @@ public class TextManager {
     }
 }
 
+*/

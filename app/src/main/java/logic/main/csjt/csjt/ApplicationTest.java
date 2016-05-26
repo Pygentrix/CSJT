@@ -62,7 +62,7 @@ public class ApplicationTest extends CardboardActivity implements CardboardView.
 
     public void initCubes(int vertexShader,int passthroughShader){
 
-        tetra1 = new Tetrahedron(-6.0f,2.0f,7.0f,2.5f,2.5f,2.5f, 1.0f, 0.6523f, 0.0f, 1.0f);
+        tetra1 = new Tetrahedron(-5.0f,1.0f,3.0f,1.5f,1.5f,1.5f, 1.0f, 0.8f, 0.0f, 1.0f);
 
         cube1 = new Cube(-5.0f,1.0f,5.0f,0.5f,0.5f,0.5f, 1.0f, 0.6523f, 0.0f, 1.0f);
         cube2 = new Cube(1.0f,8.0f,3.0f,0.7f,0.7f,0.7f, 1.0f, 0.5f, 0.4f, 1.0f);
