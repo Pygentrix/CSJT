@@ -13,7 +13,7 @@ import java.nio.FloatBuffer;
  */
 public class Tetrahedron extends Geom {
 
-    //TODO: Change names to Tetra
+    //TODO: Change names to Tetra (Unnecessary)
     private static final float MAX_MODEL_DISTANCE = 7.0f;
     private float[] cubeColors;
     private FloatBuffer fbCubeColors;
@@ -69,60 +69,50 @@ public class Tetrahedron extends Geom {
 
     public float[] setCubeCoords(float px,float py,float pz ,float width, float height, float depth){
 
-        //TODO: Implement it correct, some rendering fuck ups. Still not correct
-        //TODO: Change all this to the Tetrahedron layout
+        /**
+         * px, py and pz describe the origin of the Tetrahedron, in our case its exact middle.
+         * width, height and depth describe the dimensions of the surrounding cube. (The Tetrahedron fits perfectly inside this cube)
+         * Construction of the Tetrahedron vertices according to this method: https://de.wikipedia.org/wiki/Tetraeder#Umgebender_W.C3.BCrfel
+         */
+        //TODO: Change all this to the Tetrahedron layout   EDIT: Done
 
-        float[] CUBE_COORDS = new float[]{
-                // Front face
-                px-width, py+height, pz+depth,
-                px-width, py-height, pz+depth,  // unten rechts
-                px+width, py+height, pz+depth,  // rechts oben
-                px-width, py-height, pz+depth, // unten rechts
-                px+width, py-height, pz+depth,
-                px+width, py+height, pz+depth,  // rechts oben
+        //helper variables
+        float wid = width / 2;
+        float hei = height / 2;
+        float dep = depth / 2;
 
-                // Right face
-                px+width, py+height, pz+depth,
-                px+width, py-height, pz+depth,
-                px+width, py+height, pz-depth,
-                px+width, py-height, pz+depth,
-                px+width, py-height, pz-depth,
-                px+width, py+height, pz-depth,
+        float[] TETRA_COORDS = new float[]{
+                //Face A
+                px-wid, py-hei, pz-dep,     //left bottom back point
+                px+wid, py-hei, pz+dep,     //right bottom front point
+                px-wid, py+hei, pz+dep,     //left top front point
 
-                // Back face
-                px+width, py+height, pz-depth,
-                px+width, py-height, pz-depth,
-                px-width, py+height, pz-depth,
-                px+width, py-height, pz-depth,
-                px-width, py-height, pz-depth,
-                px-width, py+height, pz-depth,
+                //Face B
+                px-wid, py-hei, pz-dep,     //left bottom back point
+                px+wid, py-hei, pz+dep,     //right bottom front point
+                px+wid, py+hei, pz-dep,     //right top back point
 
-                // Left face
-                px-width, py+height, pz-depth,
-                px-width, py-height, pz-depth,
-                px-width, py+height, pz+depth,
-                px-width, py-height, pz-depth,
-                px-width, py-height, pz+depth,
-                px-width, py+height, pz+depth,
+                //Face C
+                px+wid, py-hei, pz+dep,     //right bottom front point
+                px+wid, py+hei, pz-dep,     //right top back point
+                px-wid, py+hei, pz+dep,     //left top front point
 
-                // Top face
-                px-width, py+height, pz-depth,
-                px-width, py+height, pz+depth,
-                px+width, py+height, pz-depth,
-                px-width, py+height, pz+depth,
-                px+width, py+height, pz+depth,
-                px+width, py+height, pz-depth,
+                //Face D
+                px-wid, py-hei, pz-dep,     //left bottom back point
+                px+wid, py+hei, pz-dep,     //right top back point
+                px-wid, py+hei, pz+dep,     //left top front point
 
-                // Bottom face
-                px+width, py-height, pz-depth,
-                px+width, py-height, pz+depth,
-                px-width, py-height, pz-depth,
-                px+width, py-height, pz+depth,
-                px-width, py-height, pz+depth,
-                px-width, py-height, pz-depth
+                //TODO: Alternative mode: try at own risk
+                /*
+                px-wid, py-hei, pz-dep,     //left bottom back point
+                px+wid, py-hei, pz+dep,     //right bottom front point
+                px+wid, py+hei, pz-dep,     //right top back point
+                px-wid, py+hei, pz+dep,     //left top front point
+                 */
+
         };
 
-        return CUBE_COORDS;
+        return TETRA_COORDS;
     }
 
     public FloatBuffer verticsFloatBuffer(){
@@ -138,56 +128,31 @@ public class Tetrahedron extends Geom {
 
     public float[] setCubeNormals(float width, float height, float depth){
 
-        float[] CUBE_NORMALS = new float[]{
-                0.0f, 0.0f, depth,
-                0.0f, 0.0f, depth,
-                0.0f, 0.0f, depth,
-                0.0f, 0.0f, depth,
-                0.0f, 0.0f, depth,
-                0.0f, 0.0f, depth,
+        //Normals are constructed similar to the coordinates
+        float[] TETRA_NORMALS = new float[]{
+                //FACE A
+                -width, -height, depth,
+                -width, -height, depth,
+                -width, -height, depth,
 
-                // Right face
-                width, 0.0f, 0.0f,
-                width, 0.0f, 0.0f,
-                width, 0.0f, 0.0f,
-                width, 0.0f, 0.0f,
-                width, 0.0f, 0.0f,
-                width, 0.0f, 0.0f,
+                //FACE B
+                width, -height, -depth,
+                width, -height, -depth,
+                width, -height, -depth,
 
-                // Back face
-                0.0f, 0.0f, -depth,
-                0.0f, 0.0f, -depth,
-                0.0f, 0.0f, -depth,
-                0.0f, 0.0f, -depth,
-                0.0f, 0.0f, -depth,
-                0.0f, 0.0f, -depth,
+                //FACE C
+                width, height, depth,
+                width, height, depth,
+                width, height, depth,
 
-                // Left face
-                -width, 0.0f, 0.0f,
-                -width, 0.0f, 0.0f,
-                -width, 0.0f, 0.0f,
-                -width, 0.0f, 0.0f,
-                -width, 0.0f, 0.0f,
-                -width, 0.0f, 0.0f,
+                //FACE D
+                -width, height, -depth,
+                -width, height, -depth,
+                -width, height, -depth
 
-                // Top face
-                0.0f, height, 0.0f,
-                0.0f, height, 0.0f,
-                0.0f, height, 0.0f,
-                0.0f, height, 0.0f,
-                0.0f, height, 0.0f,
-                0.0f, height, 0.0f,
-
-                // Bottom face
-                0.0f, -height, 0.0f,
-                0.0f, -height, 0.0f,
-                0.0f, -height, 0.0f,
-                0.0f, -height, 0.0f,
-                0.0f, -height, 0.0f,
-                0.0f, -height, 0.0f
         };
 
-        return CUBE_NORMALS;
+        return TETRA_NORMALS;
     }
     public FloatBuffer normalsFloatBuffer(){
 

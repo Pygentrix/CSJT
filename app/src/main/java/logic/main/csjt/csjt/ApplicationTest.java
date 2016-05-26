@@ -48,6 +48,7 @@ public class ApplicationTest extends CardboardActivity implements CardboardView.
     int m = 10;// dont do m=100 , rendering 10000 cubes atm is too much
 
 //OBJECTS
+    Tetrahedron tetra1;
     Cube cube1;
     Cube cube2;
     Cube light1;
@@ -60,6 +61,8 @@ public class ApplicationTest extends CardboardActivity implements CardboardView.
 
 
     public void initCubes(int vertexShader,int passthroughShader){
+
+        tetra1 = new Tetrahedron(-6.0f,2.0f,7.0f,2.5f,2.5f,2.5f, 1.0f, 0.6523f, 0.0f, 1.0f);
 
         cube1 = new Cube(-5.0f,1.0f,5.0f,0.5f,0.5f,0.5f, 1.0f, 0.6523f, 0.0f, 1.0f);
         cube2 = new Cube(1.0f,8.0f,3.0f,0.7f,0.7f,0.7f, 1.0f, 0.5f, 0.4f, 1.0f);
@@ -188,9 +191,13 @@ public class ApplicationTest extends CardboardActivity implements CardboardView.
 
         initCubes(vertexShader,passthroughShader);
 
+        tetra1.initProgram(vertexShader,passthroughShader);
+
         cube1.initProgram(vertexShader,passthroughShader); //<- Program for every single cube or one for all ?
         cube2.initProgram(vertexShader,passthroughShader);
         light1.initProgram(vertexShader,passthroughShader);
+
+        tetra1.updateModelPosition();
 
         light1.updateLightPosition();
         cube1.updateModelPosition();
@@ -280,6 +287,8 @@ public class ApplicationTest extends CardboardActivity implements CardboardView.
      * @param perspective
      */
     public void drawCube(float[] perspective) {
+
+        tetra1.draw(lightPosInEyeSpace, view, perspective);
 
         if(cube1.isLookingAtObject(headView)){
             cube1.movY = 0.25f;
