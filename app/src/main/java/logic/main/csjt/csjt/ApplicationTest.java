@@ -93,6 +93,30 @@ public class ApplicationTest extends CardboardActivity implements CardboardView.
         GLES20.glShaderSource(shader, code);
         GLES20.glCompileShader(shader);
 
+        /* test for text shader
+        public static final String vs_Text =
+                "uniform mat4 uMVPMatrix;" +
+                        "attribute vec4 vPosition;" +
+                        "attribute vec4 a_Color;" +
+                        "attribute vec2 a_texCoord;" +
+                        "varying vec4 v_Color;" +
+                        "varying vec2 v_texCoord;" +
+                        "void main() {" +
+                        "  gl_Position = uMVPMatrix * vPosition;" +
+                        "  v_texCoord = a_texCoord;" +
+                        "  v_Color = a_Color;" +
+                        "}";
+        public static final String fs_Text =
+                "precision mediump float;" +
+                        "varying vec4 v_Color;" +
+                        "varying vec2 v_texCoord;" +
+                        "uniform sampler2D s_texture;" +
+                        "void main() {" +
+                        "  gl_FragColor = texture2D( s_texture, v_texCoord ) * v_Color;" +
+                        "  gl_FragColor.rgb *= v_Color.a;" +
+                        "}";
+                        */
+
         // Get the compilation status.
         final int[] compileStatus = new int[1];
         GLES20.glGetShaderiv(shader, GLES20.GL_COMPILE_STATUS, compileStatus, 0);
