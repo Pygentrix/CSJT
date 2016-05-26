@@ -6,8 +6,7 @@ package logic.main.csjt.csjt;
 
 /*
 import android.opengl.GLES20;
-import android.opengl.Matrix;
-import android.util.Log;
+
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
@@ -15,6 +14,7 @@ import java.nio.FloatBuffer;
 import java.nio.ShortBuffer;
 
 public class TextManager {
+/*
 
     private static final float RI_TEXT_UV_BOX_WIDTH = 0.125f;
     private static final float RI_TEXT_WIDTH = 32.0f;
@@ -370,6 +370,7 @@ public class TextManager {
     public void setUniformscale(float uniformscale) {
         this.uniformscale = uniformscale;
     }
+*/
 }
 
 */
