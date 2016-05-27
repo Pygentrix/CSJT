@@ -52,6 +52,7 @@ public class ApplicationTest extends CardboardActivity implements CardboardView.
     Cube cube1;
     Cube cube2;
     Cube light1;
+    Cuboid cuboid1;
     ///////////////////////////////////////
     Cube[][] cubes = new Cube[m][m];
     ///////////////////////////////////////
@@ -63,6 +64,7 @@ public class ApplicationTest extends CardboardActivity implements CardboardView.
     public void initCubes(int vertexShader,int passthroughShader){
 
         tetra1 = new Tetrahedron(-5.0f,1.0f,3.0f,1.5f,1.5f,1.5f, 1.0f, 0.8f, 0.0f, 1.0f);
+        cuboid1 = new Cuboid(5.0f,5.0f,8.0f,6.0f,3.7f,8.7f, 1.4f, 2.6f, 0.4f, 0.2f);
 
         cube1 = new Cube(-5.0f,1.0f,5.0f,0.5f,0.5f,0.5f, 1.0f, 0.6523f, 0.0f, 1.0f);
         cube2 = new Cube(1.0f,8.0f,3.0f,0.7f,0.7f,0.7f, 1.0f, 0.5f, 0.4f, 1.0f);
@@ -110,15 +112,15 @@ public class ApplicationTest extends CardboardActivity implements CardboardView.
 
         return shader;
     }
+/*
+        public static int sp_Text;
+     /*SHADER Text
 
-     /*   public static int sp_Text;
-     SHADER Text
-     *
      * This shader is for rendering 2D text textures straight from a texture
      * Color and alpha blended.
      *
-     */
-       /* public static final String vs_Text =
+
+     public static final String vs_Text =
                 "uniform mat4 uMVPMatrix;" +
                         "attribute vec4 vPosition;" +
                         "attribute vec4 a_Color;" +
@@ -222,12 +224,13 @@ public class ApplicationTest extends CardboardActivity implements CardboardView.
         initCubes(vertexShader,passthroughShader);
 
         tetra1.initProgram(vertexShader,passthroughShader);
-
+        cuboid1.initProgram(vertexShader, passthroughShader);
         cube1.initProgram(vertexShader,passthroughShader); //<- Program for every single cube or one for all ?
         cube2.initProgram(vertexShader,passthroughShader);
         light1.initProgram(vertexShader,passthroughShader);
 
         tetra1.updateModelPosition();
+        cuboid1.updateModelPosition();
 
         light1.updateLightPosition();
         cube1.updateModelPosition();
@@ -319,6 +322,7 @@ public class ApplicationTest extends CardboardActivity implements CardboardView.
     public void drawCube(float[] perspective) {
 
         tetra1.draw(lightPosInEyeSpace, view, perspective);
+        cuboid1.draw(lightPosInEyeSpace, view, perspective);
 
         if(cube1.isLookingAtObject(headView)){
             cube1.movY = 0.25f;
