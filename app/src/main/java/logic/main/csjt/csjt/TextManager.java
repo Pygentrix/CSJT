@@ -4,14 +4,14 @@ package logic.main.csjt.csjt;
  * Created by JB on 23.05.2016.
  */
 
-
-import android.opengl.GLES20;
-
-
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
 import java.nio.ShortBuffer;
+import java.util.Iterator;
+import java.util.Vector;
+
+import android.opengl.GLES20;
 
 public class TextManager {
 /*
