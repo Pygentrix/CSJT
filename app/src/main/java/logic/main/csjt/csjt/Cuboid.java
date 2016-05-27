@@ -235,7 +235,7 @@ public class Cuboid extends Geom{
         GLES20.glLinkProgram(cubeProgram);
         GLES20.glUseProgram(cubeProgram);
 
-        checkGLError("Cube program");
+        checkGLError("Cuboid program");
 
         this.cubePositionParam = GLES20.glGetAttribLocation(cubeProgram, "a_Position");
         this.cubeNormalParam = GLES20.glGetAttribLocation(cubeProgram, "a_Normal");
@@ -250,7 +250,7 @@ public class Cuboid extends Geom{
         GLES20.glEnableVertexAttribArray(this.cubeNormalParam);// Enables the VertexArrays which is needed so opengl knows wht to render
         GLES20.glEnableVertexAttribArray(this.cubeColorParam);  // Enables the VertexArrays which is needed so opengl knows wht to render
 
-        checkGLError("Cube program params");
+        checkGLError("Cuboid program params");
     }
 
     public void updateLightPosition() {
