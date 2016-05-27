@@ -233,6 +233,11 @@ public class Tetrahedron extends Geom {
 
     public Tetrahedron(float x, float y, float z,float width,float height,float depth, float r, float g, float b, float a) {
 
+        pages = 4;
+        verticesPerPage = 3;
+        vCount = pages * verticesPerPage;
+        selectedGeomColors = setSelectedGeomColors();
+        setFbSelectedGeomColors(setSelectedColorFloatBuffer());
         modelGeom = new float[16];
         modelViewProjection = new float[16];
         modelPosition = new float[] {1.0f, 1.0f, -MAX_MODEL_DISTANCE / 2.0f};

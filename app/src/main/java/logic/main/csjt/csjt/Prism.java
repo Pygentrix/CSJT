@@ -55,61 +55,44 @@ public class Prism extends Geom{
     }
 
     //SETTERS
-    public float[] setPrismCoords(float px,float py,float pz ,float width, float height, float depth){
+    public float[] setPrismCoords(float px,float py,float pz ,float width,float height){
 
         //TODO: Implement it correct, some rendering fuck ups. Still not correct
 
-        float[] CUBE_COORDS = new float[]{
-                // Front face
-                px-width, py+height, pz+depth,
-                px-width, py-height, pz+depth,  // unten rechts
-                px+width, py+height, pz+depth,  // rechts oben
-                px-width, py-height, pz+depth, // unten rechts
-                px+width, py-height, pz+depth,
-                px+width, py+height, pz+depth,  // rechts oben
-
-                // Right face
-                px+width, py+height, pz+depth,
-                px+width, py-height, pz+depth,
-                px+width, py+height, pz-depth,
-                px+width, py-height, pz+depth,
-                px+width, py-height, pz-depth,
-                px+width, py+height, pz-depth,
-
-                // Back face
-                px+width, py+height, pz-depth,
-                px+width, py-height, pz-depth,
-                px-width, py+height, pz-depth,
-                px+width, py-height, pz-depth,
-                px-width, py-height, pz-depth,
-                px-width, py+height, pz-depth,
-
-                // Left face
-                px-width, py+height, pz-depth,
-                px-width, py-height, pz-depth,
-                px-width, py+height, pz+depth,
-                px-width, py-height, pz-depth,
-                px-width, py-height, pz+depth,
-                px-width, py+height, pz+depth,
-
+        float[] PRISM_COORDS = new float[]{
                 // Top face
-                px-width, py+height, pz-depth,
-                px-width, py+height, pz+depth,
-                px+width, py+height, pz-depth,
-                px-width, py+height, pz+depth,
-                px+width, py+height, pz+depth,
-                px+width, py+height, pz-depth,
+                px, py+height, pz,
+                px+width, py+height, pz,
+                px+(width/2), py+height, pz+(width/2),
 
                 // Bottom face
-                px+width, py-height, pz-depth,
-                px+width, py-height, pz+depth,
-                px-width, py-height, pz-depth,
-                px+width, py-height, pz+depth,
-                px-width, py-height, pz+depth,
-                px-width, py-height, pz-depth
+                px, py, pz,
+                px+width, py, pz,
+                px+(width/2), py, (pz+width/2),
+
+                // Back face
+                px, py, pz,
+                px+width, py, pz,
+                px, py+height, pz,
+                px+width, py+height, pz,
+
+
+                // Left face
+                px, py, pz,
+                px+(width/2), py, pz+(width/2),
+                px, py+height, pz,
+                px+(width/2), py+height, pz+(width/2),
+
+
+                //TODO: Right face
+                px+width, py, pz,
+                px+(width/2), py, pz+(width/2),
+                px+width, py+height, pz,
+                px+(width/2), py+height, pz+(width/2),
+
         };
 
-        return CUBE_COORDS;
+        return PRISM_COORDS;
     }
 
     public FloatBuffer verticsFloatBuffer(){
@@ -123,58 +106,44 @@ public class Prism extends Geom{
         return lFloatBuffer;
     }
 
-    public float[] setPrismNormals(float width, float height, float depth){
+    public float[] setPrismNormals(float width, float height){
 
-        float[] CUBE_NORMALS = new float[]{
-                0.0f, 0.0f, depth,
-                0.0f, 0.0f, depth,
-                0.0f, 0.0f, depth,
-                0.0f, 0.0f, depth,
-                0.0f, 0.0f, depth,
-                0.0f, 0.0f, depth,
+        float[] PRISM_NORMALS = new float[]{
+                //Top Face
+                0.0f, height, 0.0f,
+                0.0f, height, 0.0f,
+                0.0f, height, 0.0f,
 
-                // Right face
-                width, 0.0f, 0.0f,
-                width, 0.0f, 0.0f,
-                width, 0.0f, 0.0f,
-                width, 0.0f, 0.0f,
-                width, 0.0f, 0.0f,
-                width, 0.0f, 0.0f,
+
+                // Bottom Face
+                0.0f, -height, 0.0f,
+                0.0f, -height, 0.0f,
+                0.0f, -height, 0.0f,
+
 
                 // Back face
-                0.0f, 0.0f, -depth,
-                0.0f, 0.0f, -depth,
-                0.0f, 0.0f, -depth,
-                0.0f, 0.0f, -depth,
-                0.0f, 0.0f, -depth,
-                0.0f, 0.0f, -depth,
+                0.0f, 0.0f, -width,
+                0.0f, 0.0f, -width,
+                0.0f, 0.0f, -width,
+                0.0f, 0.0f, -width,
 
-                // Left face
-                -width, 0.0f, 0.0f,
-                -width, 0.0f, 0.0f,
-                -width, 0.0f, 0.0f,
-                -width, 0.0f, 0.0f,
-                -width, 0.0f, 0.0f,
-                -width, 0.0f, 0.0f,
 
-                // Top face
-                0.0f, height, 0.0f,
-                0.0f, height, 0.0f,
-                0.0f, height, 0.0f,
-                0.0f, height, 0.0f,
-                0.0f, height, 0.0f,
-                0.0f, height, 0.0f,
+                // Left Face (evtl - bie z achse)
+                -width, 0.0f, width,
+                -width, 0.0f, width,
+                -width, 0.0f, width,
+                -width, 0.0f, width,
 
-                // Bottom face
-                0.0f, -height, 0.0f,
-                0.0f, -height, 0.0f,
-                0.0f, -height, 0.0f,
-                0.0f, -height, 0.0f,
-                0.0f, -height, 0.0f,
-                0.0f, -height, 0.0f
+
+                // Right Face
+                width, 0.0f, width,
+                width, 0.0f, width,
+                width, 0.0f, width,
+                width, 0.0f, width,
+                
         };
 
-        return CUBE_NORMALS;
+        return PRISM_NORMALS;
     }
 
     public FloatBuffer normalsFloatBuffer(){
@@ -195,11 +164,11 @@ public class Prism extends Geom{
     //FUNCTIONS / METHODS
     public void draw(float[] lightPosInEyeSpace, float[] view, float[] perspective){
         // TODO: Get Updating and rotation work toghether, look at hideObject func to solve proble
-        this.callUpdatePos();
+        //this.callUpdatePos();
 
         // You can rotate the prisms by uncommenting Matrix.rotateM, but wont work together with callUpdatePos
         float[] lModelPrism = this.getModelPrism();
-        //Matrix.rotateM(lModelPrism, 0,TIME_DELTA, this.modelPosition[0], this.modelPosition[1], this.modelPosition[2]);
+        Matrix.rotateM(lModelPrism, 0,TIME_DELTA, this.modelPosition[0], this.modelPosition[1], this.modelPosition[2]);
         this.setModelPrism(lModelPrism);
 
         Matrix.multiplyMM(this.modelView, 0, view, 0, modelGeom, 0);
@@ -224,7 +193,7 @@ public class Prism extends Geom{
         //Has to do sth with the color of the prism while pointing at it
         GLES20.glVertexAttribPointer(prismColorParam, 4, GLES20.GL_FLOAT, false, 0,this.islookingAtIt ? this.getFbSelectedGeomColors() : this.getFbGeomColors());
         //GLES20.glVertexAttribPointer(this.prismColorParam, 4, GLES20.GL_FLOAT, false, 0,this.getFbGeomColors()); //<- Points to the active Array other words: OpenGL now knows, that this needs to be rendered
-        GLES20.glDrawArrays(GLES20.GL_TRIANGLES, 0, vCount);  // There is also GL_LINES for rendering lines. We used GL_TRIANGLES , maybe also good for debugging :D looks impressiv
+        GLES20.glDrawArrays(GLES20.GL_TRIANGLES, 0, 18);  // There is also GL_LINES for rendering lines. We used GL_TRIANGLES , maybe also good for debugging :D looks impressiv
         checkGLError("Drawing prism");
     }
 
@@ -289,11 +258,11 @@ public class Prism extends Geom{
         //TODO FINSIH!
 
     }
-    public Prism(float x, float y, float z,float width,float height,float depth, float r, float g, float b, float a) {
+    public Prism(float x, float y, float z,float width,float height, float r, float g, float b, float a) {
 
-        pages = 6;
+        pages = 3;
         verticesPerPage = 6;
-        vCount = 9;
+        vCount = 18;
         selectedGeomColors = setSelectedGeomColors();
         setFbSelectedGeomColors(setSelectedColorFloatBuffer());
         modelGeom = new float[16];
@@ -305,11 +274,11 @@ public class Prism extends Geom{
         pz = z;
         this.width = width;
         this.height = height;
-        this.depth = depth;
+
 
         setGeomColors(setInitColor(r, g, b, a)); // Init Prism Colors on first call
-        prismVertics = setPrismCoords(x, y, z, width, height, depth);// Init Prism Coords on first call
-        prismNormals = setPrismNormals(width,height,depth);
+        prismVertics = setPrismCoords(x, y, z, width, height);// Init Prism Coords on first call
+        prismNormals = setPrismNormals(width,height);
 
         setFbGeomColors(colorFloatBuffer());
         fbPrismNormals = normalsFloatBuffer(); // NORMALS OF CUBE -> Normals

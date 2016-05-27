@@ -27,7 +27,7 @@ public class ApplicationTest extends CardboardActivity implements CardboardView.
 
 //FLOATS
     private static final float Z_NEAR = 0.1f;
-    private static final float Z_FAR = 100.0f;
+    private static final float Z_FAR = 500.0f;
 
     static final float CAMERA_X = 0.0f;
     static final float CAMERA_Y = 0.0f;
@@ -48,26 +48,24 @@ public class ApplicationTest extends CardboardActivity implements CardboardView.
     int m = 10;// dont do m=100 , rendering 10000 cubes atm is too much
 
 //OBJECTS
-    Tetrahedron tetra1;
     Cube cube1;
     Cube cube2;
     Cube light1;
-    Cuboid cuboid1;
-    Cuboid cuboid2;
     ///////////////////////////////////////
     Cube[][] cubes = new Cube[m][m];
     ///////////////////////////////////////
+
+    Prism testPrism1;
+    Tetrahedron testtetra1;
 
     private Vibrator vibrator;
     Random random = new Random();
 
 
-    public void initCubes(int vertexShader,int passthroughShader){
+    public void initGeoms(int vertexShader,int passthroughShader){
 
-        tetra1 = new Tetrahedron(-5.0f,1.0f,3.0f,1.5f,1.5f,1.5f, 1.0f, 0.8f, 0.0f, 1.0f);
-        cuboid1 = new Cuboid(5.0f,5.0f,8.0f,6.0f,3.7f,8.7f, 1.4f, 2.6f, 0.4f, 0.2f);
-        cuboid2 = new Cuboid(-10.0f,8.0f,4.0f,6.0f,3.7f,0.7f, 1.0f, 0.5f, 0.4f, 1.0f);
-
+        testtetra1 =new Tetrahedron(0.0f,0.0f,-5.0f,0.5f,0.5f,0.5f, 1.0f, 0.6523f, 0.0f, 1.0f);
+        testPrism1 = new Prism(0.0f,0.0f,-4.0f,1.0f,2.0f,1.0f, 0.6523f, 0.0f, 1.0f);
         cube1 = new Cube(-5.0f,1.0f,5.0f,0.5f,0.5f,0.5f, 1.0f, 0.6523f, 0.0f, 1.0f);
         cube2 = new Cube(1.0f,8.0f,3.0f,0.7f,0.7f,0.7f, 1.0f, 0.5f, 0.4f, 1.0f);
         light1 = new Cube(LIGHT_POS_IN_WORLD_SPACE[0],LIGHT_POS_IN_WORLD_SPACE[1],LIGHT_POS_IN_WORLD_SPACE[2],0.7f,0.7f,0.7f, 1.0f, 1.0f, 1.0f, 1.0f );
@@ -77,7 +75,7 @@ public class ApplicationTest extends CardboardActivity implements CardboardView.
                 ; j < m; j++){
 
             //cubes[i][j] = new Cube(50.0f-(5*j),-2.0f,20.0f-(5*i),1.0f,1.0f,1.0f, 1.0f, 0.6523f, 0.0f, 1.0f);
-            cubes[i][j] = new Cube(20.0f-(5*i),-2.0f,50.0f-(5*j),1.0f,1.0f,1.0f, 1.0f, 0.6523f, 0.0f, 1.0f);
+            cubes[i][j] = new Cube(30.0f-(5*i),-2.0f,-10.0f-(5*j),1.0f,1.0f,1.0f, 1.0f, 0.6523f, 0.0f, 1.0f);
             cubes[i][j].initProgram(vertexShader,passthroughShader);
             cubes[i][j].updateModelPosition();
             }
@@ -114,37 +112,7 @@ public class ApplicationTest extends CardboardActivity implements CardboardView.
 
         return shader;
     }
-/*
-        public static int sp_Text;
-     /*SHADER Text
 
-     * This shader is for rendering 2D text textures straight from a texture
-     * Color and alpha blended.
-     *
-
-     public static final String vs_Text =
-                "uniform mat4 uMVPMatrix;" +
-                        "attribute vec4 vPosition;" +
-                        "attribute vec4 a_Color;" +
-                        "attribute vec2 a_texCoord;" +
-                        "varying vec4 v_Color;" +
-                        "varying vec2 v_texCoord;" +
-                        "void main() {" +
-                        "  gl_Position = uMVPMatrix * vPosition;" +
-                        "  v_texCoord = a_texCoord;" +
-                        "  v_Color = a_Color;" +
-                        "}";
-        public static final String fs_Text =
-                "precision mediump float;" +
-                        "varying vec4 v_Color;" +
-                        "varying vec2 v_texCoord;" +
-                        "uniform sampler2D s_texture;" +
-                        "void main() {" +
-                        "  gl_FragColor = texture2D( s_texture, v_texCoord ) * v_Color;" +
-                        "  gl_FragColor.rgb *= v_Color.a;" +
-                        "}";
-
-*/
     /**
      * Checks if we've had an error inside of OpenGL ES, and if so what that error is.
      *
@@ -223,19 +191,16 @@ public class ApplicationTest extends CardboardActivity implements CardboardView.
         //int gridShader = loadGLShader(GLES20.GL_FRAGMENT_SHADER, R.raw.grid_fragment); //NOT NEEDED YET
         int passthroughShader = loadGLShader(GLES20.GL_FRAGMENT_SHADER, R.raw.passthrough_fragment);
 
-        initCubes(vertexShader,passthroughShader);
+        initGeoms(vertexShader,passthroughShader);
 
-        tetra1.initProgram(vertexShader,passthroughShader);
-        cuboid1.initProgram(vertexShader, passthroughShader);
-        cuboid2.initProgram(vertexShader, passthroughShader);
         cube1.initProgram(vertexShader,passthroughShader); //<- Program for every single cube or one for all ?
         cube2.initProgram(vertexShader,passthroughShader);
         light1.initProgram(vertexShader,passthroughShader);
+        testPrism1.initProgram(vertexShader,passthroughShader);
+        testtetra1.initProgram(vertexShader,passthroughShader);
 
-        tetra1.updateModelPosition();
-        cuboid1.updateModelPosition();
-        cuboid2.updateModelPosition();
-
+        testtetra1.updateModelPosition();
+        testPrism1.updateModelPosition();
         light1.updateLightPosition();
         cube1.updateModelPosition();
         cube2.updateModelPosition();
@@ -309,7 +274,7 @@ public class ApplicationTest extends CardboardActivity implements CardboardView.
         // for calculating cube position and light.
         float[] perspective = eye.getPerspective(Z_NEAR, Z_FAR);
 
-        drawCube(perspective);
+        drawGeoms(perspective);
 
 
     }
@@ -323,17 +288,15 @@ public class ApplicationTest extends CardboardActivity implements CardboardView.
      * <p>We've set all of our transformation matrices. Now we simply pass them into the shader.
      * @param perspective
      */
-    public void drawCube(float[] perspective) {
-
-        tetra1.draw(lightPosInEyeSpace, view, perspective);
-        cuboid1.draw(lightPosInEyeSpace, view, perspective);
-        cuboid2.draw(lightPosInEyeSpace, view, perspective);
+    public void drawGeoms(float[] perspective) {
 
         if(cube1.isLookingAtObject(headView)){
             cube1.movY = 0.25f;
             vibrator.vibrate(50);
             Log.e(TAG, "TRIGGERED event in DrawCube");
         }
+        //testPrism1.draw(lightPosInEyeSpace, view, perspective);
+        testtetra1.draw(lightPosInEyeSpace, view, perspective);
         cube1.draw(lightPosInEyeSpace, view, perspective);
         cube2.draw(lightPosInEyeSpace, view, perspective);
         light1.updateLightPosition();
