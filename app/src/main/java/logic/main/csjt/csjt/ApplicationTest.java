@@ -93,8 +93,32 @@ public class ApplicationTest extends CardboardActivity implements CardboardView.
         GLES20.glShaderSource(shader, code);
         GLES20.glCompileShader(shader);
 
-        /* test for text shader
-        public static final String vs_Text =
+        // Get the compilation status.
+        final int[] compileStatus = new int[1];
+        GLES20.glGetShaderiv(shader, GLES20.GL_COMPILE_STATUS, compileStatus, 0);
+
+        // If the compilation failed, delete the shader.
+        if (compileStatus[0] == 0) {
+            Log.e(TAG, "Error compiling shader: " + GLES20.glGetShaderInfoLog(shader));
+            GLES20.glDeleteShader(shader);
+            shader = 0;
+        }
+
+        if (shader == 0) {
+            throw new RuntimeException("Error creating shader.");
+        }
+
+        return shader;
+    }
+
+     /*   public static int sp_Text;
+     SHADER Text
+     *
+     * This shader is for rendering 2D text textures straight from a texture
+     * Color and alpha blended.
+     *
+     */
+       /* public static final String vs_Text =
                 "uniform mat4 uMVPMatrix;" +
                         "attribute vec4 vPosition;" +
                         "attribute vec4 a_Color;" +
@@ -115,26 +139,8 @@ public class ApplicationTest extends CardboardActivity implements CardboardView.
                         "  gl_FragColor = texture2D( s_texture, v_texCoord ) * v_Color;" +
                         "  gl_FragColor.rgb *= v_Color.a;" +
                         "}";
-                        */
 
-        // Get the compilation status.
-        final int[] compileStatus = new int[1];
-        GLES20.glGetShaderiv(shader, GLES20.GL_COMPILE_STATUS, compileStatus, 0);
-
-        // If the compilation failed, delete the shader.
-        if (compileStatus[0] == 0) {
-            Log.e(TAG, "Error compiling shader: " + GLES20.glGetShaderInfoLog(shader));
-            GLES20.glDeleteShader(shader);
-            shader = 0;
-        }
-
-        if (shader == 0) {
-            throw new RuntimeException("Error creating shader.");
-        }
-
-        return shader;
-    }
-
+*/
     /**
      * Checks if we've had an error inside of OpenGL ES, and if so what that error is.
      *
