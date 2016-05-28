@@ -56,6 +56,10 @@ public class Tetrahedron extends Geom {
         return this.fbCubeColors;
     }
 
+    public float[] getModelTetrahedron() {
+        return modelGeom;
+    }
+
     public FloatBuffer colorFloatBuffer(){
 
         FloatBuffer lFloatBuffer;
@@ -172,10 +176,17 @@ public class Tetrahedron extends Geom {
         modelPosition = new float[] {1.0f, 1.0f, -MAX_MODEL_DISTANCE / 2.0f};
 
     }
+    public void setModelTetrahedron(float[] modelTetrahedron) {
+        this.modelGeom = modelTetrahedron;
+    }
+
 
     public void draw(float[] lightPosInEyeSpace, float[] view, float[] perspective){
         // TODO: Init Params !
-        Matrix.multiplyMM(modelView, 0, view, 0, modelGeom, 0);
+        // You can rotate the cubes by uncommenting Matrix.rotateM, but wont work together with callUpdatePos
+        float[] lModelTetrahedron = this.getModelTetrahedron();
+        Matrix.rotateM(lModelTetrahedron, 0,0.3f, this.modelPosition[0], this.modelPosition[1], this.modelPosition[2]);
+        this.setModelTetrahedron(lModelTetrahedron);Matrix.multiplyMM(modelView, 0, view, 0, modelGeom, 0);
         Matrix.multiplyMM(modelViewProjection, 0, perspective, 0, modelView, 0);
         GLES20.glUseProgram(cubeProgram);
         GLES20.glUniform3fv(this.cubeLightPosParam, 1, lightPosInEyeSpace, 0);
