@@ -71,6 +71,12 @@
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/dependency-cache" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/dex" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/dex-cache" />
+      <excludeFolder url="file://$MODULE_DIR$/build/intermediates/exploded-aar/CSJT/audio/unspecified/jars" />
+      <excludeFolder url="file://$MODULE_DIR$/build/intermediates/exploded-aar/CSJT/common/unspecified/jars" />
+      <excludeFolder url="file://$MODULE_DIR$/build/intermediates/exploded-aar/CSJT/commonwidget/unspecified/jars" />
+      <excludeFolder url="file://$MODULE_DIR$/build/intermediates/exploded-aar/CSJT/core/unspecified/jars" />
+      <excludeFolder url="file://$MODULE_DIR$/build/intermediates/exploded-aar/CSJT/panowidget/unspecified/jars" />
+      <excludeFolder url="file://$MODULE_DIR$/build/intermediates/exploded-aar/CSJT/videowidget/unspecified/jars" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/exploded-aar/com.android.support/animated-vector-drawable/23.2.1/jars" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.2.1/jars" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/exploded-aar/com.android.support/support-v4/23.2.1/jars" />
@@ -103,6 +109,11 @@
     <orderEntry type="module" module-name="audio" exported="" />
     <orderEntry type="module" module-name="panowidget" exported="" />
     <orderEntry type="module" module-name="common" exported="" />
-    <orderEntry type="library" name="cardboard" level="application" />
+    <orderEntry type="library" exported="" name="commonwidget-unspecified" level="project" />
+    <orderEntry type="library" exported="" name="videowidget-unspecified" level="project" />
+    <orderEntry type="library" exported="" name="core-unspecified" level="project" />
+    <orderEntry type="library" exported="" name="audio-unspecified" level="project" />
+    <orderEntry type="library" exported="" name="panowidget-unspecified" level="project" />
+    <orderEntry type="library" exported="" name="common-unspecified" level="project" />
   </component>
 </module>
