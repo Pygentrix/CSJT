@@ -200,7 +200,7 @@ public class Tetrahedron extends Geom {
         //        isLookingAtObject() ? cube1. : cube1.cubeColors);
         GLES20.glVertexAttribPointer(this.cubeColorParam, 4, GLES20.GL_FLOAT, false, 0,this.getFbCubeColors()); //<- Points to the active Array other words: OpenGL now knows, that this needs to be rendered
         // TODO: How is the GL Triangles Mode working ?
-        GLES20.glDrawArrays(GLES20.GL_TRIANGLES, 0, vCount);  // There is also GL_LINES for rendering lines. We used GL_TRIANGLES , maybe also good for debugging :D looks impressiv
+        GLES20.glDrawArrays(rMode ? GLES20.GL_TRIANGLES : GLES20.GL_LINES, 0, vCount);  // There is also GL_LINES for rendering lines. We used GL_TRIANGLES , maybe also good for debugging :D looks impressiv
         checkGLError("Drawing cube");
     }
 

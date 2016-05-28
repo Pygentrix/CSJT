@@ -44,6 +44,7 @@ public class Geom {
 
 //BOOLEANS
     public boolean islookingAtIt = false;
+    public static boolean rMode = true; // used for the rendering mode
 
 
 //GETTERS

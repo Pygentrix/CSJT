@@ -55,6 +55,8 @@ public class ApplicationTest extends CardboardActivity implements CardboardView.
     private Vibrator vibrator;
     Random random = new Random();
 
+    private long timeOfLastTap;
+
 
     public void initGeoms(int vertexShader,int passthroughShader){
 
@@ -313,6 +315,13 @@ public class ApplicationTest extends CardboardActivity implements CardboardView.
     @Override
     public void onCardboardTrigger() {
         Log.i(TAG, "onCardboardTrigger");
+
+        if(System.currentTimeMillis() - timeOfLastTap < 2000){
+            Geom.rMode = false;
+        }
+        else{
+            Geom.rMode = true;
+        }
         if(cube1.isLookingAtObject(headView)){
             cube1.movY = 0.25f;
             Log.e(TAG, "TRIGGERED event!!!");
@@ -335,6 +344,7 @@ public class ApplicationTest extends CardboardActivity implements CardboardView.
         //selectRndCubeAndStartMoving();
 
         // Always give user feedback.
+        timeOfLastTap = System.currentTimeMillis();
         vibrator.vibrate(50);
     }
 
