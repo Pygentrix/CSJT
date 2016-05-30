@@ -224,33 +224,6 @@ public class Prism extends Geom{
         checkGLError("Prism program params");
     }
 
-    public void updateLightPosition() {
-
-        this.modelPosition[0] = ApplicationTest.LIGHT_POS_IN_WORLD_SPACE[0];
-        this.modelPosition[1] = ApplicationTest.LIGHT_POS_IN_WORLD_SPACE[1];
-        this.modelPosition[2] = ApplicationTest.LIGHT_POS_IN_WORLD_SPACE[2];
-        this.callUpdatePos();
-    }
-
-    public void callUpdatePos() {
-        if(this.initCase){
-            this.initCase = false;
-            this.modelPosition[1] = this.modelPosition[1] + this.movY;
-        }
-        else if(this.modelPosition[1] >= 50.0f){
-            this.dir = false;
-        }
-        else if(this.modelPosition[1] <= -20.0f){
-            this.dir = true;
-        }
-        if(this.dir) {this.modelPosition[1] = this.modelPosition[1] + this.movY;}
-        else if(!this.dir) {this.modelPosition[1] = this.modelPosition[1] - this.movY;}
-
-
-        this.updateModelPosition();
-        checkGLError("updatePositions");
-    }
-
     //CONSTRUCTOR(S)
     public Prism(Float x, Float y, Float z) {
 

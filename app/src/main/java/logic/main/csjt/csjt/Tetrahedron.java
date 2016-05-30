@@ -185,7 +185,7 @@ public class Tetrahedron extends Geom {
         // TODO: Init Params !
         // You can rotate the cubes by uncommenting Matrix.rotateM, but wont work together with callUpdatePos
         float[] lModelTetrahedron = this.getModelTetrahedron();
-        Matrix.rotateM(lModelTetrahedron, 0,0.3f, this.modelPosition[0], this.modelPosition[1], this.modelPosition[2]);
+        //Matrix.rotateM(lModelTetrahedron, 0,0.3f, this.modelPosition[0], this.modelPosition[1], this.modelPosition[2]);
         this.setModelTetrahedron(lModelTetrahedron);Matrix.multiplyMM(modelView, 0, view, 0, modelGeom, 0);
         Matrix.multiplyMM(modelViewProjection, 0, perspective, 0, modelView, 0);
         GLES20.glUseProgram(cubeProgram);
@@ -269,42 +269,6 @@ public class Tetrahedron extends Geom {
 
 
 
-    }
-
-    public void updateModelPosition() {
-
-        Matrix.setIdentityM(this.modelGeom, 0);
-        // We add to the Y-axis a rnd float so cubes start moving....
-        Matrix.translateM(this.modelGeom, 0, this.modelPosition[0], this.modelPosition[1], this.modelPosition[2]);
-
-        checkGLError("updateCubePosition");
-    }
-    public void updateLightPosition() {
-
-        this.modelPosition[0] = ApplicationTest.LIGHT_POS_IN_WORLD_SPACE[0];
-        this.modelPosition[1] = ApplicationTest.LIGHT_POS_IN_WORLD_SPACE[1];
-        this.modelPosition[2] = ApplicationTest.LIGHT_POS_IN_WORLD_SPACE[2];
-        this.callUpdatePos();
-    }
-
-
-    public void callUpdatePos() {
-        if(this.initCase){
-            this.initCase = false;
-            this.modelPosition[1] = this.modelPosition[1] + this.movY;
-        }
-        else if(this.modelPosition[1] >= 50.0f){
-            this.dir = false;
-        }
-        else if(this.modelPosition[1] <= -20.0f){
-            this.dir = true;
-        }
-        if(this.dir) {this.modelPosition[1] = this.modelPosition[1] + this.movY;}
-        else if(!this.dir) {this.modelPosition[1] = this.modelPosition[1] - this.movY;}
-
-
-        this.updateModelPosition();
-        checkGLError("updatePositions");
     }
     
 }

@@ -137,7 +137,6 @@ public class ApplicationTest extends CardboardActivity implements CardboardView.
             }
         });
         setCardboardView(cardboardView);
-
         camera = new float[16];
         view = new float[16];
         headRotation = new float[4];
@@ -335,7 +334,7 @@ public class ApplicationTest extends CardboardActivity implements CardboardView.
             }
         }
         //We try to change the light pos while being in the app
-        testLightning = testLightning +1;
+        testLightning = testLightning + 1;
         LIGHT_POS_IN_WORLD_SPACE[0] = 0.1f * testLightning;
         LIGHT_POS_IN_WORLD_SPACE[1] = 2.0f;
         LIGHT_POS_IN_WORLD_SPACE[2] = 0.1f * testLightning;

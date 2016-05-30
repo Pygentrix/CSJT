@@ -22,6 +22,8 @@ public class Geom {
     float width;
     float height;
     float depth;
+    float rotSpeed = 0.3f;
+    float movY = 0.0f; // Movement factor in y-direction
     // The default value is 0.12f, but we will increase the value due to debugging
     private float YAW_LIMIT;
     private float PITCH_LIMIT;
@@ -45,6 +47,8 @@ public class Geom {
 //BOOLEANS
     public boolean islookingAtIt = false;
     public static boolean rMode = true; // used for the rendering mode
+    public boolean dir = true;
+    private boolean initCase = true;
 
 
 //GETTERS
@@ -161,8 +165,8 @@ public class Geom {
     }
 
     public void updateModelPosition() {
-
         Matrix.setIdentityM(this.modelGeom, 0);
+        //Matrix.rotateM(this.modelGeom, 0,this.rotSpeed, this.modelPosition[0], this.modelPosition[1], this.modelPosition[2]);
         // We add to the Y-axis a rnd float so cubes start moving....
         Matrix.translateM(this.modelGeom, 0, this.modelPosition[0], this.modelPosition[1], this.modelPosition[2]);
 
@@ -172,6 +176,26 @@ public class Geom {
                 +((this.modelPosition[2]-ApplicationTest.CAMERA_Z)*(this.modelPosition[2]-ApplicationTest.CAMERA_Z))));
 
         checkGLError("updateCubePosition");
+    }
+
+
+    public void callUpdatePos() {
+        if(this.initCase){
+            this.initCase = false;
+            this.modelPosition[1] = this.modelPosition[1] + this.movY;
+        }
+        else if(this.modelPosition[1] >= 50.0f){
+            this.dir = false;
+        }
+        else if(this.modelPosition[1] <= -20.0f){
+            this.dir = true;
+        }
+        if(this.dir) {this.modelPosition[1] = this.modelPosition[1] + this.movY;}
+        else if(!this.dir) {this.modelPosition[1] = this.modelPosition[1] - this.movY;}
+
+
+        this.updateModelPosition();
+        checkGLError("updatePositions");
     }
 
     //TODO This function is really trivial in checking obj(more tiny obj are triggered inaccurate), this is because of no distance to obj calcs,

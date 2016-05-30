@@ -16,7 +16,7 @@ public class Cube extends Geom{
 //FLOATS
         private static final float MAX_MODEL_DISTANCE = 7.0f; // Needs to be deleted in future
         private static final float TIME_DELTA = 0.3f; // Used for object rotation
-        public float movY = 0.0f; // Movement factor in y-direction
+
 
 //FLOAT ARRAYS
         private float[] cubeNormals;
@@ -39,8 +39,6 @@ public class Cube extends Geom{
         private int cubeLightPosParam;
 
 //BOOLEANS
-        public boolean dir = true;
-        private boolean initCase = true;
 
 //GETTERS
         public FloatBuffer getFbCubeNormals() {
@@ -199,9 +197,9 @@ public class Cube extends Geom{
                 this.callUpdatePos();
 
                 // You can rotate the cubes by uncommenting Matrix.rotateM, but wont work together with callUpdatePos
-                float[] lModelCube = this.getModelCube();
+                //float[] lModelCube = this.getModelCube();
                 //Matrix.rotateM(lModelCube, 0,TIME_DELTA, this.modelPosition[0], this.modelPosition[1], this.modelPosition[2]);
-                this.setModelCube(lModelCube);
+                //this.setModelCube(lModelCube);
 
                 Matrix.multiplyMM(this.modelView, 0, view, 0, modelGeom, 0);
                 Matrix.multiplyMM(modelViewProjection, 0, perspective, 0, modelView, 0);
@@ -262,25 +260,6 @@ public class Cube extends Geom{
                 this.modelPosition[1] = ApplicationTest.LIGHT_POS_IN_WORLD_SPACE[1];
                 this.modelPosition[2] = ApplicationTest.LIGHT_POS_IN_WORLD_SPACE[2];
                 this.callUpdatePos();
-        }
-
-        public void callUpdatePos() {
-                if(this.initCase){
-                        this.initCase = false;
-                        this.modelPosition[1] = this.modelPosition[1] + this.movY;
-                }
-                else if(this.modelPosition[1] >= 50.0f){
-                        this.dir = false;
-                }
-                else if(this.modelPosition[1] <= -20.0f){
-                        this.dir = true;
-                }
-                if(this.dir) {this.modelPosition[1] = this.modelPosition[1] + this.movY;}
-                else if(!this.dir) {this.modelPosition[1] = this.modelPosition[1] - this.movY;}
-
-
-                this.updateModelPosition();
-                checkGLError("updatePositions");
         }
 
 //CONSTRUCTOR(S)
