@@ -33,7 +33,7 @@ public class Geom {
     public float[] modelView = new float[16];
     public float[] modelPosition;
     private float[] geomColors;
-    public static float[] selectedGeomColors;
+    float[] selectedGeomColors;
 
 //INTEGERS
     int vCount;
@@ -166,7 +166,7 @@ public class Geom {
 
     public void updateModelPosition() {
         Matrix.setIdentityM(this.modelGeom, 0);
-        //Matrix.rotateM(this.modelGeom, 0,this.rotSpeed, this.modelPosition[0], this.modelPosition[1], this.modelPosition[2]);
+        Matrix.rotateM(this.modelGeom, 0,this.rotSpeed, this.modelPosition[0], this.modelPosition[1], this.modelPosition[2]);
         // We add to the Y-axis a rnd float so cubes start moving....
         Matrix.translateM(this.modelGeom, 0, this.modelPosition[0], this.modelPosition[1], this.modelPosition[2]);
 
