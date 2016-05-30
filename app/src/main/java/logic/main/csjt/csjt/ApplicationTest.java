@@ -329,7 +329,7 @@ public class ApplicationTest extends CardboardActivity implements CardboardView.
                 if (cubes[i][j].isLookingAtObject(headView)) {
                     // hideObject();
                     cubes[i][j].movY = 0.25f;
-                    Log.e(TAG, "TRIGGERED ISLOOKINGATOBJ!!!");
+                    Log.e(TAG, "VCount: " + cubes[i][j].vCount);
                 }
             }
         }

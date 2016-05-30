@@ -37,8 +37,8 @@ public class Geom {
 
 //INTEGERS
     int vCount;
-    static int pages;
-    static int verticesPerPage;
+    int pages;
+    int verticesPerPage;
 
 //BUFFERS
     private FloatBuffer fbGeomColors;

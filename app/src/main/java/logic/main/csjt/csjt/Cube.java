@@ -107,7 +107,7 @@ public class Cube extends Geom{
                         px-width, py-height, pz+depth,
                         px-width, py-height, pz-depth
                 };
-
+                this.vCount = CUBE_COORDS.length / 3;
                 return CUBE_COORDS;
         }
 
@@ -287,9 +287,9 @@ public class Cube extends Geom{
                 this.height = height;
                 this.depth = depth;
 
-                setGeomColors(setInitColor(r, g, b, a)); // Init Cube Colors on first call
                 cubeVertics = setCubeCoords(x, y, z, width, height, depth);// Init Cube Coords on first call
                 cubeNormals = setCubeNormals(width,height,depth);
+                setGeomColors(setInitColor(r, g, b, a)); // Init Cube Colors on first call
 
                 setFbGeomColors(colorFloatBuffer());
                 fbCubeNormals = normalsFloatBuffer(); // NORMALS OF CUBE -> Normals
