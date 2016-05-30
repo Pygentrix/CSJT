@@ -34,11 +34,29 @@ public class Geom {
     public float[] modelPosition;
     private float[] geomColors;
     float[] selectedGeomColors;
+    float[] modelViewProjection;
+
+    float[] geomNormals;
+    float[] geomVertics;
+
+//FLOAT BUFFERS
+    FloatBuffer fbGeomNormals;
+    FloatBuffer fbGeomVertics;
 
 //INTEGERS
     int vCount;
     int pages;
     int verticesPerPage;
+
+    public static int geomProgram;
+    private static final int COORDS_PER_VERTEX = 3;
+    int geomPositionParam;
+    int geomModelViewProjectionParam;
+    int geomNormalParam;
+    int geomColorParam;
+    int geomModelParam;
+    int geomModelViewParam;
+    int geomLightPosParam;
 
 //BUFFERS
     private FloatBuffer fbGeomColors;
@@ -60,6 +78,19 @@ public class Geom {
         return this.fbGeomColors;
     }
 
+    public FloatBuffer getFbGeomNormals() {
+        return this.fbGeomNormals;
+    }
+
+    public FloatBuffer getFbGeomVertics() {
+        return this.fbGeomVertics;
+    }
+
+
+
+    public float[] getModelGeom() {
+        return modelGeom;
+    }
 
 //SETTERS
     public void setFbSelectedGeomColors(FloatBuffer fbSelectedGeomColors) {
@@ -139,7 +170,34 @@ public class Geom {
         return lFloatBuffer;
     }
 
+    public void setModelGeom(float[] modelGeom) {
+        this.modelGeom = modelGeom;
+    }
+
 //METHODS / FUNCTIONS
+
+    public FloatBuffer verticsFloatBuffer(){
+
+        FloatBuffer lFloatBuffer;
+        ByteBuffer bbVertics = ByteBuffer.allocateDirect(this.geomVertics.length * 4);
+        bbVertics.order(ByteOrder.nativeOrder());
+        lFloatBuffer = bbVertics.asFloatBuffer();
+        lFloatBuffer.put(this.geomVertics);
+        lFloatBuffer.position(0);
+        return lFloatBuffer;
+    }
+
+    public FloatBuffer normalsFloatBuffer(){
+
+        FloatBuffer lFloatBuffer;
+        ByteBuffer bbNormals = ByteBuffer.allocateDirect(this.geomNormals.length * 4);
+        bbNormals.order(ByteOrder.nativeOrder());
+        lFloatBuffer = bbNormals.asFloatBuffer();
+        lFloatBuffer.put(this.geomNormals);
+        lFloatBuffer.position(0);
+        return lFloatBuffer;
+    }
+
     public FloatBuffer colorFloatBuffer() {
 
         FloatBuffer lFloatBuffer;
@@ -164,25 +222,73 @@ public class Geom {
         }
     }
 
+
+    public void initProgram(int vertexShader, int passthroughShader){
+
+
+        this.geomProgram = GLES20.glCreateProgram();
+        GLES20.glAttachShader(geomProgram, vertexShader);
+        GLES20.glAttachShader(geomProgram, passthroughShader);
+        GLES20.glLinkProgram(geomProgram);
+        GLES20.glUseProgram(geomProgram);
+
+        checkGLError("Cube program");
+
+        this.geomPositionParam = GLES20.glGetAttribLocation(geomProgram, "a_Position");
+        this.geomNormalParam = GLES20.glGetAttribLocation(geomProgram, "a_Normal");
+        this.geomColorParam = GLES20.glGetAttribLocation(geomProgram, "a_Color");
+
+        this.geomModelParam = GLES20.glGetUniformLocation(geomProgram, "u_Model");
+        this.geomModelViewParam = GLES20.glGetUniformLocation(geomProgram, "u_MVMatrix");
+        this.geomModelViewProjectionParam = GLES20.glGetUniformLocation(geomProgram, "u_MVP");
+        this.geomLightPosParam = GLES20.glGetUniformLocation(geomProgram, "u_LightPos");
+
+        GLES20.glEnableVertexAttribArray(this.geomPositionParam);// Enables the VertexArrays which is needed so opengl knows wht to render
+        GLES20.glEnableVertexAttribArray(this.geomNormalParam);// Enables the VertexArrays which is needed so opengl knows wht to render
+        GLES20.glEnableVertexAttribArray(this.geomColorParam);  // Enables the VertexArrays which is needed so opengl knows wht to render
+
+        checkGLError("geom program params");
+    }
+
+    public void draw(float[] lightPosInEyeSpace, float[] view, float[] perspective){
+        // TODO: Get Updating and rotation work toghether, look at hideObject func to solve proble
+        this.updateModelPosition();
+        //this.updateModelPosition(); <- Collision with rotation
+        // You can rotate the geoms by uncommenting Matrix.rotateM, but wont work together with callUpdatePos
+        float[] lModelGeom = this.getModelGeom();
+        //Matrix.rotateM(lModelGeom, 0,TIME_DELTA, this.modelPosition[0], this.modelPosition[1], this.modelPosition[2]);
+        this.setModelGeom(lModelGeom);
+
+        Matrix.multiplyMM(this.modelView, 0, view, 0, modelGeom, 0);
+        Matrix.multiplyMM(modelViewProjection, 0, perspective, 0, modelView, 0);
+        GLES20.glUseProgram(geomProgram);
+        GLES20.glUniform3fv(this.geomLightPosParam, 1, lightPosInEyeSpace, 0);
+
+        // Set the Model in the shader, used to calculate lighting
+        GLES20.glUniformMatrix4fv(this.geomModelParam, 1, false, this.modelGeom, 0);
+
+        // Set the ModelView in the shader, used to calculate lighting
+        GLES20.glUniformMatrix4fv(this.geomModelViewParam, 1, false, this.modelView, 0);
+        GLES20.glVertexAttribPointer(
+                this.geomPositionParam,COORDS_PER_VERTEX, GLES20.GL_FLOAT, false, 0, this.getFbGeomVertics());
+
+        // Set the ModelViewProjection matrix in the shader.
+        GLES20.glUniformMatrix4fv(this.geomModelViewProjectionParam, 1, false, this.modelViewProjection, 0);
+
+        // Set the normal positions of the geom, again for shading
+        GLES20.glVertexAttribPointer(this.geomNormalParam, 3, GLES20.GL_FLOAT, false, 0, this.getFbGeomNormals());  //<- Points to the active Array other words: OpenGL now knows, that this needs to be rendered
+
+        //Has to do sth with the color of the geom while pointing at it
+        GLES20.glVertexAttribPointer(geomColorParam, 4, GLES20.GL_FLOAT, false, 0,this.islookingAtIt ? this.getFbSelectedGeomColors() : this.getFbGeomColors());
+        //GLES20.glVertexAttribPointer(this.geomColorParam, 4, GLES20.GL_FLOAT, false, 0,this.getFbGeomColors()); //<- Points to the active Array other words: OpenGL now knows, that this needs to be rendered
+        GLES20.glDrawArrays(rMode ? GLES20.GL_TRIANGLES : GLES20.GL_LINES, 0, vCount);  // There is also GL_LINES for rendering lines. We used GL_TRIANGLES , maybe also good for debugging :D looks impressiv
+        checkGLError("Drawing geom");
+    }
+
     public void updateModelPosition() {
         Matrix.setIdentityM(this.modelGeom, 0);
-        // We add to the Y-axis a rnd float so cubes start moving....
-        if(this.initCase){
-            this.initCase = false;
-            this.modelPosition[1] = this.modelPosition[1] + this.movY;
-            Matrix.translateM(this.modelGeom, 0, this.modelPosition[0], this.modelPosition[1] + this.movY, this.modelPosition[2]);
-        }
-        else if(this.modelPosition[1] >= 50.0f){
-            this.dir = false;
-        }
-        else if(this.modelPosition[1] <= -20.0f){
-            this.dir = true;
-        }
-        if(this.dir) {this.modelPosition[1] = this.modelPosition[1] + this.movY;
-            Matrix.translateM(this.modelGeom, 0, this.modelPosition[0], this.modelPosition[1] + this.movY, this.modelPosition[2]);}
-        else if(!this.dir) {this.modelPosition[1] = this.modelPosition[1] - this.movY;
-            Matrix.translateM(this.modelGeom, 0, this.modelPosition[0], this.modelPosition[1] - this.movY, this.modelPosition[2]);}
-
+        calcY();
+        Matrix.translateM(this.modelGeom, 0, this.modelPosition[0], this.modelPosition[1] - this.movY, this.modelPosition[2]);
         //float[] transMatrix = this.modelGeom;
         Matrix.rotateM(this.modelGeom, 0,this.rotSpeed, this.modelPosition[0], this.modelPosition[1], this.modelPosition[2]);
 
@@ -191,7 +297,24 @@ public class Geom {
                 +((this.modelPosition[1]-ApplicationTest.CAMERA_Y)*(this.modelPosition[1]-ApplicationTest.CAMERA_Y))
                 +((this.modelPosition[2]-ApplicationTest.CAMERA_Z)*(this.modelPosition[2]-ApplicationTest.CAMERA_Z))));
 
-        checkGLError("updateCubePosition");
+        checkGLError("updateGeomPosition");
+    }
+
+    private void calcY(){
+
+        // We add to the Y-axis a rnd float so geoms start moving....
+        if(this.initCase){
+            this.initCase = false;
+            this.modelPosition[1] = this.modelPosition[1] + this.movY;
+        }
+        else if(this.modelPosition[1] >= 50.0f){
+            this.dir = false;
+        }
+        else if(this.modelPosition[1] <= -20.0f){
+            this.dir = true;
+        }
+        if(this.dir) {this.modelPosition[1] = this.modelPosition[1] + this.movY;}
+        else if(!this.dir) {this.modelPosition[1] = this.modelPosition[1] - this.movY;}
     }
 
 
@@ -237,7 +360,7 @@ public class Geom {
         //        (float) Math.random() * (MAX_MODEL_DISTANCE - MIN_MODEL_DISTANCE) + MIN_MODEL_DISTANCE;
         float objectScalingFactor = objectDistance / oldObjectDistance;
         Matrix.scaleM(rotationMatrix, 0, objectScalingFactor, objectScalingFactor, objectScalingFactor);
-        //Matrix.multiplyMV(posVec, 0, rotationMatrix, 0, modelCube, 12);
+        //Matrix.multiplyMV(posVec, 0, rotationMatrix, 0, modelGeom, 12);
 
         float angleY = (float) Math.random() * 80 - 40; // Angle in Y plane, between -40 and 40.
         angleY = (float) Math.toRadians(angleY);
@@ -249,4 +372,5 @@ public class Geom {
 
         //updateModelPosition();
     }
+
 }
