@@ -170,6 +170,7 @@ public class Geom {
         if(this.initCase){
             this.initCase = false;
             this.modelPosition[1] = this.modelPosition[1] + this.movY;
+            Matrix.translateM(this.modelGeom, 0, this.modelPosition[0], this.modelPosition[1] + this.movY, this.modelPosition[2]);
         }
         else if(this.modelPosition[1] >= 50.0f){
             this.dir = false;
@@ -177,12 +178,13 @@ public class Geom {
         else if(this.modelPosition[1] <= -20.0f){
             this.dir = true;
         }
-        if(this.dir) {this.modelPosition[1] = this.modelPosition[1] + this.movY;}
-        else if(!this.dir) {this.modelPosition[1] = this.modelPosition[1] - this.movY;}
+        if(this.dir) {this.modelPosition[1] = this.modelPosition[1] + this.movY;
+            Matrix.translateM(this.modelGeom, 0, this.modelPosition[0], this.modelPosition[1] + this.movY, this.modelPosition[2]);}
+        else if(!this.dir) {this.modelPosition[1] = this.modelPosition[1] - this.movY;
+            Matrix.translateM(this.modelGeom, 0, this.modelPosition[0], this.modelPosition[1] - this.movY, this.modelPosition[2]);}
 
         //float[] transMatrix = this.modelGeom;
-        Matrix.translateM(this.modelGeom, 0, this.modelPosition[0], this.modelPosition[1], this.modelPosition[2]);
-
+        Matrix.rotateM(this.modelGeom, 0,this.rotSpeed, this.modelPosition[0], this.modelPosition[1], this.modelPosition[2]);
 
         objectDistance =(float) Math.sqrt((((this.modelPosition[0]-ApplicationTest.CAMERA_X)
                 *(this.modelPosition[0]-ApplicationTest.CAMERA_X))
