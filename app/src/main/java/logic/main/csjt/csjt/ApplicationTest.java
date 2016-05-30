@@ -16,6 +16,7 @@ import java.io.InputStreamReader;
 import java.util.Random;
 
 public class ApplicationTest extends CardboardActivity implements CardboardView.StereoRenderer  {
+
 //STRINGS
     private static final String TAG = "CSJT";
 
@@ -77,6 +78,31 @@ public class ApplicationTest extends CardboardActivity implements CardboardView.
             }
         }
     }
+    public static int sp_Text;
+
+     // This shader is for rendering 2D text textures straight from a texture
+
+    public static final String vs_Text =
+            "uniform mat4 uMVPMatrix;" +
+                    "attribute vec4 vPosition;" +
+                    "attribute vec4 a_Color;" +
+                    "attribute vec2 a_texCoord;" +
+                    "varying vec4 v_Color;" +
+                    "varying vec2 v_texCoord;" +
+                    "void main() {" +
+                    "  gl_Position = uMVPMatrix * vPosition;" +
+                    "  v_texCoord = a_texCoord;" +
+                    "  v_Color = a_Color;" +
+                    "}";
+    public static final String fs_Text =
+            "precision mediump float;" +
+                    "varying vec4 v_Color;" +
+                    "varying vec2 v_texCoord;" +
+                    "uniform sampler2D s_texture;" +
+                    "void main() {" +
+                    "  gl_FragColor = texture2D( s_texture, v_texCoord ) * v_Color;" +
+                    "  gl_FragColor.rgb *= v_Color.a;" +
+                    "}";
 
     /**
      * Converts a raw text file, saved as a resource, into an OpenGL ES shader.
@@ -199,6 +225,19 @@ public class ApplicationTest extends CardboardActivity implements CardboardView.
         light1.updateLightPosition();
         cube1.updateModelPosition();
         cube2.updateModelPosition();
+
+        // Text shader
+       /* int vshadert = riGraphicTools.loadShader(GLES20.GL_VERTEX_SHADER,
+                riGraphicTools.vs_Text);
+        int fshadert = riGraphicTools.loadShader(GLES20.GL_FRAGMENT_SHADER,
+                riGraphicTools.fs_Text);
+
+        riGraphicTools.sp_Text = GLES20.glCreateProgram();
+        GLES20.glAttachShader(riGraphicTools.sp_Text, vshadert);
+        GLES20.glAttachShader(riGraphicTools.sp_Text, fshadert);
+        GLES20.glLinkProgram(riGraphicTools.sp_Text);
+        */
+
         checkGLError("onSurfaceCreated");
     }
 
