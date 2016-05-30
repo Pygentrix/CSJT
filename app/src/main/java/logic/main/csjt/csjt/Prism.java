@@ -265,7 +265,7 @@ public class Prism extends Geom{
         fbPrismNormals = normalsFloatBuffer(); // NORMALS OF CUBE -> Normals
         fbPrismVertics = verticsFloatBuffer();  // COORDS OF CUBE -> Vertices
 
-        this.callUpdatePos();
+        this.updateModelPosition();
 
 
 

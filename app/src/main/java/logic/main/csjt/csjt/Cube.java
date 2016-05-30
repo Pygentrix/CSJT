@@ -194,11 +194,11 @@ public class Cube extends Geom{
 //FUNCTIONS / METHODS
         public void draw(float[] lightPosInEyeSpace, float[] view, float[] perspective){
                 // TODO: Get Updating and rotation work toghether, look at hideObject func to solve proble
-                //this.callUpdatePos();
+                this.updateModelPosition();
                 //this.updateModelPosition(); <- Collision with rotation
                 // You can rotate the cubes by uncommenting Matrix.rotateM, but wont work together with callUpdatePos
                 float[] lModelCube = this.getModelCube();
-                Matrix.rotateM(lModelCube, 0,TIME_DELTA, this.modelPosition[0], this.modelPosition[1], this.modelPosition[2]);
+                //Matrix.rotateM(lModelCube, 0,TIME_DELTA, this.modelPosition[0], this.modelPosition[1], this.modelPosition[2]);
                 this.setModelCube(lModelCube);
 
                 Matrix.multiplyMM(this.modelView, 0, view, 0, modelGeom, 0);
@@ -259,7 +259,7 @@ public class Cube extends Geom{
                 this.modelPosition[0] = ApplicationTest.LIGHT_POS_IN_WORLD_SPACE[0];
                 this.modelPosition[1] = ApplicationTest.LIGHT_POS_IN_WORLD_SPACE[1];
                 this.modelPosition[2] = ApplicationTest.LIGHT_POS_IN_WORLD_SPACE[2];
-                this.callUpdatePos();
+                this.updateModelPosition();
         }
 
 //CONSTRUCTOR(S)
@@ -295,7 +295,7 @@ public class Cube extends Geom{
                 fbCubeNormals = normalsFloatBuffer(); // NORMALS OF CUBE -> Normals
                 fbCubeVertics = verticsFloatBuffer();  // COORDS OF CUBE -> Vertices
 
-                this.callUpdatePos();
+                this.updateModelPosition();
 
 
 

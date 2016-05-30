@@ -166,20 +166,7 @@ public class Geom {
 
     public void updateModelPosition() {
         Matrix.setIdentityM(this.modelGeom, 0);
-        Matrix.rotateM(this.modelGeom, 0,this.rotSpeed, this.modelPosition[0], this.modelPosition[1], this.modelPosition[2]);
         // We add to the Y-axis a rnd float so cubes start moving....
-        Matrix.translateM(this.modelGeom, 0, this.modelPosition[0], this.modelPosition[1], this.modelPosition[2]);
-
-        objectDistance =(float) Math.sqrt((((this.modelPosition[0]-ApplicationTest.CAMERA_X)
-                *(this.modelPosition[0]-ApplicationTest.CAMERA_X))
-                +((this.modelPosition[1]-ApplicationTest.CAMERA_Y)*(this.modelPosition[1]-ApplicationTest.CAMERA_Y))
-                +((this.modelPosition[2]-ApplicationTest.CAMERA_Z)*(this.modelPosition[2]-ApplicationTest.CAMERA_Z))));
-
-        checkGLError("updateCubePosition");
-    }
-
-
-    public void callUpdatePos() {
         if(this.initCase){
             this.initCase = false;
             this.modelPosition[1] = this.modelPosition[1] + this.movY;
@@ -193,10 +180,18 @@ public class Geom {
         if(this.dir) {this.modelPosition[1] = this.modelPosition[1] + this.movY;}
         else if(!this.dir) {this.modelPosition[1] = this.modelPosition[1] - this.movY;}
 
+        //float[] transMatrix = this.modelGeom;
+        Matrix.translateM(this.modelGeom, 0, this.modelPosition[0], this.modelPosition[1], this.modelPosition[2]);
 
-        this.updateModelPosition();
-        checkGLError("updatePositions");
+
+        objectDistance =(float) Math.sqrt((((this.modelPosition[0]-ApplicationTest.CAMERA_X)
+                *(this.modelPosition[0]-ApplicationTest.CAMERA_X))
+                +((this.modelPosition[1]-ApplicationTest.CAMERA_Y)*(this.modelPosition[1]-ApplicationTest.CAMERA_Y))
+                +((this.modelPosition[2]-ApplicationTest.CAMERA_Z)*(this.modelPosition[2]-ApplicationTest.CAMERA_Z))));
+
+        checkGLError("updateCubePosition");
     }
+
 
     //TODO This function is really trivial in checking obj(more tiny obj are triggered inaccurate), this is because of no distance to obj calcs,
     //TODO no more time will be spent as the MUST-HAVEs are more important

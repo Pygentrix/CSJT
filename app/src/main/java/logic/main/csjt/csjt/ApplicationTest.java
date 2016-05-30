@@ -329,7 +329,7 @@ public class ApplicationTest extends CardboardActivity implements CardboardView.
             vibrator.vibrate(50);
             Log.e(TAG, "TRIGGERED event in DrawCube");
         }*/
-        //testPrism1.draw(lightPosInEyeSpace, view, perspective);
+        testPrism1.draw(lightPosInEyeSpace, view, perspective);
         testtetra1.draw(lightPosInEyeSpace, view, perspective);
         cube1.draw(lightPosInEyeSpace, view, perspective);
         cube2.draw(lightPosInEyeSpace, view, perspective);
