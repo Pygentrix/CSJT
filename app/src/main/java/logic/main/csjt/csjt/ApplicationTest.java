@@ -64,7 +64,6 @@ public class ApplicationTest extends CardboardActivity implements CardboardView.
 
     //TEXT stuff//
     // Our matrices
-    Context mContext;
     TextManager tm;
     private final float[] mtrxProjection = new float[16];
     private final float[] mtrxView = new float[16];
@@ -277,8 +276,8 @@ public class ApplicationTest extends CardboardActivity implements CardboardView.
         // Generate Textures, if more needed, alter these numbers.
         int[] texturenames = new int[1];
         GLES20.glGenTextures(1, texturenames, 0);
-        //int id = mContext.getResources()..getIdentifier("raw/", null, mContext.getPackageName());
-        Bitmap bmp = BitmapFactory.decodeResource(mContext.getResources(), R.raw.font);
+        //int id = mContext.getResources().getIdentifier("raw/", null, mContext.getPackageName());
+        Bitmap bmp = BitmapFactory.decodeResource(getResources(),R.raw.font);
         GLES20.glActiveTexture(GLES20.GL_TEXTURE0 + 1);
         GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, texturenames[0]);
         GLES20.glTexParameteri(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_MIN_FILTER,
@@ -299,7 +298,7 @@ public class ApplicationTest extends CardboardActivity implements CardboardView.
         tm.setUniformscale(ssu);
 
         // Create our new textobject
-        TextObject txt = new TextObject("hello world", 10f, 10f);
+        TextObject txt = new TextObject("HELLOWORLD", 10f, 10f);
 
         // Add it to our manager
         tm.addText(txt);
@@ -435,12 +434,12 @@ public class ApplicationTest extends CardboardActivity implements CardboardView.
         Matrix.orthoM(mtrxProjection, 0, 0f, mScreenWidth, 0.0f, mScreenHeight, 0, 50);
 
         // Set the camera position (View matrix)
-        Matrix.setLookAtM(mtrxView, 0, 0f, 0f, 1f, 0f, 0f, 0f, 0f, 1.0f, 0.0f);
+        Matrix.setLookAtM(mtrxView, 0, CAMERA_X, CAMERA_Y, CAMERA_Z, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f);
 
         // Calculate the projection and view transformation
         Matrix.multiplyMM(mtrxProjectionAndView, 0, mtrxProjection, 0, mtrxView, 0);
         if(tm!=null) {
-            //tm.Draw(mtrxProjectionAndView);
+            tm.Draw(mtrxProjectionAndView);
         }
     }
     /**
