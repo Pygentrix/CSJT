@@ -3,8 +3,10 @@ package logic.main.csjt.csjt;
 /**
  * Created by JB on 31.05.2016.
  */
-public class Cylinder {
+public class Cylinder extends Geom{
     /*
+    public float[] setCylinderCoords(float px,float py,float pz ,float width, float height, float depth){
+
     float steps = (float) ((Math.PI * 2) / parts);
 
     vertex = new float[parts * 6 + 12];
