@@ -252,12 +252,12 @@ public class Geom {
 
     public void draw(float[] lightPosInEyeSpace, float[] view, float[] perspective){
         // TODO: Get Updating and rotation work toghether, look at hideObject func to solve proble
-        this.updateModelPosition();
-        //this.updateModelPosition(); <- Collision with rotation
+
+        this.updateModelPosition();// <- Collision with rotation
         // You can rotate the geoms by uncommenting Matrix.rotateM, but wont work together with callUpdatePos
-        float[] lModelGeom = this.getModelGeom();
-        //Matrix.rotateM(lModelGeom, 0,TIME_DELTA, this.modelPosition[0], this.modelPosition[1], this.modelPosition[2]);
-        this.setModelGeom(lModelGeom);
+        //float[] lModelGeom = this.getModelGeom();
+        //Matrix.rotateM(lModelGeom, 0,rotSpeed, this.modelPosition[0], this.modelPosition[1], this.modelPosition[2]);
+        //this.setModelGeom(lModelGeom);
 
         Matrix.multiplyMM(this.modelView, 0, view, 0, modelGeom, 0);
         Matrix.multiplyMM(modelViewProjection, 0, perspective, 0, modelView, 0);
@@ -288,10 +288,11 @@ public class Geom {
     public void updateModelPosition() {
         Matrix.setIdentityM(this.modelGeom, 0);
         calcY();
-        Matrix.translateM(this.modelGeom, 0, this.modelPosition[0], this.modelPosition[1] - this.movY, this.modelPosition[2]);
-        //float[] transMatrix = this.modelGeom;
-        Matrix.rotateM(this.modelGeom, 0,this.rotSpeed, this.modelPosition[0], this.modelPosition[1], this.modelPosition[2]);
-
+        float[] transMat = this.modelGeom;
+        Matrix.translateM(transMat, 0, this.modelPosition[0], this.modelPosition[1], this.modelPosition[2]);
+        float[] rotMat = transMat;
+        Matrix.rotateM(rotMat,0,rotSpeed,this.modelPosition[0], this.modelPosition[1], this.modelPosition[2]);
+        Matrix.multiplyMV(this.modelGeom,0,transMat,0,rotMat,0);
         objectDistance =(float) Math.sqrt((((this.modelPosition[0]-ApplicationTest.CAMERA_X)
                 *(this.modelPosition[0]-ApplicationTest.CAMERA_X))
                 +((this.modelPosition[1]-ApplicationTest.CAMERA_Y)*(this.modelPosition[1]-ApplicationTest.CAMERA_Y))

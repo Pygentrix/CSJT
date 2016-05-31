@@ -1,7 +1,10 @@
 package logic.main.csjt.csjt;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.opengl.GLES20;
+import android.opengl.GLUtils;
 import android.opengl.Matrix;
 import android.os.Bundle;
 import android.os.Vibrator;
@@ -27,6 +30,7 @@ public class ApplicationTest extends CardboardActivity implements CardboardView.
     static final float CAMERA_X = 0.0f;
     static final float CAMERA_Y = 0.0f;
     static final float CAMERA_Z = 0.01f;
+    private float ssu = 1.0f;
 
 //FLOAT ARRAYS
     // We keep the light always position just above the user. CHANGE a to see whether it changes sth
@@ -57,6 +61,17 @@ public class ApplicationTest extends CardboardActivity implements CardboardView.
     Random random = new Random();
 
     private long timeOfLastTap;
+
+    //TEXT stuff//
+    // Our matrices
+    Context mContext;
+    TextManager tm;
+    private final float[] mtrxProjection = new float[16];
+    private final float[] mtrxView = new float[16];
+    private final float[] mtrxProjectionAndView = new float[16];
+    float	mScreenWidth = 1920;
+    float	mScreenHeight = 1080;
+    //Text Stuff end//
 
 
     public void initGeoms(int vertexShader,int passthroughShader){
@@ -134,7 +149,20 @@ public class ApplicationTest extends CardboardActivity implements CardboardView.
 
         return shader;
     }
+    // loading shaders out of string
+    public static int loadShader(int type, String shaderCode){
 
+        // create a vertex shader type (GLES20.GL_VERTEX_SHADER)
+        // or a fragment shader type (GLES20.GL_FRAGMENT_SHADER)
+        int shader = GLES20.glCreateShader(type);
+
+        // add the source code to the shader and compile it
+        GLES20.glShaderSource(shader, shaderCode);
+        GLES20.glCompileShader(shader);
+
+        // return the shader
+        return shader;
+    }
     /**
      * Checks if we've had an error inside of OpenGL ES, and if so what that error is.
      *
@@ -202,6 +230,9 @@ public class ApplicationTest extends CardboardActivity implements CardboardView.
     @Override
     public void onSurfaceCreated(EGLConfig config) {
         Log.i(TAG, "onSurfaceCreated");
+        // Create our texts
+        SetupText();
+
         GLES20.glClearColor(0.1f, 0.1f, 0.1f, 0.5f); // Dark background so text shows up well.
 
         ////////////
@@ -211,6 +242,16 @@ public class ApplicationTest extends CardboardActivity implements CardboardView.
         int vertexShader = loadGLShader(GLES20.GL_VERTEX_SHADER, R.raw.light_vertex);
         //int gridShader = loadGLShader(GLES20.GL_FRAGMENT_SHADER, R.raw.grid_fragment); //NOT NEEDED YET
         int passthroughShader = loadGLShader(GLES20.GL_FRAGMENT_SHADER, R.raw.passthrough_fragment);
+
+        //text rednering
+        // Text shader
+        int vshadert = loadShader(GLES20.GL_VERTEX_SHADER,vs_Text);
+        int fshadert = loadShader(GLES20.GL_FRAGMENT_SHADER, fs_Text);
+
+        sp_Text = GLES20.glCreateProgram();
+        GLES20.glAttachShader(sp_Text, vshadert);
+        GLES20.glAttachShader(sp_Text, fshadert); 		// add the fragment shader to program
+        GLES20.glLinkProgram(sp_Text);                  // creates OpenGL ES program executables
 
         initGeoms(vertexShader,passthroughShader);
 
@@ -226,19 +267,47 @@ public class ApplicationTest extends CardboardActivity implements CardboardView.
         cube1.updateModelPosition();
         cube2.updateModelPosition();
 
-        // Text shader
-       /* int vshadert = riGraphicTools.loadShader(GLES20.GL_VERTEX_SHADER,
-                riGraphicTools.vs_Text);
-        int fshadert = riGraphicTools.loadShader(GLES20.GL_FRAGMENT_SHADER,
-                riGraphicTools.fs_Text);
-
-        riGraphicTools.sp_Text = GLES20.glCreateProgram();
-        GLES20.glAttachShader(riGraphicTools.sp_Text, vshadert);
-        GLES20.glAttachShader(riGraphicTools.sp_Text, fshadert);
-        GLES20.glLinkProgram(riGraphicTools.sp_Text);
-        */
-
         checkGLError("onSurfaceCreated");
+    }
+    public void SetupText()
+    {
+        //texture stuff
+
+        // Again for the text texture
+        // Generate Textures, if more needed, alter these numbers.
+        int[] texturenames = new int[1];
+        GLES20.glGenTextures(1, texturenames, 0);
+        //int id = mContext.getResources()..getIdentifier("raw/", null, mContext.getPackageName());
+        Bitmap bmp = BitmapFactory.decodeResource(mContext.getResources(), R.raw.font);
+        GLES20.glActiveTexture(GLES20.GL_TEXTURE0 + 1);
+        GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, texturenames[0]);
+        GLES20.glTexParameteri(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_MIN_FILTER,
+                GLES20.GL_LINEAR);
+        GLES20.glTexParameteri(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_MAG_FILTER,
+                GLES20.GL_LINEAR);
+        GLUtils.texImage2D(GLES20.GL_TEXTURE_2D, 0, bmp, 0);
+        bmp.recycle();
+
+
+        // Create our text manager
+        tm = new TextManager();
+
+        // Tell our text manager to use index 1 of textures loaded
+        tm.setTextureID(1);
+
+        // Pass the uniform scale
+        tm.setUniformscale(ssu);
+
+        // Create our new textobject
+        TextObject txt = new TextObject("hello world", 10f, 10f);
+
+        // Add it to our manager
+        tm.addText(txt);
+
+        // Prepare the text for rendering
+        tm.PrepareDraw();
+
+
     }
 
     /**
@@ -294,6 +363,8 @@ public class ApplicationTest extends CardboardActivity implements CardboardView.
     @Override
     public void onDrawEye(Eye eye) {
         GLES20.glEnable(GLES20.GL_DEPTH_TEST);
+
+        //
         GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT | GLES20.GL_DEPTH_BUFFER_BIT);
 
         checkGLError("colorParam");
@@ -307,7 +378,7 @@ public class ApplicationTest extends CardboardActivity implements CardboardView.
         // Build the ModelView and ModelViewProjection matrices
         // for calculating cube position and light.
         float[] perspective = eye.getPerspective(Z_NEAR, Z_FAR);
-
+        calcTextStuff();
         drawGeoms(perspective);
 
 
@@ -347,6 +418,31 @@ public class ApplicationTest extends CardboardActivity implements CardboardView.
 
     }
 
+
+    public void calcTextStuff(){
+
+        // Render the text
+
+        // Clear our matrices
+        for(int i=0;i<16;i++)
+        {
+            mtrxProjection[i] = 0.0f;
+            mtrxView[i] = 0.0f;
+            mtrxProjectionAndView[i] = 0.0f;
+        }
+
+        // Setup our screen width and height for normal sprite translation.
+        Matrix.orthoM(mtrxProjection, 0, 0f, mScreenWidth, 0.0f, mScreenHeight, 0, 50);
+
+        // Set the camera position (View matrix)
+        Matrix.setLookAtM(mtrxView, 0, 0f, 0f, 1f, 0f, 0f, 0f, 0f, 1.0f, 0.0f);
+
+        // Calculate the projection and view transformation
+        Matrix.multiplyMM(mtrxProjectionAndView, 0, mtrxProjection, 0, mtrxView, 0);
+        if(tm!=null) {
+            //tm.Draw(mtrxProjectionAndView);
+        }
+    }
     /**
      * Called when the Cardboard trigger is pulled. (Means if display is being touched)
      */

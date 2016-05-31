@@ -1,5 +1,7 @@
 package logic.main.csjt.csjt;
 
+import android.opengl.Matrix;
+
 /**
  * Created by Pygentrix on 02.04.2016.
  */
@@ -160,6 +162,7 @@ public class Cube extends Geom{
                 this.fbGeomNormals = normalsFloatBuffer(); // NORMALS OF CUBE -> Normals
                 this.fbGeomVertics = verticsFloatBuffer();  // COORDS OF CUBE -> Vertices
 
+                Matrix.setIdentityM(this.modelGeom, 0);
                 this.updateModelPosition();
 
 
