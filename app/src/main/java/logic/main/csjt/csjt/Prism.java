@@ -16,13 +16,11 @@ public class Prism extends Geom{
                 px, py+height, pz,
                 px+width, py+height, pz,
                 px+(width/2), py+height, pz+(width/2),
-                //TODO: pz+(depth/2)
 
                 // Bottom face
                 px, py, pz,
                 px+width, py, pz,
                 px+(width/2), py, (pz+width/2),
-                //TODO: pz+(depth/2)
 
                 // Back face
                 px, py, pz,
@@ -34,16 +32,13 @@ public class Prism extends Geom{
                 // Left face
                 px, py, pz,
                 px+(width/2), py, pz+(width/2),
-                //TODO: pz+(depth/2)
                 px, py+height, pz,
                 px+(width/2), py+height, pz+(width/2),
-                //TODO: pz+(depth/2)
 
 
-                //TODO: Right face
+                // Right face
                 px+width, py, pz,
                 px+(width/2), py, pz+(width/2),
-                //TODO: pz+(depth/2)
                 px+width, py+height, pz,
                 px+(width/2), py+height, pz+(width/2),
 
@@ -73,7 +68,6 @@ public class Prism extends Geom{
                 0.0f, 0.0f, -width,
                 0.0f, 0.0f, -width,
                 0.0f, 0.0f, -width,
-                //TODO: use -depth instead of -width
 
 
                 // Left Face (evtl - bie z achse)
@@ -81,7 +75,6 @@ public class Prism extends Geom{
                 -width, 0.0f, width,
                 -width, 0.0f, width,
                 -width, 0.0f, width,
-                //TODO: replace ^^ with depth
 
 
                 // Right Face
@@ -89,7 +82,6 @@ public class Prism extends Geom{
                 width, 0.0f, width,
                 width, 0.0f, width,
                 width, 0.0f, width,
-                //TODO: replace ^^ with depth
                 
         };
 
