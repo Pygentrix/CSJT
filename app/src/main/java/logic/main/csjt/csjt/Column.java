@@ -178,8 +178,8 @@ public class Column extends Geom {
 
     public Column(float x, float y, float z,float width,float height,float depth, float r, float g, float b, float a) {
 
-        pages = 10;
-        verticesPerPage = 4;  //TODO: Check this because there are sides with 4 vertices and sides with 8
+        pages = 8;
+        verticesPerPage = 6;  //TODO: Check this because there are sides with 4 vertices and sides with 8
         vCount = 48;
         selectedGeomColors = setSelectedGeomColors();
         setFbSelectedGeomColors(setSelectedColorFloatBuffer());

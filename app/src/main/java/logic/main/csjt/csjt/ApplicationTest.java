@@ -52,6 +52,7 @@ public class ApplicationTest extends CardboardActivity implements CardboardView.
 
     Prism testPrism1;
     Tetrahedron testtetra1;
+    Column column1;
 
     private Vibrator vibrator;
     Random random = new Random();
@@ -65,6 +66,7 @@ public class ApplicationTest extends CardboardActivity implements CardboardView.
         testPrism1 = new Prism(0.0f,0.0f,-4.0f,1.0f,2.0f,1.0f, 0.6523f, 0.0f, 1.0f);
         cube1 = new Cube(0.0f,0.0f,0.0f,50.0f,50.0f,50.0f, 0.5f, 0.0f, 1.0f, 1.0f);
         cube2 = new Cube(1.0f,8.0f,3.0f,0.7f,0.7f,0.7f, 1.0f, 0.5f, 0.4f, 1.0f);
+        column1 = new Column(-1.0f,1.0f,-4.0f,1.1f,1.1f,1.1f, 0.2f, 0.8f, 0.0f, 1.0f);
         light1 = new Cube(LIGHT_POS_IN_WORLD_SPACE[0],LIGHT_POS_IN_WORLD_SPACE[1],LIGHT_POS_IN_WORLD_SPACE[2],0.7f,0.7f,0.7f, 1.0f, 1.0f, 1.0f, 1.0f );
 
         for(int i =0;i< m; i++){
@@ -219,24 +221,14 @@ public class ApplicationTest extends CardboardActivity implements CardboardView.
         light1.initProgram(vertexShader,passthroughShader);
         testPrism1.initProgram(vertexShader,passthroughShader);
         testtetra1.initProgram(vertexShader,passthroughShader);
+        column1.initProgram(vertexShader,passthroughShader);
 
         testtetra1.updateModelPosition();
         testPrism1.updateModelPosition();
         light1.updateLightPosition();
         cube1.updateModelPosition();
         cube2.updateModelPosition();
-
-        // Text shader
-       /* int vshadert = riGraphicTools.loadShader(GLES20.GL_VERTEX_SHADER,
-                riGraphicTools.vs_Text);
-        int fshadert = riGraphicTools.loadShader(GLES20.GL_FRAGMENT_SHADER,
-                riGraphicTools.fs_Text);
-
-        riGraphicTools.sp_Text = GLES20.glCreateProgram();
-        GLES20.glAttachShader(riGraphicTools.sp_Text, vshadert);
-        GLES20.glAttachShader(riGraphicTools.sp_Text, fshadert);
-        GLES20.glLinkProgram(riGraphicTools.sp_Text);
-        */
+        column1.updateModelPosition();
 
         checkGLError("onSurfaceCreated");
     }
@@ -333,6 +325,7 @@ public class ApplicationTest extends CardboardActivity implements CardboardView.
         testtetra1.draw(lightPosInEyeSpace, view, perspective);
         cube1.draw(lightPosInEyeSpace, view, perspective);
         cube2.draw(lightPosInEyeSpace, view, perspective);
+        column1.draw(lightPosInEyeSpace,view,perspective);
         light1.updateLightPosition();
         light1.draw(lightPosInEyeSpace,view,perspective);
         for(int i=0;i< m;i++){
