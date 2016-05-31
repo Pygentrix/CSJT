@@ -61,7 +61,7 @@ public class ApplicationTest extends CardboardActivity implements CardboardView.
 
     public void initGeoms(int vertexShader,int passthroughShader){
 
-        testtetra1 =new Tetrahedron(0.0f,0.0f,-5.0f,0.5f,0.5f,0.5f, 1.0f, 0.6523f, 0.0f, 1.0f);
+        testtetra1 =new Tetrahedron(-2.0f,1.0f,-1.0f,1.0f,1.0f,1.0f, 1.0f, 0.6f, 0.3f, 1.0f);
         testPrism1 = new Prism(0.0f,0.0f,-4.0f,1.0f,2.0f,1.0f, 0.6523f, 0.0f, 1.0f);
         cube1 = new Cube(0.0f,0.0f,0.0f,50.0f,50.0f,50.0f, 0.5f, 0.0f, 1.0f, 1.0f);
         cube2 = new Cube(1.0f,8.0f,3.0f,0.7f,0.7f,0.7f, 1.0f, 0.5f, 0.4f, 1.0f);
@@ -72,7 +72,7 @@ public class ApplicationTest extends CardboardActivity implements CardboardView.
                 ; j < m; j++){
 
             //cubes[i][j] = new Cube(50.0f-(5*j),-2.0f,20.0f-(5*i),1.0f,1.0f,1.0f, 1.0f, 0.6523f, 0.0f, 1.0f);
-            cubes[i][j] = new Cube(30.0f-(5*i),-2.0f,-20.0f+(5*j),1.0f,1.0f,1.0f, 1.0f, 0.6523f, 0.0f, 1.0f);
+            cubes[i][j] = new Cube(30.0f-(5*i),-2.0f,-30.0f+(5*j),1.0f,1.0f,1.0f, 1.0f, 0.6523f, 0.0f, 1.0f);
             cubes[i][j].initProgram(vertexShader,passthroughShader);
             cubes[i][j].updateModelPosition();
             }
@@ -329,7 +329,7 @@ public class ApplicationTest extends CardboardActivity implements CardboardView.
             vibrator.vibrate(50);
             Log.e(TAG, "TRIGGERED event in DrawCube");
         }*/
-        testPrism1.draw(lightPosInEyeSpace, view, perspective);
+        //testPrism1.draw(lightPosInEyeSpace, view, perspective);
         testtetra1.draw(lightPosInEyeSpace, view, perspective);
         cube1.draw(lightPosInEyeSpace, view, perspective);
         cube2.draw(lightPosInEyeSpace, view, perspective);
