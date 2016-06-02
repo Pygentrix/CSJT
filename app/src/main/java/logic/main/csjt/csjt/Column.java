@@ -10,6 +10,9 @@ public class Column extends Geom {
         /**
          *  Created by using the current Tetrahedron Class. (31.05.16)
          *  Column is basically an elongated Octagon. (Note: Not a regular octagon. those need the square root of 2 and i don't like that.)
+         *
+         *  02.06.2016: I'll repeat the successful prism experiment with this class. This time,
+         *      I'll use quadrangular shapes. (4 points)
          */
 
         //helper variables
@@ -23,6 +26,12 @@ public class Column extends Geom {
                 px,         py,         pz+dep,     //left back point
                 px,         py,         pz+(3*dep), //left front point
                 px+wid,     py,         pz+(4*dep), //front left point
+
+                px+wid,     py,         pz,         //back left point
+                px+wid,     py,         pz+(4*dep), //front left point
+                px+(3*wid), py,         pz+(4*dep), //front right point
+                px+(3*wid), py,         pz,         //back right point
+
                 px+(3*wid), py,         pz+(4*dep), //front right point
                 px+(4*wid), py,         pz+(3*dep), //right front point
                 px+(4*wid), py,         pz+dep,     //right back point
@@ -81,6 +90,12 @@ public class Column extends Geom {
                 px,         py+(4*hei), pz+dep,     //left back point
                 px,         py+(4*hei), pz+(3*dep), //left front point
                 px+wid,     py+(4*hei), pz+(4*dep), //front left point
+
+                px+wid,     py+(4*hei), pz,         //back left point
+                px+wid,     py+(4*hei), pz+(4*dep), //front left point
+                px+(3*wid), py+(4*hei), pz+(4*dep), //front right point
+                px+(3*wid), py+(4*hei), pz,         //back right point
+
                 px+(3*wid), py+(4*hei), pz+(4*dep), //front right point
                 px+(4*wid), py+(4*hei), pz+(3*dep), //right front point
                 px+(4*wid), py+(4*hei), pz+dep,     //right back point
@@ -100,6 +115,12 @@ public class Column extends Geom {
                 0.0f,   -height,    0.0f,   //left back point
                 0.0f,   -height,    0.0f,   //left front point
                 0.0f,   -height,    0.0f,   //front left point
+
+                0.0f,   -height,    0.0f,   //back left point
+                0.0f,   -height,    0.0f,   //front left point
+                0.0f,   -height,    0.0f,   //front right point
+                0.0f,   -height,    0.0f,   //back right point
+
                 0.0f,   -height,    0.0f,   //front right point
                 0.0f,   -height,    0.0f,   //right front point
                 0.0f,   -height,    0.0f,   //right back point
@@ -158,6 +179,12 @@ public class Column extends Geom {
                 0.0f,   height, 0.0f,   //left back point
                 0.0f,   height, 0.0f,   //left front point
                 0.0f,   height, 0.0f,   //front left point
+
+                0.0f,   height, 0.0f,   //back left point
+                0.0f,   height, 0.0f,   //front left point
+                0.0f,   height, 0.0f,   //front right point
+                0.0f,   height, 0.0f,   //back right point
+
                 0.0f,   height, 0.0f,   //front right point
                 0.0f,   height, 0.0f,   //right front point
                 0.0f,   height, 0.0f,   //right back point
@@ -178,9 +205,9 @@ public class Column extends Geom {
 
     public Column(float x, float y, float z,float width,float height,float depth, float r, float g, float b, float a) {
 
-        pages = 8;
-        verticesPerPage = 6;  //TODO: Check this because there are sides with 4 vertices and sides with 8
-        vCount = 48;
+        pages = 14;
+        verticesPerPage = 4;
+        vCount = 56;
         selectedGeomColors = setSelectedGeomColors();
         setFbSelectedGeomColors(setSelectedColorFloatBuffer());
         modelGeom = new float[16];
