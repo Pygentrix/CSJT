@@ -11,6 +11,10 @@ public class Prism extends Geom{
 
         //TODO: Implement it correct, some rendering fuck ups. Still not correct
 
+        /**
+         * Experiment: I'll try to seperate the rectangular sides into two triangular sides and see what happens
+         */
+
         float[] PRISM_COORDS = new float[]{
                 // Top face
                 px, py+height, pz,
@@ -26,21 +30,30 @@ public class Prism extends Geom{
                 px, py, pz,
                 px+width, py, pz,
                 px, py+height, pz,
+
                 px+width, py+height, pz,
+                px+width, py, pz,
+                px, py+height, pz,
 
 
                 // Left face
                 px, py, pz,
                 px+(width/2), py, pz+(width/2),
                 px, py+height, pz,
+
                 px+(width/2), py+height, pz+(width/2),
+                px+(width/2), py, pz+(width/2),
+                px, py+height, pz,
 
 
                 // Right face
                 px+width, py, pz,
                 px+(width/2), py, pz+(width/2),
                 px+width, py+height, pz,
+
                 px+(width/2), py+height, pz+(width/2),
+                px+(width/2), py, pz+(width/2),
+                px+width, py+height, pz,
 
         };
 
@@ -67,6 +80,9 @@ public class Prism extends Geom{
                 0.0f, 0.0f, -width,
                 0.0f, 0.0f, -width,
                 0.0f, 0.0f, -width,
+
+                0.0f, 0.0f, -width,
+                0.0f, 0.0f, -width,
                 0.0f, 0.0f, -width,
 
 
@@ -74,11 +90,17 @@ public class Prism extends Geom{
                 -width, 0.0f, width,
                 -width, 0.0f, width,
                 -width, 0.0f, width,
+
+                -width, 0.0f, width,
+                -width, 0.0f, width,
                 -width, 0.0f, width,
 
 
                 // Right Face
                 width, 0.0f, width,
+                width, 0.0f, width,
+                width, 0.0f, width,
+
                 width, 0.0f, width,
                 width, 0.0f, width,
                 width, 0.0f, width,
@@ -100,9 +122,9 @@ public class Prism extends Geom{
     }
     public Prism(float x, float y, float z,float width,float height, float r, float g, float b, float a) {
 
-        pages = 3;
-        verticesPerPage = 6;
-        vCount = 18;
+        pages = 8;
+        verticesPerPage = 3;
+        vCount = 24;
         selectedGeomColors = setSelectedGeomColors();
         setFbSelectedGeomColors(setSelectedColorFloatBuffer());
         modelGeom = new float[16];
