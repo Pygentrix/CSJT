@@ -55,6 +55,7 @@ public class ApplicationTest extends CardboardActivity implements CardboardView.
     Tetrahedron testtetra1;
     Column column1;
     Pyramid pyram1;
+    Octahedron octa1;
 
     private Vibrator vibrator;
     Random random = new Random();
@@ -69,6 +70,7 @@ public class ApplicationTest extends CardboardActivity implements CardboardView.
         table[1] = new Cube(-2.0f,-1.0f,0.0f,1.2f,0.2f,5.0f, 1.0f, 1.0f, 1.0f, 0.8f); //left
         table[2] = new Cube(0.0f,-1.0f,-2.5f,7.4f,0.2f,1.2f, 1.0f, 1.0f, 1.0f, 0.8f);//front
 
+        octa1 = new Octahedron(2.0f,1.0f,0.0f,1.0f,1.0f,1.0f, 1.0f,0.0f,0.0f,0.0f);
         testtetra1 =new Tetrahedron(-2.0f,1.0f,-1.0f,1.0f,1.0f,1.0f, 1.0f, 0.6f, 0.3f, 1.0f);
         testPrism1 = new Prism(0.0f,-0.8f,-2.1f,1.0f,1.0f,1.0f, 0.6523f, 0.2f, 1.0f);
         cube1 = new Cube(0.0f,0.0f,0.0f,50.0f,50.0f,50.0f, 0.5f, 0.0f, 1.0f, 1.0f);
@@ -96,6 +98,7 @@ public class ApplicationTest extends CardboardActivity implements CardboardView.
         light1.initProgram(vertexShader,passthroughShader);
         testPrism1.initProgram(vertexShader,passthroughShader);
         testtetra1.initProgram(vertexShader,passthroughShader);
+        octa1.initProgram(vertexShader, passthroughShader);
         column1.initProgram(vertexShader,passthroughShader);
         pyram1.initProgram(vertexShader,passthroughShader);
 
@@ -333,6 +336,7 @@ public class ApplicationTest extends CardboardActivity implements CardboardView.
         table[2].draw(lightPosInEyeSpace,view,perspective);
         testPrism1.draw(lightPosInEyeSpace, view, perspective);
         testtetra1.draw(lightPosInEyeSpace, view, perspective);
+        octa1.draw(lightPosInEyeSpace, view, perspective);
         cube1.draw(lightPosInEyeSpace, view, perspective);
         cube2.draw(lightPosInEyeSpace, view, perspective);
         column1.draw(lightPosInEyeSpace,view,perspective);

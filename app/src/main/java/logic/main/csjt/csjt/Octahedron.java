@@ -32,22 +32,22 @@ public class Octahedron extends Geom {
                 //Front Bottom
                 px, py, pz + depth,                               //front left point //just for me: YELLOW
                 px + width, py, pz + depth,                       //front right point //just for me: GREEN
-                px - (width / 2), py - height, pz - (depth / 2),  //bottom //just for me: BLACK
+                px - (width / 2), py - height, pz + (depth / 2),  //bottom //just for me: BLACK
 
                 //Right Bottom
                 px + width, py, pz,                               //back right point //just for me: RED
                 px + width, py, pz + depth,                       //front right point //just for me: GREEN
-                px - (width / 2), py - height, pz - (depth / 2),  //bottom //just for me: BLACK
+                px - (width / 2), py - height, pz + (depth / 2),  //bottom //just for me: BLACK
 
                 //Left Bottom
                 px, py, pz,                                      //back left point //just for me: BLUE
                 px, py, pz + depth,                              //front left point  //just for me: YELLOW
-                px - (width / 2), py - height, pz - (depth / 2), //bottom //just for me: BLACK
+                px - (width / 2), py - height, pz + (depth / 2), //bottom //just for me: BLACK
 
                 //Back Bottom
                 px, py, pz,                                      //back left point //just for me: BLUE
                 px + width, py, pz,                              //back right point //just for me: RED
-                px - (width / 2), py - height, pz - (depth / 2), //bottom //just for me: BLACK
+                px - (width / 2), py - height, pz + (depth / 2), //bottom //just for me: BLACK
         };
 
         return OCTA_COORDS;
