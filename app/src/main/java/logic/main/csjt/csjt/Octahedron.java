@@ -57,14 +57,6 @@ public class Octahedron extends Geom{
 
         //Normals are constructed similar to the coordinates
         float[] OCTA_NORMALS = new float[]{
-                //Bottom
-              //  0.0f,       -height,    0.0f,       //back left point
-              //  0.0f,       -height,    0.0f,       //front left point
-              //  0.0f,       -height,    0.0f,       //back right point
-
-              //  0.0f,       -height,    0.0f,       //front left point
-              //  0.0f,       -height,    0.0f,       //back right point
-              //  0.0f,       -height,    0.0f,       //front right point
 
                 //Back Top
                 0.0f,       height,     -2*depth,   //back left point //BLUE
