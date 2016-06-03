@@ -1,5 +1,7 @@
 package logic.main.csjt.csjt;
 
+import android.opengl.Matrix;
+
 /**
  * Created by Paul Stonjek on 11.05.2016.
  * Uploaded to the Git by Pygentrix ( Due to setting problems )
@@ -119,6 +121,13 @@ public class Tetrahedron extends Geom {
         this.updateModelPosition();
 
 
+    }
+
+    void initialRotCorrection() {
+
+        float[] lModelGeom = this.getModelGeom();
+        //Matrix.rotateM(lModelGeom, 0,0, this.modelPosition[0],this.modelPosition[1],this.modelPosition[2]);
+        this.setModelGeom(lModelGeom);
     }
 
 }

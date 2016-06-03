@@ -58,25 +58,26 @@ public class ApplicationTest extends CardboardActivity implements CardboardView.
 
     public void initGeoms(int vertexShader,int passthroughShader){
 
-
-        allGeoms.add(new Cube(2.0f,-1.0f,0.0f,1.2f,0.2f,5.0f, 1.0f, 1.0f, 1.0f, 0.9f)); //right (0)
+        //PLEASE MAKE SURE WHERE YOU INSERT THE OBJECTS SOME CALCS OTHERWISE MIGHT FAIL
+        allGeoms.add(new Cube(0.0f,1.0f,-2.5f,1.0f,1.0f,1.0f, 0.9f, 0.7f, 0.1f, 1.0f)); //rotating cube (0)
+        allGeoms.add(new Tetrahedron(-2.0f,-0.65f,-1.3f,1.0f,1.0f,1.0f, 1.0f, 0.6f, 0.3f, 1.0f)); // old testtetra (1)
+        allGeoms.add(new Cube(2.0f,-1.0f,0.0f,1.2f,0.2f,5.0f, 1.0f, 1.0f, 1.0f, 0.9f)); //right (2)
         allGeoms.add(new Cube(-2.0f,-1.0f,0.0f,1.2f,0.2f,5.0f, 1.0f, 1.0f, 1.0f, 0.9f));//left
         allGeoms.add(new Cube(0.0f,-1.0f,-2.5f,7.4f,0.2f,1.2f, 1.0f, 1.0f, 1.0f, 0.9f));//front
 
-        allGeoms.add(new Tetrahedron(-2.0f,-0.70f,-1.3f,1.0f,1.0f,1.0f, 1.0f, 0.6f, 0.3f, 1.0f)); // old testtetra
-        allGeoms.add(new Prism(0.5f,-0.8f,-2.1f,1.0f,1.0f,0.0f, 1.0f, 0.1f, 1.0f));  //old testprism1 (4)
+        allGeoms.add(new Prism(0.5f,-0.8f,-2.1f,1.0f,1.0f,0.0f, 1.0f, 0.1f, 1.0f));  //old testprism1 (5)
         //allGeoms.add(new Cube(-10.0f,-10.0f,10.0f,40.0f,40.0f,40.0f, 0.0f, 0.2f, 1.0f, 1.0f));cub1
-        allGeoms.add(new Cube(-1.1f,-0.55f,-2.1f,0.5f,0.5f,0.5f, 1.0f, 0.2f, 0.1f, 1.0f)); //old cube2 (5)
+        allGeoms.add(new Cube(-1.1f,-0.55f,-2.1f,0.5f,0.5f,0.5f, 1.0f, 0.2f, 0.1f, 1.0f)); //old cube2 (6)
 
         allGeoms.add(new Column(-0.4f,-0.8f,-2.3f,1.1f,1.1f,1.1f, 0.0f, 0.4f, 1.0f, 1.0f));  // old column1
-        allGeoms.add(new Octahedron(2.0f,1.0f,0.0f,1.0f,1.0f,1.0f, 1.0f,0.0f,0.0f,0.0f)); 
+        allGeoms.add(new Octahedron(1.8f,-0.2f,-0.8f,1.0f,1.0f,1.0f, 1.0f,0.0f,0.0f,1.0f));
         allGeoms.add(new Pyramid(1.5f, -0.8f, -1.8f, 1.0f, 1.0f, 1.0f, 1.0f, 0.6f, 0.1f, 1.0f)); //old pyram
         allGeoms.add(new Cube(LIGHT_POS_IN_WORLD_SPACE[0],LIGHT_POS_IN_WORLD_SPACE[1],LIGHT_POS_IN_WORLD_SPACE[2],0.7f,0.7f,0.7f, 1.0f, 1.0f, 1.0f, 1.0f )); //old cube2
 
-        allGeoms.add(new Cube(0.0f,1.0f,-2.5f,1.0f,1.0f,1.0f, 0.9f, 0.7f, 0.1f, 1.0f)); //old cube2 (9)
-        allGeoms.get(9).movStatus = 1;
+        allGeoms.get(0).movStatus = 1; //Start roating cube 1
+
         // Decorating the grid with some cubes index 10 to 10+m*m 110 cubes
-        startOfDeco = 10;
+        startOfDeco = allGeoms.size();
         for(int i =0;i< m; i++){
             for(int j=0; j < m; j++){
                 float x = 30.0f-(5*i);
@@ -90,6 +91,11 @@ public class ApplicationTest extends CardboardActivity implements CardboardView.
         for(int i = 0; i < allGeoms.size();i++){
 
             allGeoms.get(i).initProgram(vertexShader,passthroughShader);
+        }
+        if(allGeoms.get(1) instanceof Tetrahedron){
+        ((Tetrahedron)allGeoms.get(1)).initialRotCorrection();}
+        else{
+            Log.e(TAG, "Its not an instance of Tetrahedron! Take a look at initGeoms");
         }
 
     }
