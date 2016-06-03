@@ -46,6 +46,7 @@ public class ApplicationTest extends CardboardActivity implements CardboardView.
     Cube cube1;
     Cube cube2;
     Cube light1;
+    Cube[] table;
     ///////////////////////////////////////
     Cube[][] cubes = new Cube[m][m];
     ///////////////////////////////////////
@@ -63,12 +64,17 @@ public class ApplicationTest extends CardboardActivity implements CardboardView.
 
     public void initGeoms(int vertexShader,int passthroughShader){
 
+        table = new Cube[4];
+        table[0] = new Cube(2.0f,-1.0f,0.0f,1.2f,0.2f,5.0f, 1.0f, 1.0f, 1.0f, 0.8f); //right
+        table[1] = new Cube(-2.0f,-1.0f,0.0f,1.2f,0.2f,5.0f, 1.0f, 1.0f, 1.0f, 0.8f); //left
+        table[2] = new Cube(0.0f,-1.0f,-2.5f,7.4f,0.2f,1.2f, 1.0f, 1.0f, 1.0f, 0.8f);//front
+
         testtetra1 =new Tetrahedron(-2.0f,1.0f,-1.0f,1.0f,1.0f,1.0f, 1.0f, 0.6f, 0.3f, 1.0f);
-        testPrism1 = new Prism(0.0f,0.0f,-4.0f,1.0f,2.0f,1.0f, 0.6523f, 0.0f, 1.0f);
+        testPrism1 = new Prism(0.0f,-0.8f,-2.1f,1.0f,1.0f,1.0f, 0.6523f, 0.2f, 1.0f);
         cube1 = new Cube(0.0f,0.0f,0.0f,50.0f,50.0f,50.0f, 0.5f, 0.0f, 1.0f, 1.0f);
         cube2 = new Cube(1.0f,8.0f,3.0f,0.7f,0.7f,0.7f, 1.0f, 0.5f, 0.4f, 1.0f);
         column1 = new Column(-1.0f,1.0f,-4.0f,1.1f,1.1f,1.1f, 0.2f, 0.8f, 0.0f, 1.0f);
-        pyram1 = new Pyramid(2.0f, 1.0f, -2.0f, 1.0f, 1.0f, 1.0f, 0.2f, 0.8f, 0.0f, 1.0f);
+        pyram1 = new Pyramid(1.5f, -0.8f, 0.0f, 1.0f, 1.0f, 1.0f, 0.2f, 0.8f, 0.0f, 1.0f);
         light1 = new Cube(LIGHT_POS_IN_WORLD_SPACE[0],LIGHT_POS_IN_WORLD_SPACE[1],LIGHT_POS_IN_WORLD_SPACE[2],0.7f,0.7f,0.7f, 1.0f, 1.0f, 1.0f, 1.0f );
 
         for(int i =0;i< m; i++){
@@ -81,6 +87,19 @@ public class ApplicationTest extends CardboardActivity implements CardboardView.
             cubes[i][j].updateModelPosition();
             }
         }
+        table[0].initProgram(vertexShader,passthroughShader);
+        table[1].initProgram(vertexShader,passthroughShader);
+        table[2].initProgram(vertexShader,passthroughShader);
+
+        cube1.initProgram(vertexShader,passthroughShader); //<- Program for every single cube or one for all ?
+        cube2.initProgram(vertexShader,passthroughShader);
+        light1.initProgram(vertexShader,passthroughShader);
+        testPrism1.initProgram(vertexShader,passthroughShader);
+        testtetra1.initProgram(vertexShader,passthroughShader);
+        column1.initProgram(vertexShader,passthroughShader);
+        pyram1.initProgram(vertexShader,passthroughShader);
+
+        //Moved init update pos to initProgramm!
     }
     public static int sp_Text;
 
@@ -218,22 +237,6 @@ public class ApplicationTest extends CardboardActivity implements CardboardView.
 
         initGeoms(vertexShader,passthroughShader);
 
-        cube1.initProgram(vertexShader,passthroughShader); //<- Program for every single cube or one for all ?
-        cube2.initProgram(vertexShader,passthroughShader);
-        light1.initProgram(vertexShader,passthroughShader);
-        testPrism1.initProgram(vertexShader,passthroughShader);
-        testtetra1.initProgram(vertexShader,passthroughShader);
-        column1.initProgram(vertexShader,passthroughShader);
-        pyram1.initProgram(vertexShader,passthroughShader);
-
-        testtetra1.updateModelPosition();
-        testPrism1.updateModelPosition();
-        light1.updateLightPosition();
-        cube1.updateModelPosition();
-        cube2.updateModelPosition();
-        column1.updateModelPosition();
-        pyram1.updateModelPosition();
-
         checkGLError("onSurfaceCreated");
     }
 
@@ -325,6 +328,9 @@ public class ApplicationTest extends CardboardActivity implements CardboardView.
             vibrator.vibrate(50);
             Log.e(TAG, "TRIGGERED event in DrawCube");
         }*/
+        table[0].draw(lightPosInEyeSpace,view,perspective);
+        table[1].draw(lightPosInEyeSpace,view,perspective);
+        table[2].draw(lightPosInEyeSpace,view,perspective);
         testPrism1.draw(lightPosInEyeSpace, view, perspective);
         testtetra1.draw(lightPosInEyeSpace, view, perspective);
         cube1.draw(lightPosInEyeSpace, view, perspective);
@@ -337,7 +343,7 @@ public class ApplicationTest extends CardboardActivity implements CardboardView.
             for(int j=0;j< m;j++){
                 cubes[i][j].isLookingAtObject(headView);
                 //cubes[i][j].callUpdatePos();
-                cubes[i][j].draw(lightPosInEyeSpace, view, perspective);
+                //cubes[i][j].draw(lightPosInEyeSpace, view, perspective);
 
                 }
 
@@ -372,16 +378,8 @@ public class ApplicationTest extends CardboardActivity implements CardboardView.
         }
         /**
          * Thundergrass, 03.06.2016: Trying to apply the movement ability to the pyramid and the column to see them from more sides
+         * Pygentrix Not needed anymore because you done good job!
          */
-        if (column1.isLookingAtObject(headView)) {
-            column1.movY = 0.15f;
-            Log.e(TAG, "Column is moving");
-        }
-        if (pyram1.isLookingAtObject(headView)) {
-            pyram1.movY = 0.15f;
-            Log.e(TAG, "Pyramid is moving");
-        }
-
 
         //We try to change the light pos while being in the app
         testLightning = testLightning + 1;

@@ -246,7 +246,7 @@ public class Geom {
         GLES20.glEnableVertexAttribArray(this.geomPositionParam);// Enables the VertexArrays which is needed so opengl knows wht to render
         GLES20.glEnableVertexAttribArray(this.geomNormalParam);// Enables the VertexArrays which is needed so opengl knows wht to render
         GLES20.glEnableVertexAttribArray(this.geomColorParam);  // Enables the VertexArrays which is needed so opengl knows wht to render
-
+        this.updateModelPosition();
         checkGLError("geom program params");
     }
 
@@ -290,7 +290,7 @@ public class Geom {
         calcY();
         Matrix.translateM(this.modelGeom, 0, this.modelPosition[0], this.modelPosition[1] - this.movY, this.modelPosition[2]);
         //float[] transMatrix = this.modelGeom;
-        Matrix.rotateM(this.modelGeom, 0,this.rotSpeed, this.modelPosition[0], this.modelPosition[1], this.modelPosition[2]);
+        //Matrix.rotateM(this.modelGeom, 0,this.rotSpeed, this.modelPosition[0], this.modelPosition[1], this.modelPosition[2]);
 
         objectDistance =(float) Math.sqrt((((this.modelPosition[0]-ApplicationTest.CAMERA_X)
                 *(this.modelPosition[0]-ApplicationTest.CAMERA_X))

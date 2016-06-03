@@ -60,7 +60,7 @@ public class Cube extends Geom{
                         px-width, py-height, pz+depth,
                         px-width, py-height, pz-depth
                 };
-                this.vCount = CUBE_COORDS.length / 3;
+
                 return CUBE_COORDS;
         }
 
@@ -159,7 +159,6 @@ public class Cube extends Geom{
                 setFbGeomColors(colorFloatBuffer());
                 this.fbGeomNormals = normalsFloatBuffer(); // NORMALS OF CUBE -> Normals
                 this.fbGeomVertics = verticsFloatBuffer();  // COORDS OF CUBE -> Vertices
-
                 this.updateModelPosition();
 
 
