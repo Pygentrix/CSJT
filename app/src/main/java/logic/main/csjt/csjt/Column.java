@@ -314,6 +314,7 @@ public class Column extends Geom {
         setFbGeomColors(colorFloatBuffer());
         this.fbGeomNormals = normalsFloatBuffer(); // NORMALS OF CUBE -> Normals
         this.fbGeomVertics = verticsFloatBuffer();  // COORDS OF CUBE -> Vertices
+        this.updateModelPosition();
 
 
 
