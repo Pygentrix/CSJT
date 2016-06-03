@@ -53,6 +53,7 @@ public class ApplicationTest extends CardboardActivity implements CardboardView.
     Prism testPrism1;
     Tetrahedron testtetra1;
     Column column1;
+    Pyramid pyram1;
 
     private Vibrator vibrator;
     Random random = new Random();
@@ -67,6 +68,7 @@ public class ApplicationTest extends CardboardActivity implements CardboardView.
         cube1 = new Cube(0.0f,0.0f,0.0f,50.0f,50.0f,50.0f, 0.5f, 0.0f, 1.0f, 1.0f);
         cube2 = new Cube(1.0f,8.0f,3.0f,0.7f,0.7f,0.7f, 1.0f, 0.5f, 0.4f, 1.0f);
         column1 = new Column(-1.0f,1.0f,-4.0f,1.1f,1.1f,1.1f, 0.2f, 0.8f, 0.0f, 1.0f);
+        pyram1 = new Pyramid(2.0f, 1.0f, -2.0f, 1.0f, 1.0f, 1.0f, 0.2f, 0.8f, 0.0f, 1.0f);
         light1 = new Cube(LIGHT_POS_IN_WORLD_SPACE[0],LIGHT_POS_IN_WORLD_SPACE[1],LIGHT_POS_IN_WORLD_SPACE[2],0.7f,0.7f,0.7f, 1.0f, 1.0f, 1.0f, 1.0f );
 
         for(int i =0;i< m; i++){
@@ -222,6 +224,7 @@ public class ApplicationTest extends CardboardActivity implements CardboardView.
         testPrism1.initProgram(vertexShader,passthroughShader);
         testtetra1.initProgram(vertexShader,passthroughShader);
         column1.initProgram(vertexShader,passthroughShader);
+        pyram1.initProgram(vertexShader,passthroughShader);
 
         testtetra1.updateModelPosition();
         testPrism1.updateModelPosition();
@@ -229,6 +232,7 @@ public class ApplicationTest extends CardboardActivity implements CardboardView.
         cube1.updateModelPosition();
         cube2.updateModelPosition();
         column1.updateModelPosition();
+        pyram1.updateModelPosition();
 
         checkGLError("onSurfaceCreated");
     }
@@ -326,6 +330,7 @@ public class ApplicationTest extends CardboardActivity implements CardboardView.
         cube1.draw(lightPosInEyeSpace, view, perspective);
         cube2.draw(lightPosInEyeSpace, view, perspective);
         column1.draw(lightPosInEyeSpace,view,perspective);
+        pyram1.draw(lightPosInEyeSpace,view,perspective);
         light1.updateLightPosition();
         light1.draw(lightPosInEyeSpace,view,perspective);
         for(int i=0;i< m;i++){
@@ -365,6 +370,19 @@ public class ApplicationTest extends CardboardActivity implements CardboardView.
                 }
             }
         }
+        /**
+         * Thundergrass, 03.06.2016: Trying to apply the movement ability to the pyramid and the column to see them from more sides
+         */
+        if (column1.isLookingAtObject(headView)) {
+            column1.movY = 0.15f;
+            Log.e(TAG, "Column is moving");
+        }
+        if (pyram1.isLookingAtObject(headView)) {
+            pyram1.movY = 0.15f;
+            Log.e(TAG, "Pyramid is moving");
+        }
+
+
         //We try to change the light pos while being in the app
         testLightning = testLightning + 1;
         LIGHT_POS_IN_WORLD_SPACE[0] = 0.1f * testLightning;
