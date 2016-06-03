@@ -87,24 +87,24 @@ public class Octahedron extends Geom{
                 2*width,    height,     0.0f,       //top //ORANGE
 
                 //Back Bottom
-                0.0f,       height,     -2*depth,   //back left point //BLUE
-                0.0f,       height,     -2*depth,   //back right point //RED
-                0.0f,       height,     -2*depth,   //top //ORANGE
+                0.0f,       -height,     -2*depth,   //back left point //BLUE
+                0.0f,       -height,     -2*depth,   //back right point //RED
+                0.0f,       -height,     -2*depth,   //top //ORANGE
 
                 //Left Bottom
-                -2*width,   height,     0.0f,       //back left point //BLUE
-                -2*width,   height,     0.0f,       //front left point //YELLOW
-                -2*width,   height,     0.0f,       //top //ORANGE
+                -2*width,   -height,     0.0f,       //back left point //BLUE
+                -2*width,   -height,     0.0f,       //front left point //YELLOW
+                -2*width,   -height,     0.0f,       //top //ORANGE
 
                 //Front Bottom
-                0.0f,       height,     2*depth,    //front left point //YELLOW
-                0.0f,       height,     2*depth,    //front right point //GREEN
-                0.0f,       height,     2*depth,    //top //ORANGE
+                0.0f,       -height,     2*depth,    //front left point //YELLOW
+                0.0f,       -height,     2*depth,    //front right point //GREEN
+                0.0f,       -height,     2*depth,    //top //ORANGE
 
                 //Right Bottom
-                2*width,    height,     0.0f,       //back right point //RED
-                2*width,    height,     0.0f,       //front right point //GREEN
-                2*width,    height,     0.0f,       //top //ORANGE
+                2*width,    -height,     0.0f,       //back right point //RED
+                2*width,    -height,     0.0f,       //front right point //GREEN
+                2*width,    -height,     0.0f,       //top //ORANGE
 
         };
 
