@@ -13,6 +13,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.Random;
 
 public class ApplicationTest extends CardboardActivity implements CardboardView.StereoRenderer  {
@@ -30,7 +31,7 @@ public class ApplicationTest extends CardboardActivity implements CardboardView.
 
 //FLOAT ARRAYS
     // We keep the light always position just above the user. CHANGE a to see whether it changes sth
-    public static float[] LIGHT_POS_IN_WORLD_SPACE = new float[] {8.0f, 1.0f, 10.0f, 1.0f};
+    public static float[] LIGHT_POS_IN_WORLD_SPACE = new float[] {1.0f, 2.0f, 0.0f, 1.0f};
     private final float[] lightPosInEyeSpace = new float[4];
 
     private float[] camera;
@@ -39,22 +40,14 @@ public class ApplicationTest extends CardboardActivity implements CardboardView.
     private float[] headRotation;
 
 //INTEGERS
-    int testLightning = 1;
+    //int testLightning = 1;
     int m = 10;// dont do m=100 , rendering 10000 cubes atm is too much
 
 //OBJECTS
-    Cube cube1;
-    Cube cube2;
-    Cube light1;
-    Cube[] table;
-    ///////////////////////////////////////
-    Cube[][] cubes = new Cube[m][m];
-    ///////////////////////////////////////
 
-    Prism testPrism1;
-    Tetrahedron testtetra1;
-    Column column1;
-    Pyramid pyram1;
+    ArrayList<Geom> allGeoms = new ArrayList<>();
+
+    Grid grid;
 
     private Vibrator vibrator;
     Random random = new Random();
@@ -64,42 +57,42 @@ public class ApplicationTest extends CardboardActivity implements CardboardView.
 
     public void initGeoms(int vertexShader,int passthroughShader){
 
-        table = new Cube[4];
-        table[0] = new Cube(2.0f,-1.0f,0.0f,1.2f,0.2f,5.0f, 1.0f, 1.0f, 1.0f, 0.8f); //right
-        table[1] = new Cube(-2.0f,-1.0f,0.0f,1.2f,0.2f,5.0f, 1.0f, 1.0f, 1.0f, 0.8f); //left
-        table[2] = new Cube(0.0f,-1.0f,-2.5f,7.4f,0.2f,1.2f, 1.0f, 1.0f, 1.0f, 0.8f);//front
 
-        testtetra1 =new Tetrahedron(-2.0f,1.0f,-1.0f,1.0f,1.0f,1.0f, 1.0f, 0.6f, 0.3f, 1.0f);
-        testPrism1 = new Prism(0.0f,-0.8f,-2.1f,1.0f,1.0f,1.0f, 0.6523f, 0.2f, 1.0f);
-        cube1 = new Cube(0.0f,0.0f,0.0f,50.0f,50.0f,50.0f, 0.5f, 0.0f, 1.0f, 1.0f);
-        cube2 = new Cube(1.0f,8.0f,3.0f,0.7f,0.7f,0.7f, 1.0f, 0.5f, 0.4f, 1.0f);
-        column1 = new Column(-1.0f,1.0f,-4.0f,1.1f,1.1f,1.1f, 0.2f, 0.8f, 0.0f, 1.0f);
-        pyram1 = new Pyramid(1.5f, -0.8f, 0.0f, 1.0f, 1.0f, 1.0f, 0.2f, 0.8f, 0.0f, 1.0f);
-        light1 = new Cube(LIGHT_POS_IN_WORLD_SPACE[0],LIGHT_POS_IN_WORLD_SPACE[1],LIGHT_POS_IN_WORLD_SPACE[2],0.7f,0.7f,0.7f, 1.0f, 1.0f, 1.0f, 1.0f );
+        allGeoms.add(new Cube(2.0f,-1.0f,0.0f,1.2f,0.2f,5.0f, 1.0f, 1.0f, 1.0f, 0.9f)); //right (0)
+        allGeoms.add(new Cube(-2.0f,-1.0f,0.0f,1.2f,0.2f,5.0f, 1.0f, 1.0f, 1.0f, 0.9f));//left
+        allGeoms.add(new Cube(0.0f,-1.0f,-2.5f,7.4f,0.2f,1.2f, 1.0f, 1.0f, 1.0f, 0.9f));//front
+
+        allGeoms.add(new Tetrahedron(-2.0f,-0.70f,-1.3f,1.0f,1.0f,1.0f, 1.0f, 0.6f, 0.3f, 1.0f)); // old testtetra
+        allGeoms.add(new Prism(0.5f,-0.8f,-2.1f,1.0f,1.0f,0.0f, 1.0f, 0.1f, 1.0f));  //old testprism1 (4)
+        //allGeoms.add(new Cube(-10.0f,-10.0f,10.0f,40.0f,40.0f,40.0f, 0.0f, 0.2f, 1.0f, 1.0f));cub1
+        allGeoms.add(new Cube(-1.1f,-0.55f,-2.1f,0.5f,0.5f,0.5f, 1.0f, 0.2f, 0.1f, 1.0f)); //old cube2 (5)
+
+        allGeoms.add(new Column(-0.4f,-0.8f,-2.3f,1.1f,1.1f,1.1f, 0.0f, 0.4f, 1.0f, 1.0f));  // old column1
+        allGeoms.add(new Pyramid(1.5f, -0.8f, -1.8f, 1.0f, 1.0f, 1.0f, 1.0f, 0.6f, 0.1f, 1.0f)); //old pyram
+        allGeoms.add(new Cube(LIGHT_POS_IN_WORLD_SPACE[0],LIGHT_POS_IN_WORLD_SPACE[1],LIGHT_POS_IN_WORLD_SPACE[2],0.7f,0.7f,0.7f, 1.0f, 1.0f, 1.0f, 1.0f )); //old cube2
+
+        allGeoms.add(new Cube(0.0f,1.0f,-2.5f,1.0f,1.0f,1.0f, 0.9f, 0.7f, 0.1f, 1.0f)); //old cube2 (9)
+        allGeoms.get(9).movStatus = 1;
 
         for(int i =0;i< m; i++){
-            for(int j=0
-                ; j < m; j++){
+            for(int j=0; j < m; j++){
 
-            //cubes[i][j] = new Cube(50.0f-(5*j),-2.0f,20.0f-(5*i),1.0f,1.0f,1.0f, 1.0f, 0.6523f, 0.0f, 1.0f);
-            cubes[i][j] = new Cube(30.0f-(5*i),-2.0f,-30.0f+(5*j),1.0f,1.0f,1.0f, 1.0f, 0.6523f, 0.0f, 1.0f);
-            cubes[i][j].initProgram(vertexShader,passthroughShader);
-            cubes[i][j].updateModelPosition();
+                allGeoms.add(new Cube(30.0f-(5*i),-2.0f,-30.0f+(5*j),1.0f,1.0f,1.0f, 1.0f, 0.6523f, 0.0f, 1.0f));
             }
         }
-        table[0].initProgram(vertexShader,passthroughShader);
-        table[1].initProgram(vertexShader,passthroughShader);
-        table[2].initProgram(vertexShader,passthroughShader);
+        for(int i = 0; i < allGeoms.size();i++){
 
-        cube1.initProgram(vertexShader,passthroughShader); //<- Program for every single cube or one for all ?
-        cube2.initProgram(vertexShader,passthroughShader);
-        light1.initProgram(vertexShader,passthroughShader);
-        testPrism1.initProgram(vertexShader,passthroughShader);
-        testtetra1.initProgram(vertexShader,passthroughShader);
-        column1.initProgram(vertexShader,passthroughShader);
-        pyram1.initProgram(vertexShader,passthroughShader);
+            allGeoms.get(i).initProgram(vertexShader,passthroughShader);
+        }
 
         //Moved init update pos to initProgramm!
+    }
+
+    public void initFloor(int gridShader,int vertexShader){
+
+        grid = new Grid(2.0f);
+        grid.initProgramm(gridShader, vertexShader);
+
     }
     public static int sp_Text;
 
@@ -232,10 +225,12 @@ public class ApplicationTest extends CardboardActivity implements CardboardView.
         ////////////
 
         int vertexShader = loadGLShader(GLES20.GL_VERTEX_SHADER, R.raw.light_vertex);
-        //int gridShader = loadGLShader(GLES20.GL_FRAGMENT_SHADER, R.raw.grid_fragment); //NOT NEEDED YET
+        int gridShader = loadGLShader(GLES20.GL_FRAGMENT_SHADER, R.raw.grid_fragment); //NOT NEEDED YET
         int passthroughShader = loadGLShader(GLES20.GL_FRAGMENT_SHADER, R.raw.passthrough_fragment);
 
         initGeoms(vertexShader,passthroughShader);
+
+        initFloor(gridShader,vertexShader);
 
         checkGLError("onSurfaceCreated");
     }
@@ -308,6 +303,7 @@ public class ApplicationTest extends CardboardActivity implements CardboardView.
         float[] perspective = eye.getPerspective(Z_NEAR, Z_FAR);
 
         drawGeoms(perspective);
+        grid.drawFloor(lightPosInEyeSpace,view,perspective);
 
 
     }
@@ -328,26 +324,13 @@ public class ApplicationTest extends CardboardActivity implements CardboardView.
             vibrator.vibrate(50);
             Log.e(TAG, "TRIGGERED event in DrawCube");
         }*/
-        table[0].draw(lightPosInEyeSpace,view,perspective);
-        table[1].draw(lightPosInEyeSpace,view,perspective);
-        table[2].draw(lightPosInEyeSpace,view,perspective);
-        testPrism1.draw(lightPosInEyeSpace, view, perspective);
-        testtetra1.draw(lightPosInEyeSpace, view, perspective);
-        cube1.draw(lightPosInEyeSpace, view, perspective);
-        cube2.draw(lightPosInEyeSpace, view, perspective);
-        column1.draw(lightPosInEyeSpace,view,perspective);
-        pyram1.draw(lightPosInEyeSpace,view,perspective);
-        light1.updateLightPosition();
-        light1.draw(lightPosInEyeSpace,view,perspective);
-        for(int i=0;i< m;i++){
-            for(int j=0;j< m;j++){
-                cubes[i][j].isLookingAtObject(headView);
-                //cubes[i][j].callUpdatePos();
-                //cubes[i][j].draw(lightPosInEyeSpace, view, perspective);
+        //table[0].draw(lightPosInEyeSpace,view,perspective);
+        for(int i = 0;i < allGeoms.size();i++){
 
-                }
-
+            allGeoms.get(i).isLookingAtObject(headView);
+            allGeoms.get(i).draw(lightPosInEyeSpace,view,perspective);
         }
+
 
     }
 
@@ -362,18 +345,16 @@ public class ApplicationTest extends CardboardActivity implements CardboardView.
             Geom.rMode = !Geom.rMode;
         }
 
-/*        if(cube1.isLookingAtObject(headView)){
-            //cube1.movY = 0.25f;
-            Log.e(TAG, "TRIGGERED event!!!");
-        }*/
-        //cubes[4][4].setInitColor(1.0f,0.0f,0.0f,1.0f);
-        for(int i = 0; i < m; i++){
-            for(int j = 0; j < m;j++) {
-                if (cubes[i][j].isLookingAtObject(headView)) {
-                    // hideObject();
-                    cubes[i][j].movY = 0.25f;
-                    Log.e(TAG, "VCount: " + cubes[i][j].vCount);
+        for(int i = 0; i < allGeoms.size(); i++){
+
+            if(allGeoms.get(i).islookingAtIt){
+                if(!(i <= 2)){
+                    //All geoms start rotating if selected and display is touched except the "table" cubes
+                    //allGeoms.get(i).movStatus = 1;
                 }
+            }
+            else{
+                allGeoms.get(i).movStatus = 0;
             }
         }
         /**
@@ -382,10 +363,10 @@ public class ApplicationTest extends CardboardActivity implements CardboardView.
          */
 
         //We try to change the light pos while being in the app
-        testLightning = testLightning + 1;
-        LIGHT_POS_IN_WORLD_SPACE[0] = 0.1f * testLightning;
-        LIGHT_POS_IN_WORLD_SPACE[1] = 2.0f;
-        LIGHT_POS_IN_WORLD_SPACE[2] = 0.1f * testLightning;
+        //testLightning = testLightning + 1;
+        //LIGHT_POS_IN_WORLD_SPACE[0] = 0.01f;
+        //LIGHT_POS_IN_WORLD_SPACE[1] = 2.0f;
+        //LIGHT_POS_IN_WORLD_SPACE[2] = 0.01f;
         //selectRndCubeAndStartMoving();
 
         // Always give user feedback.
@@ -395,10 +376,9 @@ public class ApplicationTest extends CardboardActivity implements CardboardView.
 
     private void selectRndCubeAndStartMoving() {
 
-        int rndCubeSelector = random.nextInt((m-1));
-        int rndCubeSelector2 = random.nextInt((m-1));
+        int rndCubeSelector = random.nextInt((allGeoms.size()-1));
         float rndMovY = (random.nextFloat() / 2);
-        cubes[rndCubeSelector][rndCubeSelector2].movY = rndMovY;
+        allGeoms.get(rndCubeSelector).movY = rndMovY;
         Log.e(TAG, "RndCubeSelector" + rndCubeSelector + "rndfloat:" + rndMovY);
 
     }

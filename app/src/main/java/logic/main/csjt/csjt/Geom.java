@@ -7,12 +7,16 @@ import android.util.Log;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
+import java.util.ArrayList;
 
 /**
  * Created by tom on 09.04.16.
  */
 
 public class Geom {
+
+    ArrayList<Geom> allGeoms = new ArrayList<Geom>();
+
 //STRINGS
     private static final String TAG = "CSJT";
 
@@ -22,7 +26,7 @@ public class Geom {
     float width;
     float height;
     float depth;
-    float rotSpeed = 0.3f;
+    float rotSpeed = 0.5f;
     float movY = 0.0f; // Movement factor in y-direction
     // The default value is 0.12f, but we will increase the value due to debugging
     private float YAW_LIMIT;
@@ -57,6 +61,7 @@ public class Geom {
     int geomModelParam;
     int geomModelViewParam;
     int geomLightPosParam;
+    int movStatus = 0; // 0 -> No movement ; 1 -> Rotation ; 2 -> movement in directions
 
 //BUFFERS
     private FloatBuffer fbGeomColors;
@@ -251,13 +256,18 @@ public class Geom {
     }
 
     public void draw(float[] lightPosInEyeSpace, float[] view, float[] perspective){
-        // TODO: Get Updating and rotation work toghether, look at hideObject func to solve proble
-        this.updateModelPosition();
-        //this.updateModelPosition(); <- Collision with rotation
-        // You can rotate the geoms by uncommenting Matrix.rotateM, but wont work together with callUpdatePos
-        float[] lModelGeom = this.getModelGeom();
-        //Matrix.rotateM(lModelGeom, 0,TIME_DELTA, this.modelPosition[0], this.modelPosition[1], this.modelPosition[2]);
-        this.setModelGeom(lModelGeom);
+        // TODO: Get Updating and rotation work toghether, look at hideObject func to solve problem
+        if(movStatus == 0){
+            //Actually doing nothing
+        }
+        else if(movStatus == 1) {
+            float[] lModelGeom = this.getModelGeom();
+            Matrix.rotateM(lModelGeom, 0,rotSpeed, this.modelPosition[0],this.modelPosition[1],this.modelPosition[2]);
+            this.setModelGeom(lModelGeom);
+        }
+        else if(movStatus == 2){
+            this.updateModelPosition();
+        }
 
         Matrix.multiplyMM(this.modelView, 0, view, 0, modelGeom, 0);
         Matrix.multiplyMM(modelViewProjection, 0, perspective, 0, modelView, 0);
@@ -336,8 +346,8 @@ public class Geom {
         float yaw = (float) Math.atan2(objPositionVec[0], -objPositionVec[2]);
         // Returns true if pitch and yaw are in the space of the object
         // Modified the PITCH AND YAW LIMIT!!
-        PITCH_LIMIT = this.height / objectDistance;
-        YAW_LIMIT = this.width / objectDistance;
+        PITCH_LIMIT = this.height / objectDistance /2;
+        YAW_LIMIT = this.width / objectDistance /2;
         this.islookingAtIt = Math.abs(pitch) < PITCH_LIMIT && Math.abs(yaw) < YAW_LIMIT;
         return this.islookingAtIt;
     }
@@ -371,6 +381,17 @@ public class Geom {
         modelPosition[2] = posVec[2];
 
         //updateModelPosition();
+    }
+
+    public Geom(){
+
+        this.addToGlobalList();
+        //this should add the obj to a global list where all geoms are referenced in
+    }
+
+    private void addToGlobalList() {
+
+
     }
 
 }
