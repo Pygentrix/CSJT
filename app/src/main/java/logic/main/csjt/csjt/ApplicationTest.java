@@ -42,6 +42,7 @@ public class ApplicationTest extends CardboardActivity implements CardboardView.
 //INTEGERS
     //int testLightning = 1;
     int m = 10;// dont do m=100 , rendering 10000 cubes atm is too much
+    int startOfDeco;
 
 //OBJECTS
 
@@ -73,11 +74,16 @@ public class ApplicationTest extends CardboardActivity implements CardboardView.
 
         allGeoms.add(new Cube(0.0f,1.0f,-2.5f,1.0f,1.0f,1.0f, 0.9f, 0.7f, 0.1f, 1.0f)); //old cube2 (9)
         allGeoms.get(9).movStatus = 1;
-
+        // Decorating the grid with some cubes index 10 to 10+m*m 110 cubes
+        startOfDeco = 10;
         for(int i =0;i< m; i++){
             for(int j=0; j < m; j++){
-
-                allGeoms.add(new Cube(30.0f-(5*i),-2.0f,-30.0f+(5*j),1.0f,1.0f,1.0f, 1.0f, 0.6523f, 0.0f, 1.0f));
+                float x = 30.0f-(5*i);
+                float z = -30.0f+(5*j);
+                if(x == 0.0f && z == 0.0f){
+                    Log.i("CS","Size of ArrayList(not complete filled yet):" + allGeoms.size());
+                }
+                allGeoms.add(new Cube(x,-0.75f,-30.0f+(5*j),0.5f,0.5f,0.5f, 1.0f, 0.6523f, 0.0f, 1.0f));
             }
         }
         for(int i = 0; i < allGeoms.size();i++){
@@ -85,7 +91,6 @@ public class ApplicationTest extends CardboardActivity implements CardboardView.
             allGeoms.get(i).initProgram(vertexShader,passthroughShader);
         }
 
-        //Moved init update pos to initProgramm!
     }
 
     public void initFloor(int gridShader,int vertexShader){
@@ -344,7 +349,7 @@ public class ApplicationTest extends CardboardActivity implements CardboardView.
         if(System.currentTimeMillis() - timeOfLastTap < 400){
             Geom.rMode = !Geom.rMode;
         }
-
+        //Maybe implement switch case instead of if clause
         for(int i = 0; i < allGeoms.size(); i++){
 
             if(allGeoms.get(i).islookingAtIt){
@@ -352,9 +357,23 @@ public class ApplicationTest extends CardboardActivity implements CardboardView.
                     //All geoms start rotating if selected and display is touched except the "table" cubes
                     //allGeoms.get(i).movStatus = 1;
                 }
+                if ((i >= startOfDeco) && ( i != (startOfDeco+66))){
+                    if(allGeoms.get(i).movY != 0.0f){
+                        allGeoms.get(i).movY = 0.0f;
+                        allGeoms.get(i).movStatus = 0;
+                    }
+                    else{
+                    allGeoms.get(i).movY = 0.15f;
+                    allGeoms.get(i).movStatus = 2;
+                    }
+                }
+                if( i == 9){
+                    allGeoms.get(i).movStatus = 1;
+                }
             }
+
             else{
-                allGeoms.get(i).movStatus = 0;
+                //allGeoms.get(i).movStatus = 0;
             }
         }
         /**

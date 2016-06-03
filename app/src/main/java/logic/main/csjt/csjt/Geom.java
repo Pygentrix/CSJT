@@ -33,9 +33,9 @@ public class Geom {
     private float PITCH_LIMIT;
 
 //FLOAT ARRAYS
-    public float[] modelGeom;
-    public float[] modelView = new float[16];
-    public float[] modelPosition;
+    float[] modelGeom;
+    float[] modelView = new float[16];
+    float[] modelPosition;
     private float[] geomColors;
     float[] selectedGeomColors;
     float[] modelViewProjection;
@@ -52,7 +52,7 @@ public class Geom {
     int pages;
     int verticesPerPage;
 
-    public static int geomProgram;
+    static int geomProgram;
     private static final int COORDS_PER_VERTEX = 3;
     int geomPositionParam;
     int geomModelViewProjectionParam;
@@ -68,10 +68,10 @@ public class Geom {
     private FloatBuffer fbSelectedGeomColors;
 
 //BOOLEANS
-    public boolean islookingAtIt = false;
-    public static boolean rMode = true; // used for the rendering mode
-    public boolean dir = true;
-    private boolean initCase = true;
+    boolean islookingAtIt = false;
+    static boolean rMode = true; // used for the rendering mode
+    boolean dir = true;
+    boolean initCase = true;
 
 
 //GETTERS
@@ -298,9 +298,7 @@ public class Geom {
     public void updateModelPosition() {
         Matrix.setIdentityM(this.modelGeom, 0);
         calcY();
-        Matrix.translateM(this.modelGeom, 0, this.modelPosition[0], this.modelPosition[1] - this.movY, this.modelPosition[2]);
-        //float[] transMatrix = this.modelGeom;
-        //Matrix.rotateM(this.modelGeom, 0,this.rotSpeed, this.modelPosition[0], this.modelPosition[1], this.modelPosition[2]);
+        Matrix.translateM(this.modelGeom, 0, this.modelPosition[0], this.modelPosition[1], this.modelPosition[2]);
 
         objectDistance =(float) Math.sqrt((((this.modelPosition[0]-ApplicationTest.CAMERA_X)
                 *(this.modelPosition[0]-ApplicationTest.CAMERA_X))
@@ -320,7 +318,7 @@ public class Geom {
         else if(this.modelPosition[1] >= 50.0f){
             this.dir = false;
         }
-        else if(this.modelPosition[1] <= -20.0f){
+        else if(this.modelPosition[1] <= -0.5f){
             this.dir = true;
         }
         if(this.dir) {this.modelPosition[1] = this.modelPosition[1] + this.movY;}
