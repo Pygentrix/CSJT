@@ -381,10 +381,18 @@ public class Geom {
         //updateModelPosition();
     }
 
-    public Geom(){
+    public Geom(float x,float y,float z){
 
         this.addToGlobalList();
+        Log.i("CSJT-Geoms" , "Geom is being constructed");
         //this should add the obj to a global list where all geoms are referenced in
+        modelGeom = new float[16];
+        modelViewProjection = new float[16];
+        modelPosition = new float[] {x, y, z}; //TODO: Look for fourth param
+        // TODO: Build constructors so we dont need to set static coords for every single cube. DONE so far
+        px = x;
+        py = y;
+        pz = z;
     }
 
     private void addToGlobalList() {

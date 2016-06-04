@@ -105,23 +105,20 @@ public class Octahedron extends Geom {
 
     public Octahedron(Float x, Float y, Float z) {
 
+        super(x,y,z);
         float r, g, b, a = 1.0f;
 
     }
 
     public Octahedron(float x, float y, float z, float width, float height, float depth, float r, float g, float b, float a) {
 
+        super(x,y,z);
         pages = 8;
         verticesPerPage = 3;
         vCount = pages * verticesPerPage;
         selectedGeomColors = setSelectedGeomColors();
         setFbSelectedGeomColors(setSelectedColorFloatBuffer());
-        modelGeom = new float[16];
-        modelViewProjection = new float[16];
-        modelPosition = new float[]{x, y, z};
-        px = x;
-        py = y;
-        pz = z;
+
         this.width = width;
         this.height = height;
         this.depth = depth;
@@ -133,6 +130,7 @@ public class Octahedron extends Geom {
         setFbGeomColors(colorFloatBuffer());
         this.fbGeomNormals = normalsFloatBuffer();
         this.fbGeomVertics = verticsFloatBuffer();
+
 
 
     }

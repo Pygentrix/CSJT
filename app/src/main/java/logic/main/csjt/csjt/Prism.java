@@ -115,25 +115,20 @@ public class Prism extends Geom{
 
     //CONSTRUCTOR(S)
     public Prism(Float x, Float y, Float z) {
-
+        super(x,y,z);
         float r, g, b, a = 1.0f;
         //TODO FINSIH!
 
     }
     public Prism(float x, float y, float z,float width,float height, float r, float g, float b, float a) {
 
+        super(x,y,z);
         pages = 8;
         verticesPerPage = 3;
         vCount = 24;
         selectedGeomColors = setSelectedGeomColors();
         setFbSelectedGeomColors(setSelectedColorFloatBuffer());
-        modelGeom = new float[16];
-        modelViewProjection = new float[16];
-        modelPosition = new float[] {x, y, z};
-        // TODO: Build constructors so we dont need to set static coords for every single prism. DONE so far
-        px = x;
-        py = y;
-        pz = z;
+
         this.width = width;
         this.height = height;
 

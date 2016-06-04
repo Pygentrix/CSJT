@@ -68,7 +68,6 @@ public class ApplicationTest extends CardboardActivity implements CardboardView.
         allGeoms.add(new Prism(0.5f,-0.8f,-2.1f,1.0f,1.0f,0.0f, 1.0f, 0.1f, 1.0f));  //old testprism1 (5)
         //allGeoms.add(new Cube(-10.0f,-10.0f,10.0f,40.0f,40.0f,40.0f, 0.0f, 0.2f, 1.0f, 1.0f));cub1
         allGeoms.add(new Cube(-1.1f,-0.55f,-2.1f,0.5f,0.5f,0.5f, 1.0f, 0.2f, 0.1f, 1.0f)); //old cube2 (6)
-
         allGeoms.add(new Column(-0.4f,-0.8f,-2.3f,1.1f,1.1f,1.1f, 0.0f, 0.4f, 1.0f, 1.0f));  // old column1
         allGeoms.add(new Octahedron(1.8f,-0.2f,-0.8f,1.0f,1.0f,1.0f, 1.0f,0.0f,0.0f,1.0f));
         allGeoms.add(new Pyramid(1.5f, -0.8f, -1.8f, 1.0f, 1.0f, 1.0f, 1.0f, 0.6f, 0.1f, 1.0f)); //old pyram
@@ -92,6 +91,7 @@ public class ApplicationTest extends CardboardActivity implements CardboardView.
 
             allGeoms.get(i).initProgram(vertexShader,passthroughShader);
         }
+
         if(allGeoms.get(1) instanceof Tetrahedron){
         ((Tetrahedron)allGeoms.get(1)).initialRotCorrection();}
         else{
@@ -178,6 +178,7 @@ public class ApplicationTest extends CardboardActivity implements CardboardView.
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        Log.i(TAG,"onCreate");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.common_ui);
 
@@ -360,7 +361,7 @@ public class ApplicationTest extends CardboardActivity implements CardboardView.
         for(int i = 0; i < allGeoms.size(); i++){
 
             if(allGeoms.get(i).islookingAtIt){
-                if(!(i <= 2)){
+                if(!(i <= 11)){
                     //All geoms start rotating if selected and display is touched except the "table" cubes
                     //allGeoms.get(i).movStatus = 1;
                 }
@@ -374,7 +375,7 @@ public class ApplicationTest extends CardboardActivity implements CardboardView.
                     allGeoms.get(i).movStatus = 2;
                     }
                 }
-                if( i == 9){
+                if( i == 0){
                     allGeoms.get(i).movStatus = 1;
                 }
             }

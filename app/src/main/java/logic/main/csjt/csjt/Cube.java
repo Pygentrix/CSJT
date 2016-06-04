@@ -128,26 +128,22 @@ public class Cube extends Geom{
         }
 
 //CONSTRUCTOR(S)
-        public Cube(Float x, Float y, Float z) {
+        public Cube(float x, float y, float z) {
 
+                super(x,y,z);
                 float r, g, b, a = 1.0f;
                 //TODO FINSIH!
 
         }
         public Cube(float x, float y, float z,float width,float height,float depth, float r, float g, float b, float a) {
 
+                super(x,y,z);
                 pages = 6;
                 verticesPerPage = 6;
                 vCount = pages * verticesPerPage;
                 selectedGeomColors = setSelectedGeomColors();
                 setFbSelectedGeomColors(setSelectedColorFloatBuffer());
-                modelGeom = new float[16];
-                modelViewProjection = new float[16];
-                modelPosition = new float[] {x, y, z};
-                // TODO: Build constructors so we dont need to set static coords for every single cube. DONE so far
-                px = x;
-                py = y;
-                pz = z;
+
                 this.width = width;
                 this.height = height;
                 this.depth = depth;

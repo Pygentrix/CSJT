@@ -86,7 +86,7 @@ public class Tetrahedron extends Geom {
     }
 
     public Tetrahedron(Float x, Float y, Float z) {
-
+        super(x,y,z);
         float r, g, b, a = 1.0f;
         // FINSIH!
 
@@ -95,18 +95,13 @@ public class Tetrahedron extends Geom {
 
     public Tetrahedron(float x, float y, float z,float width,float height,float depth, float r, float g, float b, float a) {
 
+        super(x,y,z);
         pages = 4;
         verticesPerPage = 3;
         vCount = pages * verticesPerPage;
         selectedGeomColors = setSelectedGeomColors();
         setFbSelectedGeomColors(setSelectedColorFloatBuffer());
-        modelGeom = new float[16];
-        modelViewProjection = new float[16];
-        modelPosition = new float[] {x, y, z}; //TODO: Look for fourth param
-        // TODO: Build constructors so we dont need to set static coords for every single cube. DONE so far
-        px = x;
-        py = y;
-        pz = z;
+
         this.width = width;
         this.height = height;
         this.depth = depth;
