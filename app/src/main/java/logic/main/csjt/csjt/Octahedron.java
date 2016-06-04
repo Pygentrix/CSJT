@@ -2,6 +2,7 @@ package logic.main.csjt.csjt;
 
 /**
  * Created by JB on 03.06.2016.
+ * DONE
  */
 public class Octahedron extends Geom {
     public float[] setOctaCoords(float px, float py, float pz, float width, float height, float depth) {
