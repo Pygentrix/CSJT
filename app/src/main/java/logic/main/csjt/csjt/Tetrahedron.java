@@ -1,14 +1,12 @@
 package logic.main.csjt.csjt;
 
-import android.opengl.Matrix;
-
 /**
  * Created by Paul Stonjek on 11.05.2016.
  * Uploaded to the Git by Pygentrix ( Due to setting problems )
  */
-public class Tetrahedron extends Geom {
+class Tetrahedron extends Geom {
 
-    public float[] setTetraCoords(float px,float py,float pz ,float width, float height, float depth){
+    private float[] setTetraCoords(float px, float py, float pz, float width, float height, float depth){
 
         /**
          * px, py and pz describe the origin of the Tetrahedron, in our case its exact middle.
@@ -22,7 +20,7 @@ public class Tetrahedron extends Geom {
         float hei = height / 2;
         float dep = depth / 2;
 
-        float[] TETRA_COORDS = new float[]{
+        return new float[]{
                 //Face A
                 px-wid, py-hei, pz-dep,     //left bottom back point
                 px+wid, py-hei, pz+dep,     //right bottom front point
@@ -52,14 +50,13 @@ public class Tetrahedron extends Geom {
                  */
 
         };
-
-        return TETRA_COORDS;
     }
 
-    public float[] setTetraNormals(float width, float height, float depth){
+    private float[] setTetraNormals(float width, float height, float depth){
 
         //Normals are constructed similar to the coordinates
-        float[] TETRA_NORMALS = new float[]{
+
+        return new float[]{
                 //FACE A
                 -width, -height, depth,
                 -width, -height, depth,
@@ -81,11 +78,9 @@ public class Tetrahedron extends Geom {
                 -width, height, -depth
 
         };
-
-        return TETRA_NORMALS;
     }
 
-    public Tetrahedron(Float x, Float y, Float z) {
+    Tetrahedron(Float x, Float y, Float z) {
         super(x,y,z);
         float r, g, b, a = 1.0f;
         // FINSIH!
@@ -93,7 +88,7 @@ public class Tetrahedron extends Geom {
     }
 
 
-    public Tetrahedron(float x, float y, float z,float width,float height,float depth, float r, float g, float b, float a) {
+    Tetrahedron(float x, float y, float z, float width, float height, float depth, float r, float g, float b, float a) {
 
         super(x,y,z);
         pages = 4;

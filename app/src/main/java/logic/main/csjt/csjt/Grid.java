@@ -33,14 +33,14 @@ public class Grid {
     private float[] gfloorColors;
     private float[] modelFloor;
     private float[] modelView;
-    float[] modelViewProjection;
+    private float[] modelViewProjection;
 
-    static float r = 0.4f;
-    static float g = 0.7f;
-    static float b = 1.0f;
-    static float a = 0.9f;
+    private static float r = 0.4f;
+    private static float g = 0.7f;
+    private static float b = 1.0f;
+    private static float a = 0.9f;
 
-    public FloatBuffer verticsFloatBuffer(){
+    private FloatBuffer verticsFloatBuffer(){
 
         FloatBuffer lFloatBuffer;
         ByteBuffer bbVertics = ByteBuffer.allocateDirect(this.gfloorVertics.length * 4);
@@ -51,7 +51,7 @@ public class Grid {
         return lFloatBuffer;
     }
 
-    public FloatBuffer normalsFloatBuffer(){
+    private FloatBuffer normalsFloatBuffer(){
 
         FloatBuffer lFloatBuffer;
         ByteBuffer bbNormals = ByteBuffer.allocateDirect(this.gfloorNormals.length * 4);
@@ -62,7 +62,7 @@ public class Grid {
         return lFloatBuffer;
     }
 
-    public FloatBuffer colorFloatBuffer() {
+    private FloatBuffer colorFloatBuffer() {
 
         FloatBuffer lFloatBuffer;
         ByteBuffer bbColors = ByteBuffer.allocateDirect(this.gfloorColors.length * 4);
@@ -105,7 +105,7 @@ public class Grid {
      *
      * @param label Label to report in case of error.
      */
-    public static void checkGLError(String label) {
+    private static void checkGLError(String label) {
         int error;
         while ((error = GLES20.glGetError()) != GLES20.GL_NO_ERROR) {
             Log.e("CSJT", label + ": glError " + error);
@@ -113,7 +113,7 @@ public class Grid {
         }
     }
 
-    public void drawFloor(float[] lightPosInEyeSpace, float[] view, float[] perspective) {
+    void drawFloor(float[] lightPosInEyeSpace, float[] view, float[] perspective) {
 
         // Set modelView for the floor, so we draw floor in the correct location
         Matrix.multiplyMM(modelView, 0, view, 0, modelFloor, 0);
@@ -141,7 +141,7 @@ public class Grid {
 
     // The grid lines on the floor are rendered procedurally and large polygons cause floating point
     // precision problems on some architectures. So we split the floor into 4 quadrants.
-    public static final float[] FLOOR_COORDS = new float[] {
+    private static final float[] FLOOR_COORDS = new float[] {
             // +X, +Z quadrant
             200, 0, 0,
             0, 0, 0,
@@ -175,7 +175,7 @@ public class Grid {
             0, 0, 0,
     };
 
-    public static final float[] FLOOR_NORMALS = new float[] {
+    private static final float[] FLOOR_NORMALS = new float[] {
             0.0f, 1.0f, 0.0f,
             0.0f, 1.0f, 0.0f,
             0.0f, 1.0f, 0.0f,
@@ -202,7 +202,7 @@ public class Grid {
             0.0f, 1.0f, 0.0f,
     };
 
-    public static final float[] FLOOR_COLORS = new float[] {
+    private static final float[] FLOOR_COLORS = new float[] {
             r,g, b, a,
             r,g, b, a,
             r,g, b, a,
@@ -229,7 +229,7 @@ public class Grid {
             r,g, b, a,
     };
 
-    public Grid (float floorDepth){
+    Grid(float floorDepth){
 
         this.floorDepth = floorDepth;
 

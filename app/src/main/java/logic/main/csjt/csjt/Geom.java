@@ -7,7 +7,7 @@ import android.util.Log;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
-import java.util.ArrayList;
+
 
 /**
  * Created by tom on 09.04.16.
@@ -15,7 +15,7 @@ import java.util.ArrayList;
 
 public class Geom {
 
-    ArrayList<Geom> allGeoms = new ArrayList<Geom>();
+    //ArrayList<Geom> allGeoms = new ArrayList<Geom>();
 
 //STRINGS
     private static final String TAG = "CSJT";
@@ -51,6 +51,8 @@ public class Geom {
     int vCount;
     int pages;
     int verticesPerPage;
+    int id;
+    static int geomCounter = 0;
 
     static int geomProgram;
     private static final int COORDS_PER_VERTEX = 3;
@@ -384,7 +386,9 @@ public class Geom {
     public Geom(float x,float y,float z){
 
         this.addToGlobalList();
-        Log.i("CSJT-Geoms" , "Geom is being constructed");
+        this.id = geomCounter;
+        Log.i("CSJT-Geoms" , "Geom " + id + " is being constructed");
+        geomCounter++;
         //this should add the obj to a global list where all geoms are referenced in
         modelGeom = new float[16];
         modelViewProjection = new float[16];

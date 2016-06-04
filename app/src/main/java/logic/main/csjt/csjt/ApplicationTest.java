@@ -31,7 +31,7 @@ public class ApplicationTest extends CardboardActivity implements CardboardView.
 
 //FLOAT ARRAYS
     // We keep the light always position just above the user. CHANGE a to see whether it changes sth
-    public static float[] LIGHT_POS_IN_WORLD_SPACE = new float[] {1.0f, 2.0f, 0.0f, 1.0f};
+    static float[] LIGHT_POS_IN_WORLD_SPACE = new float[] {1.0f, 2.0f, 0.0f, 1.0f};
     private final float[] lightPosInEyeSpace = new float[4];
 
     private float[] camera;
@@ -41,22 +41,22 @@ public class ApplicationTest extends CardboardActivity implements CardboardView.
 
 //INTEGERS
     //int testLightning = 1;
-    int m = 10;// dont do m=100 , rendering 10000 cubes atm is too much
-    int startOfDeco;
+    private int m = 10;// dont do m=100 , rendering 10000 cubes atm is too much
+    private int startOfDeco;
 
 //OBJECTS
 
-    ArrayList<Geom> allGeoms = new ArrayList<>();
+    private ArrayList<Geom> allGeoms = new ArrayList<>();
 
-    Grid grid;
+    private Grid grid;
 
     private Vibrator vibrator;
-    Random random = new Random();
+    private Random random = new Random();
 
     private long timeOfLastTap;
 
 
-    public void initGeoms(int vertexShader,int passthroughShader){
+    private void initGeoms(int vertexShader, int passthroughShader){
 
         //PLEASE MAKE SURE WHERE YOU INSERT THE OBJECTS SOME CALCS OTHERWISE MIGHT FAIL
         allGeoms.add(new Cube(0.0f,1.0f,-2.5f,1.0f,1.0f,1.0f, 0.9f, 0.7f, 0.1f, 1.0f)); //rotating cube (0)
@@ -87,9 +87,9 @@ public class ApplicationTest extends CardboardActivity implements CardboardView.
                 allGeoms.add(new Cube(x,-0.75f,-30.0f+(5*j),0.5f,0.5f,0.5f, 1.0f, 0.6523f, 0.0f, 1.0f));
             }
         }
-        for(int i = 0; i < allGeoms.size();i++){
+        for (Geom allGeom : allGeoms) {
 
-            allGeoms.get(i).initProgram(vertexShader,passthroughShader);
+            allGeom.initProgram(vertexShader, passthroughShader);
         }
 
         if(allGeoms.get(1) instanceof Tetrahedron){
@@ -100,7 +100,7 @@ public class ApplicationTest extends CardboardActivity implements CardboardView.
 
     }
 
-    public void initFloor(int gridShader,int vertexShader){
+    private void initFloor(int gridShader, int vertexShader){
 
         grid = new Grid(2.0f);
         grid.initProgramm(gridShader, vertexShader);
@@ -197,6 +197,7 @@ public class ApplicationTest extends CardboardActivity implements CardboardView.
         headRotation = new float[4];
         headView = new float[16];
         vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+        Log.i(TAG,"End of onCreate");
     }
 
     @Override
@@ -330,7 +331,7 @@ public class ApplicationTest extends CardboardActivity implements CardboardView.
      * <p>We've set all of our transformation matrices. Now we simply pass them into the shader.
      * @param perspective
      */
-    public void drawGeoms(float[] perspective) {
+    private void drawGeoms(float[] perspective) {
 
 /*        if(cube1.isLookingAtObject(headView)){
             cube1.movY = 0.25f;
@@ -338,10 +339,10 @@ public class ApplicationTest extends CardboardActivity implements CardboardView.
             Log.e(TAG, "TRIGGERED event in DrawCube");
         }*/
         //table[0].draw(lightPosInEyeSpace,view,perspective);
-        for(int i = 0;i < allGeoms.size();i++){
+        for (Geom allGeom : allGeoms) {
 
-            allGeoms.get(i).isLookingAtObject(headView);
-            allGeoms.get(i).draw(lightPosInEyeSpace,view,perspective);
+            allGeom.isLookingAtObject(headView);
+            allGeom.draw(lightPosInEyeSpace, view, perspective);
         }
 
 

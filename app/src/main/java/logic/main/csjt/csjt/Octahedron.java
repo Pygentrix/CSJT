@@ -7,7 +7,7 @@ public class Octahedron extends Geom {
     public float[] setOctaCoords(float px, float py, float pz, float width, float height, float depth) {
 
 
-        float[] OCTA_COORDS = new float[]{
+        return new float[]{
 
                 //Back Top
                 px, py, pz,                                       //back left point //just for me: BLUE
@@ -49,14 +49,13 @@ public class Octahedron extends Geom {
                 px + width, py, pz,                              //back right point //just for me: RED
                 px - (width / 2), py - height, pz + (depth / 2), //bottom //just for me: BLACK
         };
-
-        return OCTA_COORDS;
     }
 
-    public float[] setOctaNormals(float width, float height, float depth) {
+    private float[] setOctaNormals(float width, float height, float depth) {
 
         //Normals are constructed similar to the coordinates
-        float[] OCTA_NORMALS = new float[]{
+
+        return new float[]{
 
                 //Back Top
                 0.0f, height, -2 * depth,   //back left point //BLUE
@@ -99,8 +98,6 @@ public class Octahedron extends Geom {
                 2 * width, -height, 0.0f,    //top //ORANGE
 
         };
-
-        return OCTA_NORMALS;
     }
 
     public Octahedron(Float x, Float y, Float z) {
@@ -110,7 +107,7 @@ public class Octahedron extends Geom {
 
     }
 
-    public Octahedron(float x, float y, float z, float width, float height, float depth, float r, float g, float b, float a) {
+     Octahedron(float x, float y, float z, float width, float height, float depth, float r, float g, float b, float a) {
 
         super(x,y,z);
         pages = 8;

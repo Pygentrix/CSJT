@@ -4,14 +4,14 @@ package logic.main.csjt.csjt;
  * Created by Pygentrix on 02.04.2016.
  */
 
-public class Cube extends Geom{
+class Cube extends Geom{
 
 //SETTERS
-        public float[] setCubeCoords(float px,float py,float pz ,float width, float height, float depth){
+        private float[] setCubeCoords(float px, float py, float pz, float width, float height, float depth){
 
                 //TODO: Implement it correct, some rendering fuck ups. Still not correct
 
-                float[] CUBE_COORDS = new float[]{
+                return new float[]{
                         // Front face
                         px-width, py+height, pz+depth,
                         px-width, py-height, pz+depth,  // unten rechts
@@ -60,13 +60,11 @@ public class Cube extends Geom{
                         px-width, py-height, pz+depth,
                         px-width, py-height, pz-depth
                 };
-
-                return CUBE_COORDS;
         }
 
-        public float[] setCubeNormals(float width, float height, float depth){
+        private float[] setCubeNormals(float width, float height, float depth){
 
-                float[] CUBE_NORMALS = new float[]{
+                return new float[]{
                         0.0f, 0.0f, depth,
                         0.0f, 0.0f, depth,
                         0.0f, 0.0f, depth,
@@ -114,8 +112,6 @@ public class Cube extends Geom{
                         0.0f, -height, 0.0f,
                         0.0f, -height, 0.0f
                 };
-
-                return CUBE_NORMALS;
         }
 
 //FUNCTIONS / METHODS
@@ -128,14 +124,14 @@ public class Cube extends Geom{
         }
 
 //CONSTRUCTOR(S)
-        public Cube(float x, float y, float z) {
+        Cube(float x, float y, float z) {
 
                 super(x,y,z);
                 float r, g, b, a = 1.0f;
                 //TODO FINSIH!
 
         }
-        public Cube(float x, float y, float z,float width,float height,float depth, float r, float g, float b, float a) {
+        Cube(float x, float y, float z, float width, float height, float depth, float r, float g, float b, float a) {
 
                 super(x,y,z);
                 pages = 6;
