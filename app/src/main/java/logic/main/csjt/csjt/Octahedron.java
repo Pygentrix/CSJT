@@ -12,42 +12,42 @@ public class Octahedron extends Geom {
                 //Back Top
                 px, py, pz,                                       //back left point //just for me: BLUE
                 px + width, py, pz,                               //back right point //just for me: RED
-                px + (width / 2), py + height, pz + (depth / 2),  //top //just for me: ORANGE
+                px + (width / 2.0f), py + height, pz + (depth / 2.0f),  //top //just for me: ORANGE
 
                 //Left Top
                 px, py, pz,                                      //back left point //just for me: BLUE
                 px, py, pz + depth,                              //front left point  //just for me: YELLOW
-                px + (width / 2), py + height, pz + (depth / 2), //top //just for me: ORANGE
+                px + (width / 2.0f), py + height, pz + (depth / 2.0f), //top //just for me: ORANGE
 
                 //Front Top
                 px, py, pz + depth,                              //front left point //just for me: YELLOW
                 px + width, py, pz + depth,                      //front right point //just for me: GREEN
-                px + (width / 2), py + height, pz + (depth / 2), //top //just for me: ORANGE
+                px + (width / 2.0f), py + height, pz + (depth / 2.0f), //top //just for me: ORANGE
 
                 //Right Top
                 px + width, py, pz,                              //back right point //just for me: RED
                 px + width, py, pz + depth,                      //front right point //just for me: GREEN
-                px + (width / 2), py + height, pz + (depth / 2), //top //just for me: ORANGE
+                px + (width / 2.0f), py + height, pz + (depth / 2.0f), //top //just for me: ORANGE
 
                 //Front Bottom
                 px, py, pz + depth,                               //front left point //just for me: YELLOW
                 px + width, py, pz + depth,                       //front right point //just for me: GREEN
-                px - (width / 2), py - height, pz + (depth / 2),  //bottom //just for me: BLACK
+                px - (width / 2.0f), py - height, pz + (depth / 2.0f),  //bottom //just for me: BLACK
 
                 //Right Bottom
                 px + width, py, pz,                               //back right point //just for me: RED
                 px + width, py, pz + depth,                       //front right point //just for me: GREEN
-                px - (width / 2), py - height, pz + (depth / 2),  //bottom //just for me: BLACK
+                px - (width / 2.0f), py - height, pz + (depth / 2.0f),  //bottom //just for me: BLACK
 
                 //Left Bottom
                 px, py, pz,                                      //back left point //just for me: BLUE
                 px, py, pz + depth,                              //front left point  //just for me: YELLOW
-                px - (width / 2), py - height, pz + (depth / 2), //bottom //just for me: BLACK
+                px - (width / 2.0f), py - height, pz + (depth / 2.0f), //bottom //just for me: BLACK
 
                 //Back Bottom
                 px, py, pz,                                      //back left point //just for me: BLUE
                 px + width, py, pz,                              //back right point //just for me: RED
-                px - (width / 2), py - height, pz + (depth / 2), //bottom //just for me: BLACK
+                px - (width / 2.0f), py - height, pz + (depth / 2.0f), //bottom //just for me: BLACK
         };
     }
 
@@ -58,44 +58,44 @@ public class Octahedron extends Geom {
         return new float[]{
 
                 //Back Top
-                0.0f, height, -2 * depth,   //back left point //BLUE
-                0.0f, height, -2 * depth,   //back right point //RED
-                0.0f, height, -2 * depth,   //top //ORANGE
+                0.0f, height, -2.0f * depth,   //back left point //BLUE
+                0.0f, height, -2.0f * depth,   //back right point //RED
+                0.0f, height, -2.0f * depth,   //top //ORANGE
 
                 //Left Top
-                -2 * width, height, 0.0f,   //back left point //BLUE
-                -2 * width, height, 0.0f,   //front left point //YELLOW
-                -2 * width, height, 0.0f,   //top //ORANGE
+                -2.0f * width, height, 0.0f,   //back left point //BLUE
+                -2.0f * width, height, 0.0f,   //front left point //YELLOW
+                -2.0f * width, height, 0.0f,   //top //ORANGE
 
                 //Front Top
-                0.0f, height, 2 * depth,    //front left point //YELLOW
-                0.0f, height, 2 * depth,    //front right point //GREEN
-                0.0f, height, 2 * depth,    //top //ORANGE
+                0.0f, height, 2.0f * depth,    //front left point //YELLOW
+                0.0f, height, 2.0f * depth,    //front right point //GREEN
+                0.0f, height, 2.0f * depth,    //top //ORANGE
 
                 //Right Top
-                2 * width, height, 0.0f,    //back right point //RED
-                2 * width, height, 0.0f,    //front right point //GREEN
-                2 * width, height, 0.0f,    //top //ORANGE
+                2.0f * width, height, 0.0f,    //back right point //RED
+                2.0f * width, height, 0.0f,    //front right point //GREEN
+                2.0f * width, height, 0.0f,    //top //ORANGE
 
                 //Back Bottom
-                0.0f, -height, -2 * depth,   //back left point //BLUE
-                0.0f, -height, -2 * depth,   //back right point //RED
-                0.0f, -height, -2 * depth,   //top //ORANGE
+                0.0f, -height, -2.0f * depth,   //back left point //BLUE
+                0.0f, -height, -2.0f * depth,   //back right point //RED
+                0.0f, -height, -2.0f * depth,   //top //ORANGE
 
                 //Left Bottom
-                -2 * width, -height, 0.0f,   //back left point //BLUE
-                -2 * width, -height, 0.0f,   //front left point //YELLOW
-                -2 * width, -height, 0.0f,   //top //ORANGE
+                -2.0f * width, -height, 0.0f,   //back left point //BLUE
+                -2.0f * width, -height, 0.0f,   //front left point //YELLOW
+                -2.0f * width, -height, 0.0f,   //top //ORANGE
 
                 //Front Bottom
-                0.0f, -height, 2 * depth,    //front left point //YELLOW
-                0.0f, -height, 2 * depth,    //front right point //GREEN
-                0.0f, -height, 2 * depth,    //top //ORANGE
+                0.0f, -height, 2.0f * depth,    //front left point //YELLOW
+                0.0f, -height, 2.0f * depth,    //front right point //GREEN
+                0.0f, -height, 2.0f * depth,    //top //ORANGE
 
                 //Right Bottom
-                2 * width, -height, 0.0f,    //back right point //RED
-                2 * width, -height, 0.0f,    //front right point //GREEN
-                2 * width, -height, 0.0f,    //top //ORANGE
+                2.0f * width, -height, 0.0f,    //back right point //RED
+                2.0f * width, -height, 0.0f,    //front right point //GREEN
+                2.0f * width, -height, 0.0f,    //top //ORANGE
 
         };
     }
