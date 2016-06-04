@@ -3,12 +3,12 @@ package logic.main.csjt.csjt;
 /**
  * Created by Thundergrass on 02.06.2016.
  */
-public class Pyramid extends Geom {
+class Pyramid extends Geom {
 
-    public float[] setPyramCoords(float px,float py,float pz ,float width, float height, float depth){
+    private float[] setPyramCoords(float px, float py, float pz, float width, float height, float depth){
 
 
-        float[] PYRAM_COORDS = new float[]{
+        return new float[]{
                 //Bottom
                 px,         py,         pz,         //back left point
                 px,         py,         pz+depth,   //front left point
@@ -39,14 +39,13 @@ public class Pyramid extends Geom {
                 px+(width/2), py+height, pz+(depth/2), //top
 
         };
-
-        return PYRAM_COORDS;
     }
 
-    public float[] setPyramNormals(float width, float height, float depth){
+    private float[] setPyramNormals(float width, float height, float depth){
 
         //Normals are constructed similar to the coordinates
-        float[] PYRAM_NORMALS = new float[]{
+
+        return new float[]{
                 //Bottom
                 0.0f,       -height,    0.0f,       //back left point
                 0.0f,       -height,    0.0f,       //front left point
@@ -77,11 +76,9 @@ public class Pyramid extends Geom {
                 2*width,    height,     0.0f,       //top
 
         };
-
-        return PYRAM_NORMALS;
     }
 
-    public Pyramid(Float x, Float y, Float z) {
+    Pyramid(Float x, Float y, Float z) {
         super(x,y,z);
         float r, g, b, a = 1.0f;
         // FINSIH!
@@ -89,7 +86,7 @@ public class Pyramid extends Geom {
     }
 
 
-    public Pyramid(float x, float y, float z,float width,float height,float depth, float r, float g, float b, float a) {
+    Pyramid(float x, float y, float z,float width,float height,float depth, float r, float g, float b, float a) {
 
         super(x,y,z);
         pages = 6;

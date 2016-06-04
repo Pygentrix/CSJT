@@ -3,9 +3,9 @@ package logic.main.csjt.csjt;
 /**
  * Created by Thundergrass on 31.05.2016.
  */
-public class Column extends Geom {
+class Column extends Geom {
 
-    public float[] setColumnCoords(float px,float py,float pz ,float width, float height, float depth){
+    private float[] setColumnCoords(float px, float py, float pz, float width, float height, float depth){
 
         /**
          *  Created by using the current Tetrahedron Class. (31.05.16)
@@ -22,7 +22,7 @@ public class Column extends Geom {
         float hei = height / 4;
         float dep = depth / 4;
 
-        float[] COL_COORDS = new float[]{
+        return new float[]{
                 //Bottom Face
                 px+wid,     py,         pz,         //back left point
                 px,         py,         pz+dep,     //left back point
@@ -146,14 +146,13 @@ public class Column extends Geom {
                 px+(3*wid), py+(4*hei), pz,         //back right point
 
         };
-
-        return COL_COORDS;
     }
 
-    public float[] setColumnNormals(float width, float height, float depth){
+    private float[] setColumnNormals(float width, float height, float depth){
 
         //Normals are constructed similar to the coordinates
-        float[] COL_NORMALS = new float[]{
+
+        return new float[]{
                 //Bottom Face
                 0.0f,   -height,    0.0f,   //back left point
                 0.0f,   -height,    0.0f,   //left back point
@@ -277,11 +276,9 @@ public class Column extends Geom {
                 0.0f,   height, 0.0f,   //back right point
 
         };
-
-        return COL_NORMALS;
     }
 
-    public Column(Float x, Float y, Float z) {
+    Column(Float x, Float y, Float z) {
         super(x,y,z);
         float r, g, b, a = 1.0f;
         // FINSIH!
@@ -289,7 +286,7 @@ public class Column extends Geom {
     }
 
 
-    public Column(float x, float y, float z,float width,float height,float depth, float r, float g, float b, float a) {
+    Column(float x, float y, float z, float width, float height, float depth, float r, float g, float b, float a) {
 
         super(x,y,z);
         pages = 28;

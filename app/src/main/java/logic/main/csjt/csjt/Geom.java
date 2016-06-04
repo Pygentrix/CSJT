@@ -13,7 +13,7 @@ import java.nio.FloatBuffer;
  * Created by tom on 09.04.16.
  */
 
-public class Geom {
+class Geom {
 
     //ArrayList<Geom> allGeoms = new ArrayList<Geom>();
 
@@ -26,7 +26,7 @@ public class Geom {
     float width;
     float height;
     float depth;
-    float rotSpeed = 0.5f;
+    private float rotSpeed = 0.5f;
     float movY = 0.0f; // Movement factor in y-direction
     // The default value is 0.12f, but we will increase the value due to debugging
     private float YAW_LIMIT;
@@ -52,17 +52,17 @@ public class Geom {
     int pages;
     int verticesPerPage;
     int id;
-    static int geomCounter = 0;
+    private static int geomCounter = 0;
 
-    static int geomProgram;
+    private static int geomProgram;
     private static final int COORDS_PER_VERTEX = 3;
-    int geomPositionParam;
-    int geomModelViewProjectionParam;
-    int geomNormalParam;
-    int geomColorParam;
-    int geomModelParam;
-    int geomModelViewParam;
-    int geomLightPosParam;
+    private int geomPositionParam;
+    private int geomModelViewProjectionParam;
+    private int geomNormalParam;
+    private int geomColorParam;
+    private int geomModelParam;
+    private int geomModelViewParam;
+    private int geomLightPosParam;
     int movStatus = 0; // 0 -> No movement ; 1 -> Rotation ; 2 -> movement in directions
 
 //BUFFERS
@@ -72,47 +72,47 @@ public class Geom {
 //BOOLEANS
     boolean islookingAtIt = false;
     static boolean rMode = true; // used for the rendering mode
-    boolean dir = true;
-    boolean initCase = true;
+    private boolean dir;
+    private boolean initCase;
 
 
 //GETTERS
-    public FloatBuffer getFbSelectedGeomColors() {
+private FloatBuffer getFbSelectedGeomColors() {
         return fbSelectedGeomColors;
     }
 
-    public FloatBuffer getFbGeomColors() {
+    private FloatBuffer getFbGeomColors() {
         return this.fbGeomColors;
     }
 
-    public FloatBuffer getFbGeomNormals() {
+    private FloatBuffer getFbGeomNormals() {
         return this.fbGeomNormals;
     }
 
-    public FloatBuffer getFbGeomVertics() {
+    private FloatBuffer getFbGeomVertics() {
         return this.fbGeomVertics;
     }
 
 
 
-    public float[] getModelGeom() {
+    float[] getModelGeom() {
         return modelGeom;
     }
 
 //SETTERS
-    public void setFbSelectedGeomColors(FloatBuffer fbSelectedGeomColors) {
+    void setFbSelectedGeomColors(FloatBuffer fbSelectedGeomColors) {
         this.fbSelectedGeomColors = fbSelectedGeomColors;
     }
 
-    public void setGeomColors(float[] geomColors) {
+    void setGeomColors(float[] geomColors) {
         this.geomColors = geomColors;
     }
 
-    public void setFbGeomColors(FloatBuffer fbGeomColors) {
+    void setFbGeomColors(FloatBuffer fbGeomColors) {
         this.fbGeomColors = fbGeomColors;
     }
 
-    public float[] setInitColor(float r, float g, float b, float a) {
+    float[] setInitColor(float r, float g, float b, float a) {
 
         float[] INIT_COLORS = new float[pages * verticesPerPage * 4];
 
@@ -139,7 +139,7 @@ public class Geom {
         return INIT_COLORS;
     }
 
-    public float[] setSelectedGeomColors() {
+    float[] setSelectedGeomColors() {
 
         float[] S_COLORS = new float[pages * verticesPerPage * 4];
 
@@ -166,7 +166,7 @@ public class Geom {
         return S_COLORS;
     }
 
-    public FloatBuffer setSelectedColorFloatBuffer() {
+    FloatBuffer setSelectedColorFloatBuffer() {
 
         FloatBuffer lFloatBuffer;
         ByteBuffer bbColors = ByteBuffer.allocateDirect(this.selectedGeomColors.length * 4);
@@ -177,13 +177,13 @@ public class Geom {
         return lFloatBuffer;
     }
 
-    public void setModelGeom(float[] modelGeom) {
+    void setModelGeom(float[] modelGeom) {
         this.modelGeom = modelGeom;
     }
 
 //METHODS / FUNCTIONS
 
-    public FloatBuffer verticsFloatBuffer(){
+    FloatBuffer verticsFloatBuffer(){
 
         FloatBuffer lFloatBuffer;
         ByteBuffer bbVertics = ByteBuffer.allocateDirect(this.geomVertics.length * 4);
@@ -194,7 +194,7 @@ public class Geom {
         return lFloatBuffer;
     }
 
-    public FloatBuffer normalsFloatBuffer(){
+    FloatBuffer normalsFloatBuffer(){
 
         FloatBuffer lFloatBuffer;
         ByteBuffer bbNormals = ByteBuffer.allocateDirect(this.geomNormals.length * 4);
@@ -205,7 +205,7 @@ public class Geom {
         return lFloatBuffer;
     }
 
-    public FloatBuffer colorFloatBuffer() {
+    FloatBuffer colorFloatBuffer() {
 
         FloatBuffer lFloatBuffer;
         ByteBuffer bbColors = ByteBuffer.allocateDirect(this.geomColors.length * 4);
@@ -221,7 +221,7 @@ public class Geom {
      *
      * @param label Label to report in case of error.
      */
-    public static void checkGLError(String label) {
+    private static void checkGLError(String label) {
         int error;
         while ((error = GLES20.glGetError()) != GLES20.GL_NO_ERROR) {
             Log.e(TAG, label + ": glError " + error);
@@ -230,10 +230,10 @@ public class Geom {
     }
 
 
-    public void initProgram(int vertexShader, int passthroughShader){
+    void initProgram(int vertexShader, int passthroughShader){
 
 
-        this.geomProgram = GLES20.glCreateProgram();
+        geomProgram = GLES20.glCreateProgram();
         GLES20.glAttachShader(geomProgram, vertexShader);
         GLES20.glAttachShader(geomProgram, passthroughShader);
         GLES20.glLinkProgram(geomProgram);
@@ -257,7 +257,7 @@ public class Geom {
         checkGLError("geom program params");
     }
 
-    public void draw(float[] lightPosInEyeSpace, float[] view, float[] perspective){
+    void draw(float[] lightPosInEyeSpace, float[] view, float[] perspective){
         // TODO: Get Updating and rotation work toghether, look at hideObject func to solve problem
         if(movStatus == 0){
             //Actually doing nothing
@@ -297,7 +297,7 @@ public class Geom {
         checkGLError("Drawing geom");
     }
 
-    public void updateModelPosition() {
+    void updateModelPosition() {
         Matrix.setIdentityM(this.modelGeom, 0);
         calcY();
         Matrix.translateM(this.modelGeom, 0, this.modelPosition[0], this.modelPosition[1], this.modelPosition[2]);
@@ -324,13 +324,13 @@ public class Geom {
             this.dir = true;
         }
         if(this.dir) {this.modelPosition[1] = this.modelPosition[1] + this.movY;}
-        else if(!this.dir) {this.modelPosition[1] = this.modelPosition[1] - this.movY;}
+        else {this.modelPosition[1] = this.modelPosition[1] - this.movY;}
     }
 
 
     //TODO This function is really trivial in checking obj(more tiny obj are triggered inaccurate), this is because of no distance to obj calcs,
     //TODO no more time will be spent as the MUST-HAVEs are more important
-    public boolean isLookingAtObject(float[] headView) {
+    boolean isLookingAtObject(float[] headView) {
         float[] initVec = {this.modelPosition[0], this.modelPosition[1], this.modelPosition[2], 1.0f};
         float[] objPositionVec = new float[4];
 
@@ -383,7 +383,7 @@ public class Geom {
         //updateModelPosition();
     }
 
-    public Geom(float x,float y,float z){
+    Geom(float x, float y, float z){
 
         this.addToGlobalList();
         this.id = geomCounter;
@@ -397,6 +397,8 @@ public class Geom {
         px = x;
         py = y;
         pz = z;
+        dir = true;
+        initCase = true;
     }
 
     private void addToGlobalList() {

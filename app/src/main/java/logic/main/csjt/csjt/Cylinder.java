@@ -3,7 +3,7 @@ package logic.main.csjt.csjt;
 /**
  * Created by JB on 31.05.2016.
  */
-public class Cylinder extends JustForCylinder{
+class Cylinder extends JustForCylinder{
 
     private static final double TWOPI = 2 * Math.PI;
     //Anzahl der Scheiben des Rings
@@ -25,7 +25,7 @@ public class Cylinder extends JustForCylinder{
         initBuffAndPutV();
     }
 
-    public Cylinder(double base, double radius, double height, int slices){
+    Cylinder(double base, double radius, double height, int slices){
         super();
         this.radius = radius > 0.0 ? radius : 0.1;
         this.height = height > 0.0 ? height : 0.1;
