@@ -4,10 +4,10 @@ package logic.main.csjt.csjt;
  * Created by Pygentrix on 20.05.2016.
  */
 
-public class Prism extends Geom{
+class Prism extends Geom{
 
     //SETTERS
-    public float[] setPrismCoords(float px,float py,float pz ,float width,float height){
+    private float[] setPrismCoords(float px, float py, float pz, float width, float height){
 
         //TODO: Implement it correct, some rendering fuck ups. Still not correct
 
@@ -15,7 +15,7 @@ public class Prism extends Geom{
          * Experiment: I'll try to seperate the rectangular sides into two triangular sides and see what happens
          */
 
-        float[] PRISM_COORDS = new float[]{
+        return new float[]{
                 // Top face
                 px, py+height, pz,
                 px+width, py+height, pz,
@@ -56,14 +56,12 @@ public class Prism extends Geom{
                 px+width, py+height, pz,
 
         };
-
-        return PRISM_COORDS;
     }
 
 
-    public float[] setPrismNormals(float width, float height){
+    private float[] setPrismNormals(float width, float height){
 
-        float[] PRISM_NORMALS = new float[]{
+        return new float[]{
                 //Top Face
                 0.0f, height, 0.0f,
                 0.0f, height, 0.0f,
@@ -104,23 +102,21 @@ public class Prism extends Geom{
                 width, 0.0f, width,
                 width, 0.0f, width,
                 width, 0.0f, width,
-                
-        };
 
-        return PRISM_NORMALS;
+        };
     }
 
 
     //FUNCTIONS / METHODS
 
     //CONSTRUCTOR(S)
-    public Prism(Float x, Float y, Float z) {
+    Prism(Float x, Float y, Float z) {
         super(x,y,z);
         float r, g, b, a = 1.0f;
         //TODO FINSIH!
 
     }
-    public Prism(float x, float y, float z,float width,float height, float r, float g, float b, float a) {
+    Prism(float x, float y, float z,float width,float height, float r, float g, float b, float a) {
 
         super(x,y,z);
         pages = 8;
