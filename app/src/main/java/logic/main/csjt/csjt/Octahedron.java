@@ -12,42 +12,42 @@ public class Octahedron extends Geom {
                 //Back Top
                 px, py, pz,                                       //back left point //just for me: BLUE
                 px + width, py, pz,                               //back right point //just for me: RED
-                px + (width / 2.0f), py + height, pz + (depth / 2.0f),  //top //just for me: ORANGE
+                px + (width / 2.0f), py + (height/1.5f), pz + (depth / 2.0f),  //top //just for me: ORANGE
 
                 //Left Top
                 px, py, pz,                                      //back left point //just for me: BLUE
                 px, py, pz + depth,                              //front left point  //just for me: YELLOW
-                px + (width / 2.0f), py + height, pz + (depth / 2.0f), //top //just for me: ORANGE
+                px + (width / 2.0f), py + (height/1.5f), pz + (depth / 2.0f), //top //just for me: ORANGE
 
                 //Front Top
                 px, py, pz + depth,                              //front left point //just for me: YELLOW
                 px + width, py, pz + depth,                      //front right point //just for me: GREEN
-                px + (width / 2.0f), py + height, pz + (depth / 2.0f), //top //just for me: ORANGE
+                px + (width / 2.0f), py + (height/1.5f), pz + (depth / 2.0f), //top //just for me: ORANGE
 
                 //Right Top
                 px + width, py, pz,                              //back right point //just for me: RED
                 px + width, py, pz + depth,                      //front right point //just for me: GREEN
-                px + (width / 2.0f), py + height, pz + (depth / 2.0f), //top //just for me: ORANGE
+                px + (width / 2.0f), py + (height/1.5f), pz + (depth / 2.0f), //top //just for me: ORANGE
 
                 //Front Bottom
                 px, py, pz + depth,                               //front left point //just for me: YELLOW
                 px + width, py, pz + depth,                       //front right point //just for me: GREEN
-                px + (width / 2.0f), py - (height/3.0f), pz + (depth / 2.0f),  //bottom //just for me: BLACK
+                px + (width / 2.0f), py - (height/1.5f), pz + (depth / 2.0f),  //bottom //just for me: BLACK
 
                 //Right Bottom
                 px + width, py, pz,                               //back right point //just for me: RED
                 px + width, py, pz + depth,                       //front right point //just for me: GREEN
-                px + (width / 2.0f), py - (height/3.0f), pz + (depth / 2.0f),  //bottom //just for me: BLACK
+                px + (width / 2.0f), py - (height/1.5f), pz + (depth / 2.0f),  //bottom //just for me: BLACK
 
                 //Left Bottom
                 px, py, pz,                                      //back left point //just for me: BLUE
                 px, py, pz + depth,                              //front left point  //just for me: YELLOW
-                px + (width / 2.0f), py - (height/3.0f), pz + (depth / 2.0f), //bottom //just for me: BLACK
+                px + (width / 2.0f), py - (height/1.5f), pz + (depth / 2.0f), //bottom //just for me: BLACK
 
                 //Back Bottom
                 px, py, pz,                                      //back left point //just for me: BLUE
                 px + width, py, pz,                              //back right point //just for me: RED
-                px + (width / 2.0f), py - (height/3.0f), pz + (depth / 2.0f), //bottom //just for me: BLACK
+                px + (width / 2.0f), py - (height/1.5f), pz + (depth / 2.0f), //bottom //just for me: BLACK
         };
     }
 
