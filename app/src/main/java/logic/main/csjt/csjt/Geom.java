@@ -74,6 +74,7 @@ class Geom {
     static boolean rMode = true; // used for the rendering mode
     private boolean dir;
     private boolean initCase;
+    boolean triggered = false;
 
 
 //GETTERS
@@ -298,6 +299,15 @@ private FloatBuffer getFbSelectedGeomColors() {
     }
 
     void updateModelPosition() {
+
+       /* glMatrixMode(GL_MODLEVIEW); Think about that
+        glPushMatrix();
+        glTranslatef(xcenter, ycenter, zcenter); // move back to focus of gluLookAt
+        glRotatef(.....whatever.....); //  rotate around center
+        glTranslatef(-xcenter, -ycenter, -zcenter); //move object to center
+        DrawObject();
+        glPopMatrix();*/
+
         Matrix.setIdentityM(this.modelGeom, 0);
         calcY();
         Matrix.translateM(this.modelGeom, 0, this.modelPosition[0], this.modelPosition[1], this.modelPosition[2]);

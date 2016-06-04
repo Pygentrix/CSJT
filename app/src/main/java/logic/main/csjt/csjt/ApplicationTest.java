@@ -31,7 +31,7 @@ public class ApplicationTest extends CardboardActivity implements CardboardView.
 
 //FLOAT ARRAYS
     // We keep the light always position just above the user. CHANGE a to see whether it changes sth
-    static float[] LIGHT_POS_IN_WORLD_SPACE = new float[] {0.5f, 1.0f, 0.0f, 1.0f};
+    static float[] LIGHT_POS_IN_WORLD_SPACE = new float[] {2.0f, 1.0f, 0.0f, 1.0f};
     private final float[] lightPosInEyeSpace = new float[4];
 
     private float[] camera;
@@ -43,6 +43,9 @@ public class ApplicationTest extends CardboardActivity implements CardboardView.
     //int testLightning = 1;
     private int m = 10;// dont do m=100 , rendering 10000 cubes atm is too much
     private int startOfDeco;
+
+//BOOLEANS
+    private boolean movLight = false;
 
 //OBJECTS
 
@@ -58,23 +61,35 @@ public class ApplicationTest extends CardboardActivity implements CardboardView.
 
     private void initGeoms(int vertexShader, int passthroughShader){
 
+        /////////////////////////////////////////////////////
         //PLEASE MAKE SURE WHERE YOU INSERT THE OBJECTS SOME CALCS OTHERWISE MIGHT FAIL
+        //AREA WHERE YOU ARE ABLE TO ADD NEW GEOMS TO WORLD
         allGeoms.add(new Cube(0.0f,1.0f,-2.5f,1.0f,1.0f,1.0f, 0.9f, 0.7f, 0.1f, 1.0f)); //rotating cube (0)
         allGeoms.add(new Tetrahedron(2.0f,-0.65f,-0.4f,1.0f,1.0f,1.0f, 1.0f, 0.6f, 0.3f, 1.0f)); // old testtetra (1)
-        allGeoms.add(new Cube(2.0f,-1.0f,0.0f,1.2f,0.2f,5.0f, 1.0f, 1.0f, 1.0f, 0.9f)); //right (2)
+        allGeoms.add(new Static_Sphere(-0.4f,-0.8f,-2.3f,1.3f,1.3f,1.3f, 1.0f, 0.8f, 0.0f, 1.0f));
+        allGeoms.add(new Cube(2.0f,-1.0f,0.0f,1.2f,0.2f,5.0f, 1.0f, 1.0f, 1.0f, 0.9f)); //right (3)
         allGeoms.add(new Cube(-2.0f,-1.0f,0.0f,1.2f,0.2f,5.0f, 1.0f, 1.0f, 1.0f, 0.9f));//left
         allGeoms.add(new Cube(0.0f,-1.0f,-2.5f,7.4f,0.2f,1.2f, 1.0f, 1.0f, 1.0f, 0.9f));//front
 
-        allGeoms.add(new Prism(0.5f,-0.8f,-2.1f,1.0f,1.0f,0.0f, 1.0f, 0.1f, 1.0f));  //old testprism1 (5)
+        allGeoms.add(new Prism(0.5f,-0.8f,-2.1f,1.0f,1.0f,0.0f, 1.0f, 0.1f, 1.0f));  //old testprism1 (6)
         //allGeoms.add(new Cube(-10.0f,-10.0f,10.0f,40.0f,40.0f,40.0f, 0.0f, 0.2f, 1.0f, 1.0f));cub1
-        allGeoms.add(new Cube(-1.1f,-0.55f,-2.1f,0.5f,0.5f,0.5f, 1.0f, 0.2f, 0.1f, 1.0f)); //old cube2 (6)
+        allGeoms.add(new Cube(-1.1f,-0.55f,-2.1f,0.5f,0.5f,0.5f, 1.0f, 0.2f, 0.1f, 1.0f)); //old cube2 (7)
         allGeoms.add(new Column(-1.8f,-0.65f,-1.3f,1.1f,1.1f,1.1f, 1.0f, 0.6f, 0.3f, 1.0f));  // old column1
         allGeoms.add(new Octahedron(-2.0f,-0.5f,-0.5f,1.0f,1.0f,1.0f, 1.0f,0.1f,0.1f,1.0f));
-        allGeoms.add(new Pyramid(1.5f, -0.8f, -1.8f, 1.0f, 1.0f, 1.0f, 1.0f, 0.6f, 0.1f, 1.0f)); //old pyram
+        allGeoms.add(new Pyramid(1.5f, -0.8f, -1.8f, 1.0f, 1.0f, 1.0f, 1.0f, 0.6f, 0.1f, 1.0f)); //old pyram (10)
         //allGeoms.add(new Cube(LIGHT_POS_IN_WORLD_SPACE[0],LIGHT_POS_IN_WORLD_SPACE[1],LIGHT_POS_IN_WORLD_SPACE[2],0.2f,0.2f,0.2f, 1.0f, 1.0f, 1.0f, 1.0f )); //old lioghtcube
-        allGeoms.add(new Static_Sphere(-0.4f,-0.8f,-2.3f,1.3f,1.3f,1.3f, 1.0f, 0.8f, 0.0f, 1.0f));
-        allGeoms.get(0).movStatus = 1; //Start roating cube 1
 
+        //>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>INSERT NEW GEOMS BELOW HERE<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+
+        //<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<END OF INSERTION AREA>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+        //END OF AREA
+        /////////////////////////////////////////////////////
+
+        //SPECIAL INITS OR DIFF START PARAMS FOR CERTAIN CUBES
+        allGeoms.get(0).movStatus = 1; //Start roating cube 1
+        /////////////////////////////////////////////////////
+
+        //CUBE FIELD FOR DECORATION AND SOME INTERACTION
         // Decorating the grid with some cubes index 10 to 10+m*m 110 cubes
         startOfDeco = allGeoms.size();
         for(int i =0;i< m; i++){
@@ -87,16 +102,19 @@ public class ApplicationTest extends CardboardActivity implements CardboardView.
                 allGeoms.add(new Cube(x,-0.75f,-30.0f+(5*j),0.5f,0.5f,0.5f, 1.0f, 0.6523f, 0.0f, 1.0f));
             }
         }
+        ////////////////////////////////////////////////////
+        //INITIALISING ALL GEOMS
         for (Geom allGeom : allGeoms) {
 
             allGeom.initProgram(vertexShader, passthroughShader);
         }
-
+        //SPECIAL METHODS FOR DIFFERENT GEOMS
         if(allGeoms.get(1) instanceof Tetrahedron){
         ((Tetrahedron)allGeoms.get(1)).initialRotCorrection();}
         else{
             Log.e(TAG, "Its not an instance of Tetrahedron! Take a look at initGeoms");
         }
+        //////////////////////////////////////
 
     }
 
@@ -315,9 +333,19 @@ public class ApplicationTest extends CardboardActivity implements CardboardView.
         // Build the ModelView and ModelViewProjection matrices
         // for calculating cube position and light.
         float[] perspective = eye.getPerspective(Z_NEAR, Z_FAR);
-
+        if(movLight){
+        calcLight();}
         drawGeoms(perspective);
         grid.drawFloor(lightPosInEyeSpace,view,perspective);
+
+
+    }
+
+    private void calcLight() {
+        float[] rotMatrix =new float[16];
+        Matrix.setRotateM(rotMatrix, 0, 0.5f, 0f, 1f, 0f);
+        //Matrix.setRotateM(rotMatrix, 0,1.0f, 0.0f,1.0f,0.0f);
+        Matrix.multiplyMV(LIGHT_POS_IN_WORLD_SPACE,0,rotMatrix,0,LIGHT_POS_IN_WORLD_SPACE,0);
 
 
     }
@@ -378,24 +406,52 @@ public class ApplicationTest extends CardboardActivity implements CardboardView.
                 }
                 if( i == 0){
                     allGeoms.get(i).movStatus = 1;
+                    //Activate Bouncing for all background cubes
+                    if(!allGeoms.get(i).triggered || allGeoms.get(i).movStatus == 2){
+                        for(int j = startOfDeco; j < allGeoms.size(); j++){
+                            if(( j != (startOfDeco+66))){
+                                allGeoms.get(j).movY = 0.0f;
+                                allGeoms.get(j).movStatus = 1;}
+                        }
+                    }
+                    else {
+                        for(int j = startOfDeco; j < allGeoms.size(); j++){
+                            allGeoms.get(j).movY = 0.0f;
+                            allGeoms.get(j).movStatus = 0;
+                        }
+
+                    }
+                    allGeoms.get(i).triggered = !allGeoms.get(i).triggered;
+                }
+                if( i == 2){ // Sphere
+                    //Activate rotation
+                    movLight = !movLight;
+
+                }
+                if( i == 10){ // pyramid
+                    //Activate Bouncing for all background cubes
+                    if(!allGeoms.get(i).triggered || allGeoms.get(i).movStatus == 1){
+                        for(int j = startOfDeco; j < allGeoms.size(); j++){
+                        if(( j != (startOfDeco+66))){
+                        allGeoms.get(j).movY = 0.15f;
+                        allGeoms.get(j).movStatus = 2;}
+                        }
+                    }
+                    else {
+                        for(int j = startOfDeco; j < allGeoms.size(); j++){
+                            allGeoms.get(j).movY = 0.0f;
+                            allGeoms.get(j).movStatus = 0;
+                        }
+
+                    }
+                    allGeoms.get(i).triggered = !allGeoms.get(i).triggered;
+
                 }
             }
-
             else{
-                //allGeoms.get(i).movStatus = 0;
+
             }
         }
-        /**
-         * Thundergrass, 03.06.2016: Trying to apply the movement ability to the pyramid and the column to see them from more sides
-         * Pygentrix Not needed anymore because you done good job!
-         */
-
-        //We try to change the light pos while being in the app
-        //testLightning = testLightning + 1;
-        //LIGHT_POS_IN_WORLD_SPACE[0] = 0.01f;
-        //LIGHT_POS_IN_WORLD_SPACE[1] = 2.0f;
-        //LIGHT_POS_IN_WORLD_SPACE[2] = 0.01f;
-        //selectRndCubeAndStartMoving();
 
         // Always give user feedback.
         timeOfLastTap = System.currentTimeMillis();
