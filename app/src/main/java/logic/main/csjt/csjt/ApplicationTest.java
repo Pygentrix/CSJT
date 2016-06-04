@@ -31,7 +31,7 @@ public class ApplicationTest extends CardboardActivity implements CardboardView.
 
 //FLOAT ARRAYS
     // We keep the light always position just above the user. CHANGE a to see whether it changes sth
-    static float[] LIGHT_POS_IN_WORLD_SPACE = new float[] {1.0f, 2.0f, 0.0f, 1.0f};
+    static float[] LIGHT_POS_IN_WORLD_SPACE = new float[] {0.5f, 1.0f, 0.0f, 1.0f};
     private final float[] lightPosInEyeSpace = new float[4];
 
     private float[] camera;
@@ -60,7 +60,7 @@ public class ApplicationTest extends CardboardActivity implements CardboardView.
 
         //PLEASE MAKE SURE WHERE YOU INSERT THE OBJECTS SOME CALCS OTHERWISE MIGHT FAIL
         allGeoms.add(new Cube(0.0f,1.0f,-2.5f,1.0f,1.0f,1.0f, 0.9f, 0.7f, 0.1f, 1.0f)); //rotating cube (0)
-        allGeoms.add(new Tetrahedron(-2.0f,-0.65f,-1.3f,1.0f,1.0f,1.0f, 1.0f, 0.6f, 0.3f, 1.0f)); // old testtetra (1)
+        allGeoms.add(new Tetrahedron(2.0f,-0.65f,-0.4f,1.0f,1.0f,1.0f, 1.0f, 0.6f, 0.3f, 1.0f)); // old testtetra (1)
         allGeoms.add(new Cube(2.0f,-1.0f,0.0f,1.2f,0.2f,5.0f, 1.0f, 1.0f, 1.0f, 0.9f)); //right (2)
         allGeoms.add(new Cube(-2.0f,-1.0f,0.0f,1.2f,0.2f,5.0f, 1.0f, 1.0f, 1.0f, 0.9f));//left
         allGeoms.add(new Cube(0.0f,-1.0f,-2.5f,7.4f,0.2f,1.2f, 1.0f, 1.0f, 1.0f, 0.9f));//front
@@ -68,11 +68,11 @@ public class ApplicationTest extends CardboardActivity implements CardboardView.
         allGeoms.add(new Prism(0.5f,-0.8f,-2.1f,1.0f,1.0f,0.0f, 1.0f, 0.1f, 1.0f));  //old testprism1 (5)
         //allGeoms.add(new Cube(-10.0f,-10.0f,10.0f,40.0f,40.0f,40.0f, 0.0f, 0.2f, 1.0f, 1.0f));cub1
         allGeoms.add(new Cube(-1.1f,-0.55f,-2.1f,0.5f,0.5f,0.5f, 1.0f, 0.2f, 0.1f, 1.0f)); //old cube2 (6)
-        allGeoms.add(new Column(-0.4f,-0.8f,-2.3f,1.1f,1.1f,1.1f, 0.0f, 0.4f, 1.0f, 1.0f));  // old column1
-        allGeoms.add(new Octahedron(1.8f,0.0f,-1.0f,1.0f,1.0f,1.0f, 1.0f,0.1f,0.1f,1.0f));
+        allGeoms.add(new Column(-1.8f,-0.65f,-1.3f,1.1f,1.1f,1.1f, 1.0f, 0.6f, 0.3f, 1.0f));  // old column1
+        allGeoms.add(new Octahedron(-2.0f,-0.5f,-0.5f,1.0f,1.0f,1.0f, 1.0f,0.1f,0.1f,1.0f));
         allGeoms.add(new Pyramid(1.5f, -0.8f, -1.8f, 1.0f, 1.0f, 1.0f, 1.0f, 0.6f, 0.1f, 1.0f)); //old pyram
-        allGeoms.add(new Cube(LIGHT_POS_IN_WORLD_SPACE[0],LIGHT_POS_IN_WORLD_SPACE[1],LIGHT_POS_IN_WORLD_SPACE[2],0.7f,0.7f,0.7f, 1.0f, 1.0f, 1.0f, 1.0f )); //old cube2
-
+        //allGeoms.add(new Cube(LIGHT_POS_IN_WORLD_SPACE[0],LIGHT_POS_IN_WORLD_SPACE[1],LIGHT_POS_IN_WORLD_SPACE[2],0.2f,0.2f,0.2f, 1.0f, 1.0f, 1.0f, 1.0f )); //old lioghtcube
+        allGeoms.add(new Static_Sphere(-0.4f,-0.8f,-2.3f,1.3f,1.3f,1.3f, 1.0f, 0.8f, 0.0f, 1.0f));
         allGeoms.get(0).movStatus = 1; //Start roating cube 1
 
         // Decorating the grid with some cubes index 10 to 10+m*m 110 cubes
