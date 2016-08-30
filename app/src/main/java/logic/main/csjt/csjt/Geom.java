@@ -238,7 +238,6 @@ private FloatBuffer getFbSelectedGeomColors() {
         GLES20.glAttachShader(geomProgram, vertexShader);
         GLES20.glAttachShader(geomProgram, passthroughShader);
         GLES20.glLinkProgram(geomProgram);
-        GLES20.glUseProgram(geomProgram);
 
         checkGLError("Cube program");
 
@@ -251,15 +250,17 @@ private FloatBuffer getFbSelectedGeomColors() {
         this.geomModelViewProjectionParam = GLES20.glGetUniformLocation(geomProgram, "u_MVP");
         this.geomLightPosParam = GLES20.glGetUniformLocation(geomProgram, "u_LightPos");
 
-        GLES20.glEnableVertexAttribArray(this.geomPositionParam);// Enables the VertexArrays which is needed so opengl knows wht to render
-        GLES20.glEnableVertexAttribArray(this.geomNormalParam);// Enables the VertexArrays which is needed so opengl knows wht to render
-        GLES20.glEnableVertexAttribArray(this.geomColorParam);  // Enables the VertexArrays which is needed so opengl knows wht to render
         this.updateModelPosition();
         checkGLError("geom program params");
     }
 
     void draw(float[] lightPosInEyeSpace, float[] view, float[] perspective){
-        // TODO: Get Updating and rotation work toghether, look at hideObject func to solve problem
+
+        GLES20.glEnableVertexAttribArray(this.geomPositionParam);// Enables the VertexArrays which is needed so opengl knows wht to render
+        GLES20.glEnableVertexAttribArray(this.geomNormalParam);// Enables the VertexArrays which is needed so opengl knows wht to render
+        GLES20.glEnableVertexAttribArray(this.geomColorParam);  // Enables the VertexArrays which is needed so opengl knows wht to render
+
+        // TODO: Get Updating and rotation work together, look at hideObject func to solve problem
         if(movStatus == 0){
             //Actually doing nothing
         }
@@ -296,6 +297,11 @@ private FloatBuffer getFbSelectedGeomColors() {
         //GLES20.glVertexAttribPointer(this.geomColorParam, 4, GLES20.GL_FLOAT, false, 0,this.getFbGeomColors()); //<- Points to the active Array other words: OpenGL now knows, that this needs to be rendered
         GLES20.glDrawArrays(rMode ? GLES20.GL_TRIANGLES : GLES20.GL_LINES, 0, vCount);  // There is also GL_LINES for rendering lines. We used GL_TRIANGLES , maybe also good for debugging :D looks impressiv
         checkGLError("Drawing geom");
+
+        GLES20.glDisableVertexAttribArray(this.geomPositionParam);// Enables the VertexArrays which is needed so opengl knows wht to render
+        GLES20.glDisableVertexAttribArray(this.geomNormalParam);// Enables the VertexArrays which is needed so opengl knows wht to render
+        GLES20.glDisableVertexAttribArray(this.geomColorParam);  // Enables the VertexArrays which is needed so opengl knows wht to render
+
     }
 
     void updateModelPosition() {

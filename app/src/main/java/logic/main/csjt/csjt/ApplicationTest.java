@@ -1,11 +1,16 @@
 package logic.main.csjt.csjt;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Point;
 import android.opengl.GLES20;
+import android.opengl.GLUtils;
 import android.opengl.Matrix;
 import android.os.Bundle;
 import android.os.Vibrator;
 import android.util.Log;
+import android.view.Display;
 import com.google.vrtoolkit.cardboard.*;
 
 import javax.microedition.khronos.egl.EGLConfig;
@@ -20,6 +25,7 @@ public class ApplicationTest extends CardboardActivity implements CardboardView.
 
 //STRINGS
     private static final String TAG = "CSJT";
+
 
 //FLOATS
     private static final float Z_NEAR = 0.1f;
@@ -43,12 +49,20 @@ public class ApplicationTest extends CardboardActivity implements CardboardView.
     //int testLightning = 1;
     private int m = 10;// dont do m=100 , rendering 10000 cubes atm is too much
     private int startOfDeco;
+    private int width;
+    private int height;
+
+    public static int sp_Text;
 
 //BOOLEANS
     private boolean movLight = false;
 
 //OBJECTS
 
+    Display display;
+    Point size;
+    TextManager tm;
+    Bitmap bmp;
     private ArrayList<Geom> allGeoms = new ArrayList<>();
 
     private Grid grid;
@@ -124,31 +138,22 @@ public class ApplicationTest extends CardboardActivity implements CardboardView.
         grid.initProgramm(gridShader, vertexShader);
 
     }
-    public static int sp_Text;
 
-     // This shader is for rendering 2D text textures straight from a texture
+    public void initTextShader(){
 
-    public static final String vs_Text =
-            "uniform mat4 uMVPMatrix;" +
-                    "attribute vec4 vPosition;" +
-                    "attribute vec4 a_Color;" +
-                    "attribute vec2 a_texCoord;" +
-                    "varying vec4 v_Color;" +
-                    "varying vec2 v_texCoord;" +
-                    "void main() {" +
-                    "  gl_Position = uMVPMatrix * vPosition;" +
-                    "  v_texCoord = a_texCoord;" +
-                    "  v_Color = a_Color;" +
-                    "}";
-    public static final String fs_Text =
-            "precision mediump float;" +
-                    "varying vec4 v_Color;" +
-                    "varying vec2 v_texCoord;" +
-                    "uniform sampler2D s_texture;" +
-                    "void main() {" +
-                    "  gl_FragColor = texture2D( s_texture, v_texCoord ) * v_Color;" +
-                    "  gl_FragColor.rgb *= v_Color.a;" +
-                    "}";
+        Helper2D.mtrxProjection = new float[16];
+        Helper2D.mtrxView = new float[16];
+        Helper2D.mtrxProjectionAndView = new float[16];
+
+        int vshadert = loadGLShader(GLES20.GL_VERTEX_SHADER,R.raw.vs_text);
+        int fshadert = loadGLShader(GLES20.GL_FRAGMENT_SHADER, R.raw.fs_text);
+
+        sp_Text = GLES20.glCreateProgram();
+        GLES20.glAttachShader(sp_Text, vshadert);
+        GLES20.glAttachShader(sp_Text, fshadert);
+        GLES20.glLinkProgram(sp_Text);
+        checkGLError("Text program");
+    }
 
     /**
      * Converts a raw text file, saved as a resource, into an OpenGL ES shader.
@@ -237,6 +242,7 @@ public class ApplicationTest extends CardboardActivity implements CardboardView.
     @Override
     public void onSurfaceChanged(int width, int height) {
         Log.i(TAG, "onSurfaceChanged");
+
     }
 
     /**
@@ -252,16 +258,38 @@ public class ApplicationTest extends CardboardActivity implements CardboardView.
         Log.i(TAG, "onSurfaceCreated");
         GLES20.glClearColor(0.1f, 0.1f, 0.1f, 0.5f); // Dark background so text shows up well.
 
+        display = getWindowManager().getDefaultDisplay();
+        size = new Point();
+        display.getSize(size);
+        width = size.x;
+        height = size.y;
         ////////////
         // Some stages earlier the Buffers where generated here, now everything is done inside the Obj Constructor (f.e.: Cube)
         ////////////
+        //Do texture stuff
+        int[] textureNames = new int[1];
+        GLES20.glGenTextures(1, textureNames, 0);
+        bmp = BitmapFactory.decodeResource(getResources(),R.raw.font);
+        GLES20.glActiveTexture(GLES20.GL_TEXTURE0);
+        GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, textureNames[0]);
+        GLES20.glTexParameteri(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_MIN_FILTER, GLES20.GL_LINEAR);
+        GLES20.glTexParameteri(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_MAG_FILTER, GLES20.GL_LINEAR);
+        GLUtils.texImage2D(GLES20.GL_TEXTURE_2D, 0, bmp, 0);
+        bmp.recycle();
+
+        initTextShader();
+
+        tm = new TextManager(0,1.0f);
+        tm.addText(new TextObject("Working", 4f, 4f));
+        // Prepare the text for rendering
+        tm.PrepareDraw();
+
 
         int vertexShader = loadGLShader(GLES20.GL_VERTEX_SHADER, R.raw.light_vertex);
-        int gridShader = loadGLShader(GLES20.GL_FRAGMENT_SHADER, R.raw.grid_fragment); //NOT NEEDED YET
+        int gridShader = loadGLShader(GLES20.GL_FRAGMENT_SHADER, R.raw.grid_fragment);
         int passthroughShader = loadGLShader(GLES20.GL_FRAGMENT_SHADER, R.raw.passthrough_fragment);
 
         initGeoms(vertexShader,passthroughShader);
-
         initFloor(gridShader,vertexShader);
 
         checkGLError("onSurfaceCreated");
@@ -297,12 +325,15 @@ public class ApplicationTest extends CardboardActivity implements CardboardView.
      */
     @Override
     public void onNewFrame(HeadTransform headTransform) {
+
+
         // Build the Model part of the ModelView matrix.
         //Matrix.rotateM(cube1.getModelCube(), 0, 0.3f, 0.5f, 0.5f, 1.0f);  // <- Lets rotate the cube ROTATION
 
         // Build the camera matrix and apply it to the ModelView.
         //Changed EyeY to 1.0f instead of 0.0f
         Matrix.setLookAtM(camera, 0, CAMERA_X, CAMERA_Y, CAMERA_Z, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f);
+
 
         headTransform.getHeadView(headView, 0);
 
@@ -334,11 +365,12 @@ public class ApplicationTest extends CardboardActivity implements CardboardView.
         // for calculating cube position and light.
         float[] perspective = eye.getPerspective(Z_NEAR, Z_FAR);
         if(movLight){
-        calcLight();}
+            calcLight();}
         drawGeoms(perspective);
         grid.drawFloor(lightPosInEyeSpace,view,perspective);
 
-
+        Helper2D.updateMatrices(width,height,camera); // is updating the lokkAt (fucking everythin else up), first render cubes then text...
+        tm.Draw(Helper2D.mtrxProjectionAndView);
     }
 
     private void calcLight() {

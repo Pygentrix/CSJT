@@ -1,8 +1,6 @@
 package logic.main.csjt.csjt;
 
-/**
- * Created by JB on 23.05.2016.
- */
+
 public class TextObject { //this class holds the text, coordinates and the color as variables
     public String text;
     public float x;

@@ -1,9 +1,5 @@
 package logic.main.csjt.csjt;
 
-/**
- * Created by JB on 23.05.2016.
- */
-
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
@@ -14,7 +10,7 @@ import java.util.Vector;
 import android.opengl.GLES20;
 
 public class TextManager {
-/*
+
 
     private static final float RI_TEXT_UV_BOX_WIDTH = 0.125f;
     private static final float RI_TEXT_WIDTH = 32.0f;
@@ -53,7 +49,7 @@ public class TextManager {
 
     public Vector<TextObject> txtcollection;
 
-    public TextManager()
+    public TextManager(int textureID , float ssu)
     {
         // Create our container
         txtcollection = new Vector<TextObject>();
@@ -66,6 +62,10 @@ public class TextManager {
 
         // init as 0 as default
         texturenr = 0;
+
+        this.setTextureID(textureID);
+        this.setUniformscale(ssu);
+
     }
 
     public void addText(TextObject obj)
@@ -163,7 +163,7 @@ public class TextManager {
     public void Draw(float[] m)
     {
         // Set the correct shader for our grid object.
-        GLES20.glUseProgram(riGraphicTools.sp_Text);
+        GLES20.glUseProgram(ApplicationTest.sp_Text);
 
         // The vertex buffer.
         ByteBuffer bb = ByteBuffer.allocateDirect(vecs.length * 4);
@@ -194,7 +194,7 @@ public class TextManager {
         drawListBuffer.position(0);
 
         // get handle to vertex shader's vPosition member
-        int mPositionHandle = GLES20.glGetAttribLocation(riGraphicTools.sp_Text,
+        int mPositionHandle = GLES20.glGetAttribLocation(ApplicationTest.sp_Text,
                 "vPosition");
 
         // Enable a handle to the triangle vertices
@@ -205,7 +205,7 @@ public class TextManager {
                 GLES20.GL_FLOAT, false,
                 0, vertexBuffer);
 
-        int mTexCoordLoc = GLES20.glGetAttribLocation(riGraphicTools.sp_Text,
+        int mTexCoordLoc = GLES20.glGetAttribLocation(ApplicationTest.sp_Text,
                 "a_texCoord" );
 
         // Prepare the texturecoordinates
@@ -216,7 +216,7 @@ public class TextManager {
         GLES20.glEnableVertexAttribArray ( mPositionHandle );
         GLES20.glEnableVertexAttribArray ( mTexCoordLoc );
 
-        int mColorHandle = GLES20.glGetAttribLocation(riGraphicTools.sp_Text,
+        int mColorHandle = GLES20.glGetAttribLocation(ApplicationTest.sp_Text,
                 "a_Color");
 
         // Enable a handle to the triangle vertices
@@ -228,13 +228,14 @@ public class TextManager {
                 0, colorBuffer);
 
         // get handle to shape's transformation matrix
-        int mtrxhandle = GLES20.glGetUniformLocation(riGraphicTools.sp_Text,
+        int mtrxhandle = GLES20.glGetUniformLocation(ApplicationTest.sp_Text,
                 "uMVPMatrix");
 
         // Apply the projection and view transformation
+        //m is the matrix getting passed to the function
         GLES20.glUniformMatrix4fv(mtrxhandle, 1, false, m, 0);
 
-        int mSamplerLoc = GLES20.glGetUniformLocation (riGraphicTools.sp_Text,
+        int mSamplerLoc = GLES20.glGetUniformLocation (ApplicationTest.sp_Text,
                 "s_texture" );
 
         // Set the sampler texture unit to our selected id
@@ -370,7 +371,7 @@ public class TextManager {
     public void setUniformscale(float uniformscale) {
         this.uniformscale = uniformscale;
     }
-*/
+
 }
 
 
