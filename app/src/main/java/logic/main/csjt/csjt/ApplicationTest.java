@@ -14,6 +14,7 @@ import android.view.Display;
 import com.google.vrtoolkit.cardboard.*;
 
 import javax.microedition.khronos.egl.EGLConfig;
+import javax.microedition.khronos.opengles.GL10;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -221,6 +222,7 @@ public class ApplicationTest extends CardboardActivity implements CardboardView.
         headView = new float[16];
         vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
         Log.i(TAG,"End of onCreate");
+
     }
 
     @Override
@@ -256,6 +258,7 @@ public class ApplicationTest extends CardboardActivity implements CardboardView.
     @Override
     public void onSurfaceCreated(EGLConfig config) {
         Log.i(TAG, "onSurfaceCreated");
+
         GLES20.glClearColor(0.1f, 0.1f, 0.1f, 0.5f); // Dark background so text shows up well.
 
         display = getWindowManager().getDefaultDisplay();
@@ -280,7 +283,7 @@ public class ApplicationTest extends CardboardActivity implements CardboardView.
         initTextShader();
 
         tm = new TextManager(0,1.0f);
-        tm.addText(new TextObject("Working", 4f, 4f));
+        tm.addText(new TextObject("This is a test rendering", 4f, 4f,1f,0f, 0.5f , 1f));
         // Prepare the text for rendering
         tm.PrepareDraw();
 
@@ -369,8 +372,6 @@ public class ApplicationTest extends CardboardActivity implements CardboardView.
         drawGeoms(perspective);
         grid.drawFloor(lightPosInEyeSpace,view,perspective);
 
-        Helper2D.updateMatrices(width,height,camera); // is updating the lokkAt (fucking everythin else up), first render cubes then text...
-        tm.Draw(Helper2D.mtrxProjectionAndView);
     }
 
     private void calcLight() {
@@ -383,7 +384,12 @@ public class ApplicationTest extends CardboardActivity implements CardboardView.
     }
 
     @Override
-    public void onFinishFrame(Viewport viewport) {}
+    public void onFinishFrame(Viewport viewport) {
+
+        Helper2D.updateMatrices(width,height,camera);
+        tm.Draw(Helper2D.mtrxProjectionAndView);
+
+    }
 
     /**
      * Draw the cube.

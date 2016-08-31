@@ -201,9 +201,7 @@ public class TextManager {
         GLES20.glEnableVertexAttribArray(mPositionHandle);
 
         // Prepare the background coordinate data
-        GLES20.glVertexAttribPointer(mPositionHandle, 3,
-                GLES20.GL_FLOAT, false,
-                0, vertexBuffer);
+        GLES20.glVertexAttribPointer(mPositionHandle, 3, GLES20.GL_FLOAT, false, 0, vertexBuffer);
 
         int mTexCoordLoc = GLES20.glGetAttribLocation(ApplicationTest.sp_Text,
                 "a_texCoord" );
