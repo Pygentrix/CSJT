@@ -4,9 +4,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Point;
-import android.opengl.GLES20;
-import android.opengl.GLUtils;
-import android.opengl.Matrix;
+import android.opengl.*;
 import android.os.Bundle;
 import android.os.Vibrator;
 import android.util.Log;
@@ -283,7 +281,7 @@ public class ApplicationTest extends CardboardActivity implements CardboardView.
         initTextShader();
 
         tm = new TextManager(0,1.0f);
-        tm.addText(new TextObject("This is a test rendering", 4f, 4f,1f,0f, 0.5f , 1f));
+        tm.addText(new TextObject("WORKING TEST TEXT BRAAAAAA", 4f, 4f,1f,0f, 0.5f , 1f));
         // Prepare the text for rendering
         tm.PrepareDraw();
 
@@ -386,8 +384,12 @@ public class ApplicationTest extends CardboardActivity implements CardboardView.
     @Override
     public void onFinishFrame(Viewport viewport) {
 
+        //GLES20.glEnable(GLES20.GL_DEPTH_TEST );
+        GLES10.glEnable( GLES10.GL_BLEND ); //overlapping ...
+        GLES10.glBlendFunc(GLES10.GL_SRC_ALPHA,GLES10.GL_ONE_MINUS_SRC_ALPHA);
         Helper2D.updateMatrices(width,height,camera);
         tm.Draw(Helper2D.mtrxProjectionAndView);
+        GLES10.glDisable( GLES10.GL_BLEND );
 
     }
 
